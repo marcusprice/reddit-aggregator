@@ -1,0 +1,24 @@
+{
+  "name": "reddit-aggregator",
+  "version": "1.0.0",
+  "description": "Personalized web app to collect the best daily Reddit submissions",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha -recursive || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcusprice/reddit-aggregator.git"
+  },
+  "author": "Marcus Price",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcusprice/reddit-aggregator/issues"
+  },
+  "homepage": "https://github.com/marcusprice/reddit-aggregator#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "express": "^4.16.4",
+    "mocha": "^6.1.4"
+  }
+}
