@@ -3,7 +3,7 @@ const Users = require('../../models/Users');
 
 let validUserData = {
   username: 'userOne',
-  email: 'userOne@users.net'
+  email: 'userOne@users.net',
   password: 'password',
   firstName: 'User',
   lastName: 'One'
@@ -14,8 +14,8 @@ let extraFieldUserData = {
   email: 'userOne@users.net',
   password: 'password',
   firstName: 'User',
-  lastName: 'One', 
-  lastName: 'lastName'
+  lastName: 'One',
+  extraField: 'lastName'
 };
 
 let missingFieldUserData = {
@@ -49,57 +49,75 @@ let notUniqueEmailData = {
   lastName: 'One'
 };
 
-desribe('Users', () => {
-
+describe('Users', () => {
 
   describe('Users.createUser()', () => {
-    it('should return true upon successful insertion', async () => {
-      const result = await Users.createUser(validUserData);
-      expect(result).to.be.true;
+    it('should return true upon successful insertion',  (done) => {
+      Users.createUser(validUserData)
+      .then((result) => {
+        expect(result).to.be.true;
+        done();
+      });
     });
 
-    it('should return an error if the input has too many fields', async () => {
-      const result = await Users.createUser(extraFieldUserData);
-      expect(result).to.be.an('error');
+    it('should return an error if the input has too many fields', (done) => {
+      Users.createUser(extraFieldUserData)
+      .catch((err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
     });
 
-    it('should return an error if the unput has too little fields', async () => {
-      const result = await Users.createUser(missingFieldUserData);
-      expect(result).to.be.an('error');
-    })
-
-    it('should return an error if the input has an invalid field', async () => {
-      const result = await Users.createUser(invalidFieldUserData);
-      expect(result).to.be.an('error');      
+    it('should return an error if the input has too little fields', (done) => {
+      Users.createUser(missingFieldUserData)
+      .catch((err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
     });
 
-    it('should return an error if the username already exists', async () => {
-      const result = await Users.createUser(notUniqueUsernameData);
-      expect(result).to.be.an('error');     
+    it('should return an error if the input has an invalid field', (done) => {
+      Users.createUser(invalidFieldUserData)
+      .catch((err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
     });
 
-    it('should return an error if the email already exists', async () => {
-      const result = await Users.createUser(notUniqueEmailData);
-      expect(result).to.be.an('error');
+    it('should return an error if the username already exists', (done) => {
+      Users.createUser(notUniqueUsernameData)
+      .catch((err) => {
+        expect(err).to.be.an('error');
+        done();
+      });
+    });
+
+    it('should return an error if the email already exists',  (done) => {
+      Users.createUser(notUniqueEmailData)
+      .catch((err) => {
+        throw err;
+        expect(err).to.be.an('error');
+        done();
+      });
     });
   });
 
-
+/*
   describe('Users.readUser()', () => {
     it('should return an object with user-data with input of a UserID', async () => {
       const result = await User.readUser(1);
       expect(result).to.be.an('object');
-      expect(result)to.have.property('username');
-      expect(result)to.have.property('email');
-      expect(result)to.have.property('firstname');
-      expect(result)to.have.property('lastname');
-      expect(result)to.have.property('datecreated');
-      expect(result)to.have.property('lastlogin');       
+      expect(result).to.have.property('username');
+      expect(result).to.have.property('email');
+      expect(result).to.have.property('firstname');
+      expect(result).to.have.property('lastname');
+      expect(result).to.have.property('datecreated');
+      expect(result).to.have.property('lastlogin');
     });
 
     it('should not return a password', async () => {
       const result = await User.readUser(1);
-      expect(result)to.not.have.property('username');
+      expect(result).to.not.have.property('username');
     });
 
     it('should return an object with input of a Username', async () => {
@@ -123,7 +141,6 @@ desribe('Users', () => {
     });
   });
 
-
   describe('Users.updateUser()', () => {
     it('should return true upon successful update', async () => {
       //update username & email values to avoid non-unique error
@@ -135,14 +152,14 @@ desribe('Users', () => {
     });
 
     it('should return an error if the input has too many fields', async () => {
-      const result = await Users.updateUser(extraFieldUserData); 
+      const result = await Users.updateUser(extraFieldUserData);
       expect(result).to.be.an('error');
-    });  
+    });
 
-    it('should return an error if the unput has too little fields'); 
+    it('should return an error if the unput has too little fields');
     it('should return an error if the input has an invalid field');
     it('should return an error if the username already exists');
-    it('should return an error if the email already exists);
+    it('should return an error if the email already exists');
   });
 
 
@@ -158,5 +175,5 @@ desribe('Users', () => {
     });
   });
 
-
+*/
 });

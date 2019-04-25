@@ -1,0 +1,8 @@
+{
+  "development": {
+    "dbname": "test"
+  },
+  "production": {
+    "dbname": "RedditAggregator"
+  }
+}
