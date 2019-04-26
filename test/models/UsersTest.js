@@ -53,50 +53,49 @@ describe('Users', () => {
 
   describe('Users.createUser()', () => {
     it('should return true upon successful insertion',  (done) => {
-      Users.createUser(validUserData)
-      .then((result) => {
+      Users.createUser(validUserData, (error, result) => {
+        expect(error).to.be.a('null');
         expect(result).to.be.true;
         done();
       });
     });
 
     it('should return an error if the input has too many fields', (done) => {
-      Users.createUser(extraFieldUserData)
-      .catch((err) => {
-        expect(err).to.be.an('error');
+      Users.createUser(extraFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
         done();
       });
     });
 
     it('should return an error if the input has too little fields', (done) => {
-      Users.createUser(missingFieldUserData)
-      .catch((err) => {
-        expect(err).to.be.an('error');
+      Users.createUser(missingFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
         done();
       });
     });
 
     it('should return an error if the input has an invalid field', (done) => {
-      Users.createUser(invalidFieldUserData)
-      .catch((err) => {
-        expect(err).to.be.an('error');
+      Users.createUser(invalidFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
         done();
       });
     });
 
     it('should return an error if the username already exists', (done) => {
-      Users.createUser(notUniqueUsernameData)
-      .catch((err) => {
-        expect(err).to.be.an('error');
+      Users.createUser(notUniqueUsernameData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
         done();
       });
     });
 
     it('should return an error if the email already exists',  (done) => {
-      Users.createUser(notUniqueEmailData)
-      .catch((err) => {
-        throw err;
-        expect(err).to.be.an('error');
+      Users.createUser(notUniqueEmailData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
         done();
       });
     });
