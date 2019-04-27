@@ -129,6 +129,13 @@ describe('Users', () => {
       Users.readUser('marcusprice', (error, result) => {
         expect(error).to.be.a('null');
         expect(result).to.be.an('object');
+        expect(result).to.have.property('userid');
+        expect(result).to.have.property('username');
+        expect(result).to.have.property('email');
+        expect(result).to.have.property('firstname');
+        expect(result).to.have.property('lastname');
+        expect(result).to.have.property('datecreated');
+        expect(result).to.have.property('lastlogin');
         done();
       });
     });
@@ -137,6 +144,13 @@ describe('Users', () => {
       Users.readUser('marcusprice88@gmail.com', (error, result) => {
         expect(error).to.be.a('null');
         expect(result).to.be.an('object');
+        expect(result).to.have.property('userid');
+        expect(result).to.have.property('username');
+        expect(result).to.have.property('email');
+        expect(result).to.have.property('firstname');
+        expect(result).to.have.property('lastname');
+        expect(result).to.have.property('datecreated');
+        expect(result).to.have.property('lastlogin');
         done();
       });
     });
@@ -150,7 +164,7 @@ describe('Users', () => {
     });
 
     it('should return an error if the input is not a number or string', (done) => {
-      Users.readUser('noUser', (error, result) => {
+      Users.readUser({}, (error, result) => {
         expect(error).to.be.an('error');
         expect(result).to.be.a('null');
         done();
