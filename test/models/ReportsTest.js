@@ -204,7 +204,7 @@ describe('Reports', () => {
 
   describe('Reports.deleteReport()', () => {
     it('should return true upon successful delete', (done) => {
-      Reports.deleteReport(11, (error, result) => {
+      Reports.deleteReport(13, (error, result) => {
         expect(error).to.be.a('null');
         expect(result).to.be.true;
         done();
