@@ -1,6 +1,8 @@
 const expect = require('chai').expect;
 const Users = require('../../models/Users');
 
+let userOneID;
+
 let validUserData = {
   username: 'userOne',
   email: 'userOne@users.net',
@@ -126,7 +128,8 @@ describe('Users', () => {
     });
 
     it('should return an object with input of a Username', (done) => {
-      Users.readUser('marcusprice', (error, result) => {
+      Users.readUser('userOne', (error, result) => {
+        userOneID = result.userid;
         expect(error).to.be.a('null');
         expect(result).to.be.an('object');
         expect(result).to.have.property('userid');
@@ -172,40 +175,72 @@ describe('Users', () => {
     });
   });
 
-/*
   describe('Users.updateUser()', () => {
-    it('should return true upon successful update', async () => {
-      //update username & email values to avoid non-unique error
-      validUserData.username = 'userOneUpdate';
-      validUserData.email = 'userOneUpdate@user.net';
-
-      const result = await Users.updateUser(validUserData);
-      expect(result).to.be.true;
+    it('should return true upon successful update', (done) => {
+      Users.updateUser(397, {
+        username: 'marcuspriceeeeeeee',
+        email: 'marcusprice8888888update@gmail.com',
+        firstName: 'Marcus',
+        lastName: 'Price'
+      }, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.true;
+        done();
+      });
     });
 
-    it('should return an error if the input has too many fields', async () => {
-      const result = await Users.updateUser(extraFieldUserData);
-      expect(result).to.be.an('error');
+    it('should return an error if the input has too many fields', (done) => {
+      Users.updateUser(397, extraFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+    it('should return an error if the input has too little fields', (done) => {
+      Users.updateUser(397, missingFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+    it('should return an error if the input has an invalid field', (done) => {
+      Users.updateUser(397, invalidFieldUserData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
     });
 
-    it('should return an error if the unput has too little fields');
-    it('should return an error if the input has an invalid field');
-    it('should return an error if the username already exists');
-    it('should return an error if the email already exists');
+    it('should return an error if the username already exists', (done) => {
+      Users.updateUser(397, notUniqueUsernameData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+
+    it('should return an error if the email already exists', (done) => {
+      Users.updateUser(397, notUniqueEmailData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
   });
-
 
   describe('Users.deleteUser()', () => {
-    it('should return true upon successful update', async () => {
-      const result = await Users.deleteUser('userOneUpdate');
-      expect(result).to.be.true;
+    it('should return true upon successful delete', (done) => {
+      Users.deleteUser(userOneID, (error, result) => {
+        expect(result).to.be.true;
+        done();
+      });
     });
 
-    it('should return an error if the input is not a number or string', async () => {
-      const result = await Users.deleteUser({wrong: 'inputype'});
-      expect(result).to.be.an('error');
+    it('should return an error if the user can\'t be found', (done) => {
+      Users.deleteUser(100000, (error, result) => {
+        expect(error).to.be.an('error');
+        done();
+      });
     });
   });
-
-*/
 });

@@ -8,7 +8,7 @@ module.exports = {
     const validationError = validation.validateInputData(userData, possibleKeys);
 
     if(validationError) {
-      //there was an issue with the input data - send back an error
+      //there was an issue with the input data - send back the error
       callback(validationError, null);
     } else {
       //verify that the handle is unique
@@ -79,12 +79,66 @@ module.exports = {
     }
   },
 
-  updateUser: () => {
-    
+  updateUser: (userID, updatedUserData, callback) => {
+    //test input data
+    const possibleKeys = ['username', 'email', 'firstName', 'lastName'];
+    const validationError = validation.validateInputData(updatedUserData, possibleKeys);
+
+    if(validationError) {
+      //there was an issue with the input data - send back an error
+      callback(validationError, null);
+    } else {
+      //verify that the handle is unique
+      module.exports.verifyUniqueHandle(updatedUserData, 'updateUser', userID)
+        .then(() => {
+          //handles are unique, okay to update user
+          //build sql query
+          const sql = 'UPDATE Users SET Username = $1, Email = $2, FirstName = $3, LastName = $4, LastLogin = now() WHERE UserID = $5;';
+
+          const values = [
+            updatedUserData.username,
+            updatedUserData.email,
+            updatedUserData.firstName,
+            updatedUserData.lastName,
+            userID
+          ];
+
+          pg.query(sql, values, (err, result) => {
+            if(err) {
+              callback(err, null);
+            } else {
+              callback(null, true);
+            }
+          });
+        })
+        .catch((err) => {
+          callback(err, null);
+        });
+    }
   },
 
-  deleteUser: () => {
+  deleteUser: (userID, callback) => {
+    //build sql command
+    const sql = 'DELETE FROM Users WHERE UserID = $1';
+    const values = [userID];
 
+    //run db query
+    pg.query(sql, values, (err, result) => {
+      if(err) {
+        //if there is a db error return it
+        callback(err, null);
+      } else {
+        //no db error
+        if(result.rows.length < 1) {
+          //nothing matched, return an error
+          const error = new Error('No user found with that ID');
+          callback(error, true);
+        } else {
+          //record deleted, send back true
+          callback(null, true);
+        }
+      }
+    });
   },
 
   verifyUniqueHandle: (newUserData, operation, userid = null) => {
@@ -109,7 +163,7 @@ module.exports = {
           //if there is no error
           if(res.rows.length > 0) {
             //there is a row that matches the query, reject
-            reject(new Error('username or email already exists', null));
+            reject(new Error('username or email already exists'));
           } else {
             //no rows match the query - the fields are unique
             resolve();
