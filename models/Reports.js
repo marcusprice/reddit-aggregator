@@ -4,7 +4,16 @@ const validation = require('../lib/validation');
 module.exports = {
   createReport: (reportData, callback) => {
     //validate input data
-    const possibleKeys = ['userID', 'name', 'description', 'subreddits', 'filteredIn', 'filteredOut', 'submissionLimit', 'notifications'];
+    const possibleKeys = [
+      'userID',
+      'name',
+      'description',
+      'subreddits',
+      'filteredIn',
+      'filteredOut',
+      'submissionLimit',
+      'notifications'
+    ];
     const validationError = validation.validateInputData(reportData, possibleKeys);
 
     if(validationError) {
@@ -81,11 +90,62 @@ module.exports = {
     }
   },
 
-  updateReport: () => {
+  updateReport: (reportID, reportData, callback) => {
+    //validate input data
+    const possibleKeys = [
+      'name',
+      'description',
+      'subreddits',
+      'filteredIn',
+      'filteredOut',
+      'submissionLimit',
+      'notifications'
+    ];
+    const validationError = validation.validateInputData(reportData, possibleKeys);
 
+    if(validationError) {
+      callback(validationError, null);
+    } else {
+      const sql = 'UPDATE Reports ' +
+      'SET Name = $1, Description = $2, Subreddits = $3, FilteredIn = $4, FilteredOut = $5, SubmissionLimit = $6, Notifications = $7 ' +
+      'WHERE ReportID = $8;';
+
+      const values = [
+        reportData.name,
+        reportData.description,
+        reportData.subreddits,
+        reportData.filteredIn,
+        reportData.filteredOut,
+        reportData.submissionLimit,
+        reportData.notifications,
+        reportID
+      ];
+
+      pg.query(sql, values, (err, result) => {
+        if(err) {
+          callback(err, null);
+        } else {
+          callback(null, true);
+        }
+      });
+    }
   },
 
-  deleteReport: () => {
+  deleteReport: (reportID, callback) => {
+    if(typeof(reportID) !== 'number') {
+      const error = new Error('the input was not a number');
+      callback(error, null);
+    } else {
+      const sql = 'DELETE FROM Reports WHERE ReportID = $1;';
+      values = [reportID];
 
+      pg.query(sql, values, (err, result) => {
+        if(err) {
+          callback(err, null);
+        } else {
+          callback(null, true);
+        }
+      });
+    }
   }
 }

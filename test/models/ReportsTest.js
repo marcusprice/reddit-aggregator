@@ -83,7 +83,7 @@ describe('Reports', () => {
 
   describe('Reports.readReport()', () => {
     it('should return an object with input of a ReportID', (done) => {
-      Reports.readReport(1, (error, result) => {
+      Reports.readReport(4, (error, result) => {
         expect(result).to.be.an('object');
         expect(error).to.be.a('null');
         done();
@@ -135,16 +135,89 @@ describe('Reports', () => {
 
 
   describe('Reports.updateReport()', () => {
-    it('should return true upon successful update');
-    it('should return an error if the input has too many fields');
-    it('should return an error if the unput has too little fields');
-    it('should return an error if the input has an invalid field');
+    it('should return true upon successful update', (done) => {
+      Reports.updateReport(4, {
+        name: 'My Ask Reddit Report',
+        description: 'Gets the best ask-reddit threads',
+        subreddits: 'askreddit',
+        filteredIn: '',
+        filteredOut: '',
+        submissionLimit: 60,
+        notifications: true
+      }, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.true;
+        done();
+      });
+    });
+
+    it('should return an error if the input has too many fields', (done) => {
+      Reports.updateReport(4, {
+        name: 'My Ask Reddit Report',
+        extraField: '',
+        description: 'Gets the best ask-reddit threads',
+        subreddits: 'askreddit',
+        filteredIn: '',
+        filteredOut: '',
+        submissionLimit: 60,
+        notifications: true
+      }, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+
+    it('should return an error if the unput has too little fields', (done) => {
+      Reports.updateReport(4, {
+        extraField: '',
+        description: 'Gets the best ask-reddit threads',
+        subreddits: 'askreddit',
+        filteredIn: '',
+        filteredOut: '',
+        submissionLimit: 60,
+        notifications: true
+      }, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+
+    it('should return an error if the input has an invalid field', (done) => {
+      Reports.updateReport(4, {
+        name: 'My Ask Reddit Report',
+        invalidField: 'Gets the best ask-reddit threads',
+        subreddits: 'askreddit',
+        filteredIn: '',
+        filteredOut: '',
+        submissionLimit: 60,
+        notifications: true
+      }, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
   });
 
 
   describe('Reports.deleteReport()', () => {
-    it('should return true upon successful update');
-    it('should return an error if the input is not a number or string');
+    it('should return true upon successful delete', (done) => {
+      Reports.deleteReport(11, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.true;
+        done();
+      });
+    });
+
+    it('should return an error if the input is not a number or string', (done) => {
+      Reports.deleteReport({}, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
   });
 
 })
