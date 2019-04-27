@@ -101,45 +101,64 @@ describe('Users', () => {
     });
   });
 
-/*
   describe('Users.readUser()', () => {
-    it('should return an object with user-data with input of a UserID', async () => {
-      const result = await User.readUser(1);
-      expect(result).to.be.an('object');
-      expect(result).to.have.property('username');
-      expect(result).to.have.property('email');
-      expect(result).to.have.property('firstname');
-      expect(result).to.have.property('lastname');
-      expect(result).to.have.property('datecreated');
-      expect(result).to.have.property('lastlogin');
+    it('should return an object with user-data with input of a UserID', (done) => {
+      Users.readUser(1, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.an('object');
+        expect(result).to.have.property('userid');
+        expect(result).to.have.property('username');
+        expect(result).to.have.property('email');
+        expect(result).to.have.property('firstname');
+        expect(result).to.have.property('lastname');
+        expect(result).to.have.property('datecreated');
+        expect(result).to.have.property('lastlogin');
+        done();
+      });
     });
 
-    it('should not return a password', async () => {
-      const result = await User.readUser(1);
-      expect(result).to.not.have.property('username');
+    it('should not return a password', (done) => {
+      Users.readUser(1, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.not.have.property('password');
+        done();
+      });
     });
 
-    it('should return an object with input of a Username', async () => {
-      const result = await User.readUser('marcusrice');
-      expect(result).to.be.an('object');
+    it('should return an object with input of a Username', (done) => {
+      Users.readUser('marcusprice', (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.an('object');
+        done();
+      });
     });
 
-    it('should return an object with input of a Email', async () => {
-      const result = await User.readUser('marcusrice88@gmail.com');
-      expect(result).to.be.an('object');
+    it('should return an object with input of a Email', (done) => {
+      Users.readUser('marcusprice88@gmail.com', (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.an('object');
+        done();
+      });
     });
 
-    it('should return an error if no rows are found', async () => {
-      const result = await User.readUser('noUser');
-      expect(result).to.be.an('error');
+    it('should return an error if no rows are found', (done) => {
+      Users.readUser('noUser', (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
     });
 
-    it('should return an error if the input is not a number or string', async () => {
-      const result = await User.readUser([1]);
-      expect(result).to.be.an('error');
+    it('should return an error if the input is not a number or string', (done) => {
+      Users.readUser('noUser', (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
     });
   });
 
+/*
   describe('Users.updateUser()', () => {
     it('should return true upon successful update', async () => {
       //update username & email values to avoid non-unique error
