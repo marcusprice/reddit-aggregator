@@ -100,16 +100,60 @@ describe('Comments', () => {
 
 
   describe('Comments.updateComment()', () => {
-    it('should return true upon successful update');
-    it('should return an error if the input has too many fields');
-    it('should return an error if the unput has too little fields');
-    it('should return an error if the input has an invalid field');
+    it('should return true upon successful update', (done) => {
+      Comments.updateComment(1, {
+        comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec lorem quis nunc vehicula rutrum sit amet id sapien. Morbi malesuada, neque sit amet euismod posuere, ligula ipsum finibus mauris, porttitor porta orci dolor ac metus. Cras tincidunt dolor ut sapien tristique, et imperdiet ipsum luctus.',
+        edits: 0,
+        upvotes: 20,
+        downvotes: 5
+      }, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.true;
+        done();
+      });
+    });
+
+    it('should return an error if the input has too many fields', (done) => {
+      Comments.updateComment(1, extraFieldCommentData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+
+    it('should return an error if the input has too little fields', (done) => {
+      Comments.updateComment(1, missingFieldCommentData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
+    it('should return an error if the input has an invalid field', (done) => {
+      Comments.updateComment(1, foreignFieldCommentData, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
   });
 
 
   describe('Comments.deleteComment()', () => {
-    it('should return true upon successful update');
-    it('should return an error if the input is not a number or string');
+    it('should return true upon successful delete', (done) => {
+      Comments.deleteComment(2, (error, result) => {
+        expect(error).to.be.a('null');
+        expect(result).to.be.true;
+        done();
+      });
+    });
+
+    it('should return an error if the input is not a number or string', (done) => {
+      Comments.deleteComment({}, (error, result) => {
+        expect(error).to.be.an('error');
+        expect(result).to.be.a('null');
+        done();
+      });
+    });
   });
 
 });

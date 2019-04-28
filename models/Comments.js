@@ -49,15 +49,52 @@ module.exports = {
             callback(null, result.rows[0]);
           }
         }
-      });      
+      });
     }
   },
 
-  updateComment: () => {
+  updateComment: (commentID, commentData, callback) => {
+    const possibleKeys = ['comment', 'edits', 'upvotes', 'downvotes'];
+    const validationError = validation.validateInputData(commentData, possibleKeys);
 
+    if(validationError) {
+      callback(validationError, null);
+    } else {
+      const sql = 'UPDATE Comments ' +
+      'SET Comment = $1, Edits = $2, Upvotes = $3, Downvotes = $4 WHERE CommentID = $5;';
+      const values = [
+        commentData.comment,
+        commentData.edits,
+        commentData.upvotes,
+        commentData.downvotes,
+        commentID
+      ];
+
+      pg.query(sql, values, (err, result) => {
+        if(err) {
+          callback(err, null);
+        } else {
+          callback(null, true);
+        }
+      });
+    }
   },
 
-  deleteComment: () => {
+  deleteComment: (commentID, callback) => {
+    if(typeof(commentID) !== 'number') {
+      const error = new Error('the input was not a number');
+      callback(error, null);
+    } else {
+      const sql = 'DELETE FROM Comments WHERE CommentID = $1';
+      const values = [commentID];
 
+      pg.query(sql, values, (err, result) => {
+        if (err) {
+          callback(err, null);
+        } else {
+          callback(null, true);
+        }
+      });
+    }
   }
 }
