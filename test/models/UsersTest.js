@@ -243,4 +243,14 @@ describe('Users', () => {
       });
     });
   });
+
+  describe('Users.getPassword', () => {
+    it('should retrieve a password', (done) => {
+      Users.getPassword('marcusprice', (error, result) => {
+        expect(result).to.be.a('string');
+        expect(error).to.be.a('null');
+        done();
+      });
+    });
+  })
 });
