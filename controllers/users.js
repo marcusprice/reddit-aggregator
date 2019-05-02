@@ -34,19 +34,21 @@ module.exports = {
       return getAllReports(userData);
     })
     .then(async (userData) => {
-      //save the user's reports array into avariable
+      //get the user's report submissions $ submission comments
+      //save reports into a variable
       let userReports = userData.reports;
 
-      //loop through all reports to get submission data
+      //loop through each report
       await tools.asyncForEach(userReports, async (report, index) => {
-        //save report ID into variable and get the submissions for the report
+        //get all submissions for the report
         let reportID = report.reportid;
         let submissions = await getAllSubmissions(reportID);
 
-        //loop through the submssions and get the comments for each submission
+        //loop through each submssion in the report
         await tools.asyncForEach(submissions, async (submission, index) => {
-          //save the comments into the submission object
-          submissions[index].comments = await getAllComments(submission.submissionid);
+          //get the comments for each submission
+          let submissionID = submission.submissionid;
+          submissions[index].comments = await getAllComments(submissionID);
         });
 
         //save the submissions into the userData object
