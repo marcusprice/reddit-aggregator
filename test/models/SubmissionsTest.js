@@ -96,7 +96,6 @@ describe('Submissions', () => {
     });
   });
 
-
   describe('Submissions.updateSubmission()', () => {
     it('should return true upon successful update', (done) => {
       Submissions.updateSubmission(1, validSubmissionData, (error, result) => {

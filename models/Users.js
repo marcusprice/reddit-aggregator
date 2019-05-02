@@ -79,6 +79,24 @@ module.exports = {
     }
   },
 
+  readPassword: (handle, callback) => {
+    const sql = 'SELECT Password FROM Users WHERE Username = $1 OR Email = $1;'
+    const values = [handle];
+
+    pg.query(sql, values, (err, result) => {
+      if(err) {
+        callback(err, null);
+      } else {
+        if(result.rows.length < 1) {
+          const error = new Error('handle was not found');
+          callback(error, null);
+        } else {
+          callback(null, result.rows[0].password);
+        }
+      }
+    });
+  },  
+
   updateUser: (userID, updatedUserData, callback) => {
     //test input data
     const possibleKeys = ['username', 'email', 'firstName', 'lastName'];
@@ -170,24 +188,6 @@ module.exports = {
           }
         }
       });
-    });
-  },
-
-  getPassword: (handle, callback) => {
-    const sql = 'SELECT Password FROM Users WHERE Username = $1 OR Email = $1;'
-    const values = [handle];
-
-    pg.query(sql, values, (err, result) => {
-      if(err) {
-        callback(err, null);
-      } else {
-        if(result.rows.length < 1) {
-          const error = new Error('no results were found');
-          callback(error, null);
-        } else {
-          callback(null, result.rows[0].password);
-        }
-      }
     });
   }
 }
