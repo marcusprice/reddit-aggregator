@@ -1,10 +1,6 @@
 const users = require('./controllers/users');
 
 module.exports = (app) => {
-  app.get('/', (req, res) => {
-    res.send('public/index.html');
-  });
-
   //logs user on
   app.get('/api/v1/login', (req, res) => {
     //first check if password is correct
@@ -41,5 +37,9 @@ module.exports = (app) => {
       //send the error to the client
       res.send(500, err.toString());
     });
+  });
+
+  app.get('/', (req, res) => {
+    res.send('public/index.html');
   });
 }

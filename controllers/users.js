@@ -2,9 +2,11 @@ const Users = require('../models/Users');
 const Reports = require('../models/Reports');
 const Submissions = require('../models/Submissions');
 const ReportsSubmissions = require('../models/ReportsSubmissions');
+const Comments = require('../models/Comments');
 const tools = require('../lib/tools');
 
 module.exports = {
+
   verifyPassword: (handle, password, callback) => {
     //call the readPassword model
     Users.readPassword(handle, (error, result) => {
@@ -34,28 +36,44 @@ module.exports = {
     .then(async (userData) => {
       //save the user's reports array into avariable
       let userReports = userData.reports;
-      
+
       //loop through all reports to get submission data
       await tools.asyncForEach(userReports, async (report, index) => {
         //save report ID into variable and get the submissions for the report
         let reportID = report.reportid;
         let submissions = await getAllSubmissions(reportID);
 
-        //save the submissions into the users data object
+        //loop through the submssions and get the comments for each submission
+        await tools.asyncForEach(submissions, async (submission, index) => {
+          //save the comments into the submission object
+          submissions[index].comments = await getAllComments(submission.submissionid);
+        });
+
+        //save the submissions into the userData object
         userData.reports[index].submissions = submissions;
       });
 
       //return the data which now has the submissions saved
-      return userData;
-    })
-    .then((userData) => {
-      //get the top submission comments
       callback(null, userData);
     })
-    .catch((err) => {
-      callback(err, null);
+    .catch((error) => {
+      callback(error, null);
     });
   }
+
+};
+
+const readUser = (handle) => {
+  return new Promise((resolve, reject) => {
+    //get user data
+    Users.readUser(handle, (error, result) => {
+      if(error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  })
 };
 
 const getAllReports = (userData) => {
@@ -87,15 +105,14 @@ const getAllSubmissions = (reportID) => {
   });
 };
 
-const readUser = (handle) => {
+const getAllComments = (submissionID) => {
   return new Promise((resolve, reject) => {
-    //get user data
-    Users.readUser(handle, (error, result) => {
+    Comments.readAllCommentsBySubmission(submissionID, (error, result) => {
       if(error) {
         reject(error);
       } else {
         resolve(result);
       }
     });
-  })
-}
+  });
+};

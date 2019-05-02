@@ -64,6 +64,19 @@ module.exports = {
     }
   },
 
+  readAllCommentsBySubmission: (submissionID, callback) => {
+    const sql = 'SELECT * FROM Comments WHERE SubmissionID = $1';
+    const values = [submissionID];
+
+    pg.query(sql, values, (err, result) => {
+      if(err) {
+        callback(err, null);
+      } else {
+        callback(null, result.rows);
+      }
+    });
+  },
+
   updateComment: (commentID, commentData, callback) => {
     //input was not a number, send back an error
     const possibleKeys = ['comment', 'edits', 'upvotes', 'downvotes'];
