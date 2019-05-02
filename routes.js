@@ -33,7 +33,7 @@ module.exports = (app) => {
           res.json(err);
         } else {
           //send results back to the client
-          res.send(JSON.stringify(result, null, '\t'));
+          res.json(result);
         }
       });
     })

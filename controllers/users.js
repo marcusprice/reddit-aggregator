@@ -23,34 +23,20 @@ module.exports = {
     });
   },
 
-  //involves several models. Used to get all data related to a specific user
+  //used to get all data related to a specific user
   getAllData: (handle, callback) => {
-    new Promise((resolve, reject) => {
-      //get user data
-      Users.readUser(handle, (error, result) => {
-        if(error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      });
-    })
+    //get the user's account data
+    readUser(handle)
     .then((userData) => {
       //get all of the user's reports
-      return new Promise((resolve, reject) => {
-        Reports.readAllReportsByUser(userData.userid, (error, result) => {
-          if(error) {
-            reject(error);
-          } else {
-            userData.reports = result;
-            resolve(userData);
-          }
-        });
-      });
+      return getAllReports(userData);
     })
     .then(async (userData) => {
+      //save the user's reports array into avariable
+      let userReports = userData.reports;
+      
       //loop through all reports to get submission data
-      await tools.asyncForEach(userData.reports, async (report, index) => {
+      await tools.asyncForEach(userReports, async (report, index) => {
         //save report ID into variable and get the submissions for the report
         let reportID = report.reportid;
         let submissions = await getAllSubmissions(reportID);
@@ -59,30 +45,57 @@ module.exports = {
         userData.reports[index].submissions = submissions;
       });
 
-      console.log(userData);
+      //return the data which now has the submissions saved
       return userData;
     })
     .then((userData) => {
-      //will get the
+      //get the top submission comments
       callback(null, userData);
     })
     .catch((err) => {
       callback(err, null);
     });
   }
-}
+};
+
+const getAllReports = (userData) => {
+  //get all of the user's reports
+  return new Promise((resolve, reject) => {
+    Reports.readAllReportsByUser(userData.userid, (error, result) => {
+      if(error) {
+        reject(error);
+      } else {
+        userData.reports = result;
+        resolve(userData);
+      }
+    });
+  });
+};
 
 const getAllSubmissions = (reportID) => {
-    return new Promise((resolve, reject) => {
-      //get the submissions that are saved in that report
-      ReportsSubmissions.readAllSubmissionsByReport(reportID, (error, result) => {
-        if(error) {
-          //if there is an error reject
-          reject(error);
-        } else {
-          //no error, save the array of submissions to the report
-          resolve(result);
-        }
-      });
+  return new Promise((resolve, reject) => {
+    //get the submissions that are saved in that report
+    ReportsSubmissions.readAllSubmissionsByReport(reportID, (error, result) => {
+      if(error) {
+        //if there is an error reject
+        reject(error);
+      } else {
+        //no error, save the array of submissions to the report
+        resolve(result);
+      }
     });
-  }
+  });
+};
+
+const readUser = (handle) => {
+  return new Promise((resolve, reject) => {
+    //get user data
+    Users.readUser(handle, (error, result) => {
+      if(error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  })
+}
