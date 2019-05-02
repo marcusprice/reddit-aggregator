@@ -34,7 +34,7 @@ module.exports = {
       return getAllReports(userData);
     })
     .then(async (userData) => {
-      //get the user's report submissions $ submission comments
+      //get the user's report submissions & submission-comments
       //save reports into a variable
       let userReports = userData.reports;
 

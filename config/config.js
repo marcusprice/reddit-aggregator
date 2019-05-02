@@ -10,5 +10,12 @@ module.exports = {
     username: credentials.db.username,
     password: credentials.db.password,
     name: configFile.dbname
+  },
+  reddit: {
+    userAgent: credentials.reddit.userAgent,
+    clientId: credentials.reddit.clientId,
+    clientSecret: credentials.reddit.clientSecret,
+    username: credentials.reddit.username,
+    password: credentials.reddit.password,
   }
 }
