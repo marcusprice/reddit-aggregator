@@ -6,7 +6,7 @@ const reddit = new snoowrap({
   clientId: config.reddit.clientId,
   clientSecret: config.reddit.clientSecret,
   username: config.reddit.username,
-  password: config.reddit.word,
+  password: config.reddit.password
 });
 
 module.exports = reddit;
