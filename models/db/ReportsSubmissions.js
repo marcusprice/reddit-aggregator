@@ -1,5 +1,5 @@
 const pg = require('./pg');
-const validation = require('../lib/validation');
+const validation = require('../../lib/validation');
 
 module.exports = {
   createEntry: (entryData, callback) => {
@@ -49,7 +49,7 @@ module.exports = {
       'ON submissions.submissionid = reportssubmissions.submissionid ' +
       'WHERE reportssubmissions.reportid = $1;'
       const values = [reportID];
-      
+
       pg.query(sql, values, (err, result) => {
         if(err) {
           callback(err, null);

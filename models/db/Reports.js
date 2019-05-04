@@ -1,5 +1,5 @@
 const pg = require('./pg');
-const validation = require('../lib/validation');
+const validation = require('../../lib/validation');
 
 module.exports = {
   createReport: (reportData, callback) => {
