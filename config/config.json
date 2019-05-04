@@ -1,6 +1,6 @@
 {
   "development": {
-    "dbname": "test"
+    "dbname": "RedditAggregatorDev"
   },
   "production": {
     "dbname": "RedditAggregator"
