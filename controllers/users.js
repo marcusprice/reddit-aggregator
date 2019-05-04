@@ -1,8 +1,8 @@
-const Users = require('../models/Users');
-const Reports = require('../models/Reports');
-const Submissions = require('../models/Submissions');
-const ReportsSubmissions = require('../models/ReportsSubmissions');
-const Comments = require('../models/Comments');
+const Users = require('../models/db/Users');
+const Reports = require('../models/db/Reports');
+const Submissions = require('../models/db/Submissions');
+const ReportsSubmissions = require('../models/db/ReportsSubmissions');
+const Comments = require('../models/db/Comments');
 const tools = require('../lib/tools');
 
 module.exports = {

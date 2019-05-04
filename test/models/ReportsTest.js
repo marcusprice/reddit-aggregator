@@ -1,4 +1,4 @@
-const Reports = require('../../models/Reports');
+const Reports = require('../../models/db/Reports');
 const expect = require('chai').expect;
 
 describe('Reports', () => {

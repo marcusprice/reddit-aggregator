@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const Users = require('../../models/Users');
+const Users = require('../../models/db/Users');
 
 let userOneID;
 

@@ -1,4 +1,4 @@
-const Submissions = require('../../models/Submissions');
+const Submissions = require('../../models/db/Submissions');
 const expect = require('chai').expect;
 
 describe('Submissions', () => {

@@ -1,5 +1,5 @@
 const pg = require('./pg');
-const validation = require('../lib/validation');
+const validation = require('../../lib/validation');
 
 module.exports = {
   createSubmission: (submissionData, callback) => {
@@ -112,7 +112,7 @@ module.exports = {
           if(result.rows.length < 1) {
             callback(null, true);
           } else {
-            callback(null, true);    
+            callback(null, true);
           }
         }
       });

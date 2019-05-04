@@ -1,5 +1,5 @@
 const pg = require('./pg');
-const validation = require('../lib/validation');
+const validation = require('../../lib/validation');
 
 module.exports = {
   createUser: (userData, callback) => {
@@ -95,7 +95,7 @@ module.exports = {
         }
       }
     });
-  },  
+  },
 
   updateUser: (userID, updatedUserData, callback) => {
     //test input data

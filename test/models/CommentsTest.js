@@ -1,4 +1,4 @@
-const Comments = require('../../models/Comments');
+const Comments = require('../../models/db/Comments');
 const expect = require('chai').expect;
 
 describe('Comments', () => {

@@ -1,6 +1,3 @@
-const validataion = require('../../lib/validation');
-const pg = require('../../models/pg');
-
 describe('ReportsSubmissions', () => {
   describe('ReportsSubmissions.createEntry', () => {
     it('should return true upon succesful insert');
