@@ -24,20 +24,35 @@ CREATE TABLE Reports (
 
 CREATE TABLE Subreddits (
   SubredditID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
   Subreddit VARCHAR(255)
+);
+
+CREATE TABLE ReportsSubreddits (
+  ReportsSubredditsID SERIAL NOT NULL PRIMARY KEY,
+  ReportID SERIAL REFERENCES Reports,
+  SubredditID SERIAL REFERENCES Subreddits
 );
 
 CREATE TABLE FilteredIn (
   FilteredInID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
   FilteredIn VARCHAR(255)
+);
+
+CREATE TABLE ReportsFilteredIn (
+  ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
+  ReportID SERIAL REFERENCES Reports,
+  FilteredInID SERIAL REFERENCES FilteredIn
 );
 
 CREATE TABLE FilteredOut (
   FilteredOutID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
   FilteredOut VARCHAR(255)
+);
+
+CREATE TABLE ReportsFilteredOut (
+  ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
+  ReportID SERIAL REFERENCES Reports,
+  FilteredOutID SERIAL REFERENCES FilteredOut
 );
 
 CREATE TABLE Handles (
@@ -59,9 +74,9 @@ CREATE TABLE Submissions (
   Thumbnail VARCHAR(255)
 );
 
-CREATE TABLE ReportsSubmissions (
-  ReportsSubmissionsID INT NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
+CREATE TABLE SubredditsSubmissions (
+  SubredditsSubmissionsID INT NOT NULL PRIMARY KEY,
+  SubredditID SERIAL REFERENCES Subreddits,
   SubmissionID SERIAL REFERENCES Submissions
 );
 
@@ -79,3 +94,15 @@ CREATE TABLE Comments (
 INSERT INTO Users
 (Username, Email, Password, FirstName, LastName, DateCreated, LastLogin)
 VALUES ('marcusprice', 'marcusprice88@gmail.com', 'password', 'Marcus', 'Price', now(), now());
+
+INSERT INTO Reports
+(UserID, Name, Description, DateCreated, Notifications)
+VALUES (1, 'Ask Reddit Report', 'The best ask-reddit posts throughout the day', now(), true);
+
+INSERT INTO Subreddits
+(Subreddit)
+VALUES ('askreddit');
+
+INSERT INTO ReportsSubreddits
+(ReportID, SubredditID)
+VALUES (1, 1);

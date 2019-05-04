@@ -6,23 +6,21 @@ describe('Reports', () => {
   const newValidReportData = {
     userID: 1,
     name: 'My Ask Reddit Report',
-    description: 'Gets the best ask-reddit threads',
-    subreddits: 'askreddit',
-    filteredIn: '',
-    filteredOut: '',
-    submissionLimit: 60,
-    notifications: true
+    description: 'Gets the best ask-reddit threads with nothing about cars',
+    notifications: true,
+    subreddits: ['askreddit'],
+    filteredIn: [],
+    filteredOut: ['cars']
   };
 
   const reportDataExtraField = {
     userID: 1,
     name: 'My Ask Reddit Report',
     description: 'Gets the best ask-reddit threads',
-    subreddits: 'askreddit',
-    filteredIn: '',
-    filteredOut: '',
-    submissionLimit: 60,
     notifications: true,
+    subreddits: ['askreddit'],
+    filteredIn: [],
+    filteredOut: ['cars'],
     extraField: ''
   };
 
@@ -30,20 +28,17 @@ describe('Reports', () => {
     userID: 1,
     name: 'My Ask Reddit Report',
     description: 'Gets the best ask-reddit threads',
-    subreddits: 'askreddit',
-    filteredIn: '',
-    filteredOut: '',
-    submissionLimit: 60
   };
 
   const reportDataInvalidField = {
     userID: 1,
     name: 'My Ask Reddit Report',
     description: 'Gets the best ask-reddit threads',
-    subreddits: 'askreddit',
+    notifications: true,
+    subreddits: ['askreddit'],
+    filteredIn: [],
+    filteredOut: ['cars'],    
     invalidField: '',
-    filteredOut: '',
-    submissionLimit: 60
   };
 
   describe('Reports.createReport()', () => {
@@ -83,7 +78,7 @@ describe('Reports', () => {
 
   describe('Reports.readReport()', () => {
     it('should return an object with input of a ReportID', (done) => {
-      Reports.readReport(4, (error, result) => {
+      Reports.readReport(1, (error, result) => {
         expect(result).to.be.an('object');
         expect(error).to.be.a('null');
         done();
@@ -136,13 +131,9 @@ describe('Reports', () => {
 
   describe('Reports.updateReport()', () => {
     it('should return true upon successful update', (done) => {
-      Reports.updateReport(4, {
+      Reports.updateReport(1, {
         name: 'My Ask Reddit Report',
         description: 'Gets the best ask-reddit threads',
-        subreddits: 'askreddit',
-        filteredIn: '',
-        filteredOut: '',
-        submissionLimit: 60,
         notifications: true
       }, (error, result) => {
         expect(error).to.be.a('null');
@@ -152,14 +143,10 @@ describe('Reports', () => {
     });
 
     it('should return an error if the input has too many fields', (done) => {
-      Reports.updateReport(4, {
-        name: 'My Ask Reddit Report',
+      Reports.updateReport(1, {
+        name: 'Ask Reddit Report',
         extraField: '',
         description: 'Gets the best ask-reddit threads',
-        subreddits: 'askreddit',
-        filteredIn: '',
-        filteredOut: '',
-        submissionLimit: 60,
         notifications: true
       }, (error, result) => {
         expect(error).to.be.an('error');
@@ -169,13 +156,10 @@ describe('Reports', () => {
     });
 
     it('should return an error if the unput has too little fields', (done) => {
-      Reports.updateReport(4, {
+      Reports.updateReport(1, {
         extraField: '',
         description: 'Gets the best ask-reddit threads',
         subreddits: 'askreddit',
-        filteredIn: '',
-        filteredOut: '',
-        submissionLimit: 60,
         notifications: true
       }, (error, result) => {
         expect(error).to.be.an('error');
@@ -185,13 +169,9 @@ describe('Reports', () => {
     });
 
     it('should return an error if the input has an invalid field', (done) => {
-      Reports.updateReport(4, {
+      Reports.updateReport(1, {
         name: 'My Ask Reddit Report',
         invalidField: 'Gets the best ask-reddit threads',
-        subreddits: 'askreddit',
-        filteredIn: '',
-        filteredOut: '',
-        submissionLimit: 60,
         notifications: true
       }, (error, result) => {
         expect(error).to.be.an('error');

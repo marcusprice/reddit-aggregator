@@ -5,7 +5,8 @@ describe('Comments', () => {
 
   const validCommentData = {
     submissionID: 1,
-    comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec lorem quis nunc vehicula rutrum sit amet id sapien. Morbi malesuada, neque sit amet euismod posuere, ligula ipsum finibus mauris, porttitor porta orci dolor ac metus. Cras tincidunt dolor ut sapien tristique, et imperdiet ipsum luctus.',
+    commentText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec lorem quis nunc vehicula rutrum sit amet id sapien. Morbi malesuada, neque sit amet euismod posuere, ligula ipsum finibus mauris, porttitor porta orci dolor ac metus. Cras tincidunt dolor ut sapien tristique, et imperdiet ipsum luctus.',
+    datePosted: 1556987218,
     edits: 0,
     upvotes: 20,
     downvotes: 5
@@ -13,7 +14,8 @@ describe('Comments', () => {
 
   const extraFieldCommentData = {
     submissionID: 1,
-    comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec lorem quis nunc vehicula rutrum sit amet id sapien. Morbi malesuada, neque sit amet euismod posuere, ligula ipsum finibus mauris, porttitor porta orci dolor ac metus. Cras tincidunt dolor ut sapien tristique, et imperdiet ipsum luctus.',
+    commentText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec lorem quis nunc vehicula rutrum sit amet id sapien. Morbi malesuada, neque sit amet euismod posuere, ligula ipsum finibus mauris, porttitor porta orci dolor ac metus. Cras tincidunt dolor ut sapien tristique, et imperdiet ipsum luctus.',
+    datePosted: 1556987218,
     edits: 0,
     upvotes: 20,
     downvotes: 5,
@@ -23,18 +25,18 @@ describe('Comments', () => {
   const missingFieldCommentData = {
     submissionID: 1,
     edits: 0,
+    datePosted: 1556987218,
     upvotes: 20,
     downvotes: 5,
-    extraField: ''
   };
 
   const foreignFieldCommentData = {
     submissionID: 1,
     edits: 0,
+    datePosted: 1556987218,
     foreignField: '',
     upvotes: 20,
     downvotes: 5,
-    extraField: ''
   };
 
   describe('Comments.createComment()', () => {

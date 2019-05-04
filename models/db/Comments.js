@@ -4,7 +4,7 @@ const validation = require('../../lib/validation');
 module.exports = {
   createComment: (commentData, callback) => {
     //validate input data
-    const possibleKeys = ['submissionID', 'commentText', 'edits', 'upvotes', 'downvotes'];
+    const possibleKeys = ['submissionID', 'commentText', 'datePosted', 'edits', 'upvotes', 'downvotes'];
     const validationError = validation.validateInputData(commentData, possibleKeys);
 
     if(validationError) {
@@ -14,10 +14,11 @@ module.exports = {
       //data was clean, continue on
       const sql = 'INSERT INTO Comments ' +
       '(SubmissionID, CommentText, DatePosted, Edits, Upvotes, Downvotes)' +
-      'VALUES ($1, $2, now(), $3, $4, $5);';
+      'VALUES ($1, $2, $3, $4, $5, $6);';
       const values = [
         commentData.submissionID,
-        commentData.comment,
+        commentData.commentText,
+        commentData.datePosted,
         commentData.edits,
         commentData.upvotes,
         commentData.downvotes
