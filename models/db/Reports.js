@@ -19,10 +19,12 @@ module.exports = {
     if(validationError) {
       callback(validationError, null);
     } else {
+      //sql for the standard report data
       const reportSQL = 'INSERT INTO Reports ' +
       '(UserID, Name, Description, DateCreated, LastEdit, Notifications) ' +
       'VALUES ($1, $2, $3, now(), null, $4) RETURNING ReportID;';
 
+      //save report values into an array
       const reportValues = [
         reportData.userID,
         reportData.name,
@@ -34,7 +36,10 @@ module.exports = {
       pg.query(reportSQL, reportValues)
         .then(async (result) => {
           //then enter subreddits into subreddit table
+
+          //save the report ID into a variable
           let reportID = result.rows[0].reportid;
+          //loop through the subreddits and save them in the subreddits table
           await tools.asyncForEach(reportData.subreddits, async (subreddit) => {
             //first check if subreddit is already in subreddits table
             let subredditValues = [subreddit.toLowerCase()];
@@ -55,11 +60,11 @@ module.exports = {
             await pg.query('INSERT INTO ReportsSubreddits (ReportID, SubredditID) VALUES ($1, $2)', reportsSubredditsValues);
           });
 
-          //once the linking table has been updated return pass the reportID on to the next then block
+          //return the report ID
           return reportID;
         })
         .then(async (reportID) => {
-          //then enter filter data into filtered in table
+          //next enter filter-data into filteredIn table
           //this parameter is optional, test if there is data
           if(reportData.filteredIn.length > 0) {
             //there is filtered in data
@@ -114,12 +119,14 @@ module.exports = {
               await pg.query('INSERT INTO ReportsFilteredOut (ReportID, FilteredOutID) VALUES ($1, $2)', reportsFilteredOutValues);
             });
 
+            //send a true value back
             callback(null, true);
           } else {
             callback(null, true);
           }
         })
         .catch((error) => {
+          //send back the error
           callback(error, null);
         });
     }
@@ -197,7 +204,6 @@ module.exports = {
               output.filteredOut.push(result.rows[i].filteredout);
             }
           }
-          console.log(output);
           callback(null, output);
         })
         .catch((error) => {
@@ -211,20 +217,39 @@ module.exports = {
       const error = new Error('the input was not a number');
       callback(error, null);
     } else {
+      //get all of the user's basic report data
       const sql = 'SELECT * FROM Reports WHERE UserID = $1';
-      const values = [userID];
+      const value = [userID];
 
-      pg.query(sql, values, (err, result) => {
-        if(err) {
-          callback(err, null);
+      //instantiate output variable
+      let output = [];
+      pg.query(sql, value
+      //run initial query)
+      .then(async (result) => {
+        if(result.rowCount > 0) {
+          //there are reports
+          await tools.asyncForEach(result.rows, async (report) => {
+            //loop through each report & add it to the output array
+            let fullReport = await new Promise((resolve, reject) => {
+              module.exports.readReport(report.reportid, (error, result) => {
+                if(error) {
+                  reject(error);
+                } else {
+                  resolve(result);
+                }
+              });
+            })
+            output.push(fullReport);
+          });
+
+          callback(null, output);
         } else {
-          if(result.rows.length < 1) {
-            const error = new Error('no results found');
-            callback(error, null);
-          } else {
-            callback(null, result.rows);
-          }
+          const error = new Error('no reports found');
+          callback(error, null);
         }
+      })
+      .catch((error) => {
+        callback(error, null);
       });
     }
   },
