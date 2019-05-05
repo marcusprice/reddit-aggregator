@@ -133,18 +133,76 @@ module.exports = {
       const sql = 'SELECT * FROM Reports WHERE ReportID = $1';
       const values = [reportID];
 
-      pg.query(sql, values, (err, result) => {
-        if(err) {
-          callback(err, null);
-        } else {
-          if(result.rows.length < 1) {
-            const error = new Error('no results found');
-            callback(error, null);
+      let output = {};
+      //first get the basic report data
+      pg.query(sql, values)
+        .then((result) => {
+          if(result.rowCount > 0) {
+            //save the data into the output variable
+            output = result.rows[0];
+            output.subreddits = [];
+            output.filteredIn = [];
+            output.filteredOut = [];
+            let reportValues = [reportID];
+            let subredditSQL = 'SELECT Subreddits.Subreddit ' +
+            'FROM Subreddits ' +
+            'LEFT JOIN ReportsSubreddits ' +
+            'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
+            'WHERE ReportsSubreddits.ReportID = $1';
+            return pg.query(subredditSQL, reportValues);
           } else {
-            callback(null, result.rows[0]);
+            const error = new Error('no reports with that id');
+            callback(error, null);
           }
-        }
-      });
+        })
+        .then((result) => {
+          if(result.rowCount > 0) {
+            //there were subreddits
+            for(let i = 0; i < Object.keys(result.rows).length; i++) {
+              //loop through each entry and add the subreddit name to the output
+              output.subreddits.push(result.rows[i].subreddit);
+            }
+          }
+
+          let reportValues = [reportID];
+          let subredditSQL = 'SELECT FilteredIn.FilteredIn ' +
+          'FROM FilteredIn ' +
+          'LEFT JOIN ReportsFilteredIn ' +
+          'ON FilteredIn.FilteredInID = ReportsFilteredIn.FilteredInID ' +
+          'WHERE ReportsFilteredIn.ReportID = $1';
+          return pg.query(subredditSQL, reportValues);
+        })
+        .then((result) => {
+          if(result.rowCount > 0) {
+            //there were subreddits
+            for(let i = 0; i < Object.keys(result.rows).length; i++) {
+              //loop through each entry and add the subreddit name to the output
+              output.filteredIn.push(result.rows[i].filteredin);
+            }
+          }
+
+          let reportValues = [reportID];
+          let subredditSQL = 'SELECT FilteredOut.FilteredOut ' +
+          'FROM FilteredOut ' +
+          'LEFT JOIN ReportsFilteredOut ' +
+          'ON FilteredOut.FilteredOutID = ReportsFilteredOut.FilteredOutID ' +
+          'WHERE ReportsFilteredOut.ReportID = $1';
+          return pg.query(subredditSQL, reportValues);
+        })
+        .then((result) => {
+          if(result.rowCount > 0) {
+            //there were subreddits
+            for(let i = 0; i < Object.keys(result.rows).length; i++) {
+              //loop through each entry and add the subreddit name to the output
+              output.filteredOut.push(result.rows[i].filteredout);
+            }
+          }
+          console.log(output);
+          callback(null, output);
+        })
+        .catch((error) => {
+          callback(error, null);
+        });
     }
   },
 

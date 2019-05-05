@@ -78,7 +78,7 @@ describe('Reports', () => {
 
   describe('Reports.readReport()', () => {
     it('should return an object with input of a ReportID', (done) => {
-      Reports.readReport(1, (error, result) => {
+      Reports.readReport(9, (error, result) => {
         expect(result).to.be.an('object');
         expect(error).to.be.a('null');
         done();
