@@ -6,11 +6,11 @@ describe('Reports', () => {
   const newValidReportData = {
     userID: 1,
     name: 'My Ask Reddit Report',
-    description: 'Gets the best ask-reddit threads with nothing about cars',
+    description: 'Gets the best ask-reddit and news threads with nothing about cars',
     notifications: true,
-    subreddits: ['askreddit'],
-    filteredIn: [],
-    filteredOut: ['cars']
+    subreddits: ['askreddit', 'news'],
+    filteredIn: ['trucks', 'airplanes'],
+    filteredOut: ['cars', 'motocycles']
   };
 
   const reportDataExtraField = {
@@ -37,7 +37,7 @@ describe('Reports', () => {
     notifications: true,
     subreddits: ['askreddit'],
     filteredIn: [],
-    filteredOut: ['cars'],    
+    filteredOut: ['cars'],
     invalidField: '',
   };
 

@@ -14,7 +14,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Reports (
   ReportID SERIAL NOT NULL PRIMARY KEY,
-  UserID SERIAL REFERENCES Users,
+  UserID SERIAL REFERENCES Users ON DELETE CASCADE,
   Name VARCHAR(255),
   Description VARCHAR(255),
   DateCreated TIMESTAMP,
@@ -29,7 +29,7 @@ CREATE TABLE Subreddits (
 
 CREATE TABLE ReportsSubreddits (
   ReportsSubredditsID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
+  ReportID SERIAL REFERENCES Reports ON DELETE CASCADE,
   SubredditID SERIAL REFERENCES Subreddits
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE FilteredIn (
 
 CREATE TABLE ReportsFilteredIn (
   ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
+  ReportID SERIAL REFERENCES Reports ON DELETE CASCADE,
   FilteredInID SERIAL REFERENCES FilteredIn
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE FilteredOut (
 
 CREATE TABLE ReportsFilteredOut (
   ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports,
+  ReportID SERIAL REFERENCES Reports ON DELETE CASCADE,
   FilteredOutID SERIAL REFERENCES FilteredOut
 );
 
