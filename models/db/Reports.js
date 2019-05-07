@@ -17,8 +17,10 @@ module.exports = {
     const validationError = validation.validateInputData(reportData, possibleKeys);
 
     if(validationError) {
+      //there input is invalid, send back an error
       callback(validationError, null);
     } else {
+      //input was fine, continue on
       //sql for the standard report data
       const reportSQL = 'INSERT INTO Reports ' +
       '(UserID, Name, Description, DateCreated, LastEdit, Notifications) ' +
@@ -39,7 +41,7 @@ module.exports = {
 
           //save the report ID into a variable
           let reportID = result.rows[0].reportid;
-          //loop through the subreddits and save them in the subreddits table
+          //loop through the subreddits in the input array and save them in the subreddits table
           await tools.asyncForEach(reportData.subreddits, async (subreddit) => {
             //first check if subreddit is already in subreddits table
             let subredditValues = [subreddit.toLowerCase()];
@@ -51,7 +53,7 @@ module.exports = {
               subredditID = subredditResult.rows[0].subredditid;
             } else {
               //new subreddit, save it into the db
-              subredditResult = await pg.query('INSERT INTO Subreddits (Subreddit) VALUES ($1) RETURNING SubredditID;', subredditValues);
+              subredditResult = await pg.query('INSERT INTO Subreddits (SubredditName) VALUES ($1) RETURNING SubredditID;', subredditValues);
               subredditID = subredditResult.rows[0].subredditid;
             }
 
@@ -79,7 +81,7 @@ module.exports = {
                 filterID = filterResult.rows[0].filteredinid;
               } else {
                 //new subreddit, save it into the db
-                filterResult = await pg.query('INSERT INTO FilteredIn (FilteredIn) VALUES ($1) RETURNING FilteredInID;', filteredInValues);
+                filterResult = await pg.query('INSERT INTO FilteredIn (FilteredInFilter) VALUES ($1) RETURNING FilteredInID;', filteredInValues);
                 filterID = filterResult.rows[0].filteredinid;
               }
 
@@ -110,7 +112,7 @@ module.exports = {
                 filterID = filterResult.rows[0].filteredoutid;
               } else {
                 //new subreddit, save it into the db
-                filterResult = await pg.query('INSERT INTO FilteredOut (FilteredOut) VALUES ($1) RETURNING FilteredOutID;', filteredOutValues);
+                filterResult = await pg.query('INSERT INTO FilteredOut (FilteredOutFilter) VALUES ($1) RETURNING FilteredOutID;', filteredOutValues);
                 filterID = filterResult.rows[0].filteredoutid;
               }
 
@@ -151,7 +153,7 @@ module.exports = {
             output.filteredIn = [];
             output.filteredOut = [];
             let reportValues = [reportID];
-            let subredditSQL = 'SELECT Subreddits.Subreddit ' +
+            let subredditSQL = 'SELECT Subreddits.SubredditName ' +
             'FROM Subreddits ' +
             'LEFT JOIN ReportsSubreddits ' +
             'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
@@ -172,7 +174,7 @@ module.exports = {
           }
 
           let reportValues = [reportID];
-          let subredditSQL = 'SELECT FilteredIn.FilteredIn ' +
+          let subredditSQL = 'SELECT FilteredInFilter.FilteredInFilter ' +
           'FROM FilteredIn ' +
           'LEFT JOIN ReportsFilteredIn ' +
           'ON FilteredIn.FilteredInID = ReportsFilteredIn.FilteredInID ' +
@@ -189,7 +191,7 @@ module.exports = {
           }
 
           let reportValues = [reportID];
-          let subredditSQL = 'SELECT FilteredOut.FilteredOut ' +
+          let subredditSQL = 'SELECT FilteredOut.FilteredOutFilter ' +
           'FROM FilteredOut ' +
           'LEFT JOIN ReportsFilteredOut ' +
           'ON FilteredOut.FilteredOutID = ReportsFilteredOut.FilteredOutID ' +
@@ -213,12 +215,13 @@ module.exports = {
   },
 
   readAllReportsByUser: (userID, callback) => {
+    //first verify that the input is a number
     if(typeof(userID) !== 'number') {
       const error = new Error('the input was not a number');
       callback(error, null);
     } else {
-      //get all of the user's basic report data
-      const sql = 'SELECT * FROM Reports WHERE UserID = $1';
+      //get all of the user's reports (IDs only)
+      const sql = 'SELECT ReportID FROM Reports WHERE UserID = $1';
       const value = [userID];
 
       //instantiate output variable
@@ -254,36 +257,71 @@ module.exports = {
     }
   },
 
-  updateReport: (reportID, reportData, callback) => {
-    //validate input data
+  updateReport: async (reportID, reportData, callback) => {
     const possibleKeys = [
       'name',
       'description',
-      'notifications'
+      'notifications',
+      'subreddits',
+      'filteredIn',
+      'filteredOut'
     ];
-    const validationError = validation.validateInputData(reportData, possibleKeys);
 
+    const validationError = validation.validateInputData(reportData, possibleKeys);
     if(validationError) {
       callback(validationError, null);
     } else {
-      const sql = 'UPDATE Reports ' +
-      'SET Name = $1, Description = $2, Notifications = $3' +
+      const reportSQL = 'UPDATE Reports ' +
+      'SET Name = $1, Description = $2, Notifications = $3 ' +
       'WHERE ReportID = $4;';
-
-      const values = [
+      const reportValues = [
         reportData.name,
         reportData.description,
         reportData.notifications,
         reportID
       ];
 
-      pg.query(sql, values, (err, result) => {
-        if(err) {
-          callback(err, null);
-        } else {
-          callback(null, true);
-        }
+      //update the reports table
+      await pg.query(reportSQL, reportvalues);
+
+      //now check for differences with subreddit array
+      const subredditSelectSQL = 'SELECT Subreddits.SubredditID, Subreddits.SubredditName ' +
+      'FROM Subreddits ' +
+      'LEFT JOIN ' + 'ReportsSubreddits' +
+      'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
+      'WHERE SubredditsReports.ReportID = $1';
+      const subredditSelectValues = [reportID];
+
+      //run db query to get currently stored subreddits
+      const subredditResults = await pg.query(subredditSelectSQL, subredditSelectValues);
+
+      //convert the result values into an array
+      let storedSubreddits = [];
+      subredditResults.forEach((value) => {
+        storedSubreddits.push(value.subredditname);
       });
+
+      //create empty arrays to collect subreddit info
+      const removedSubreddits = [];
+      const newSubreddits = [];
+
+      //loop through each stored subreddit and test if it is in the report data
+      for(let i = 0; i < storedSubreddits.length; i++) {
+        let storedSubreddit = storedSubreddits[i];
+        if(!reportData.subreddits.includes(storedSubreddit)) {
+          //the new report data does not include the stored subreddit, add it to removedsubreddits array
+          removedSubreddits.push(storedSubreddit);
+        }
+      }
+
+      //now test if there are any new subreddits
+      for(let i = 0; i < reportData.subreddits.length; i++) {
+        let newSubreddit = reportData.subreddits[i];
+        if(!storedSubreddits.includes(newSubreddit)) {
+          //found a subreddit that wasn't previously stored, add it to newSubreddits array
+          newSubreddits.push(newSubreddit);
+        }
+      }
     }
   },
 

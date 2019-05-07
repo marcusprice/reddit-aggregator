@@ -24,7 +24,7 @@ CREATE TABLE Reports (
 
 CREATE TABLE Subreddits (
   SubredditID SERIAL NOT NULL PRIMARY KEY,
-  Subreddit VARCHAR(255)
+  SubredditName VARCHAR(255)
 );
 
 CREATE TABLE ReportsSubreddits (
@@ -35,7 +35,7 @@ CREATE TABLE ReportsSubreddits (
 
 CREATE TABLE FilteredIn (
   FilteredInID SERIAL NOT NULL PRIMARY KEY,
-  FilteredIn VARCHAR(255)
+  FilteredInFilter VARCHAR(255)
 );
 
 CREATE TABLE ReportsFilteredIn (
@@ -46,7 +46,7 @@ CREATE TABLE ReportsFilteredIn (
 
 CREATE TABLE FilteredOut (
   FilteredOutID SERIAL NOT NULL PRIMARY KEY,
-  FilteredOut VARCHAR(255)
+  FilteredOutFilter VARCHAR(255)
 );
 
 CREATE TABLE ReportsFilteredOut (
@@ -100,7 +100,7 @@ INSERT INTO Reports
 VALUES (1, 'Ask Reddit Report', 'The best ask-reddit posts throughout the day', now(), true);
 
 INSERT INTO Subreddits
-(Subreddit)
+(SubredditName)
 VALUES ('askreddit');
 
 INSERT INTO ReportsSubreddits
