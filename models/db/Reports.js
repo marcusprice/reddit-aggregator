@@ -267,10 +267,12 @@ module.exports = {
       'filteredOut'
     ];
 
+    //check for input validation error
     const validationError = validation.validateInputData(reportData, possibleKeys);
     if(validationError) {
       callback(validationError, null);
     } else {
+      //input is fine, continue on
       const reportSQL = 'UPDATE Reports ' +
       'SET Name = $1, Description = $2, Notifications = $3 ' +
       'WHERE ReportID = $4;';
@@ -293,35 +295,37 @@ module.exports = {
       const subredditSelectValues = [reportID];
 
       //run db query to get currently stored subreddits
-      const subredditResults = await pg.query(subredditSelectSQL, subredditSelectValues);
+      const storedSubreddits = await pg.query(subredditSelectSQL, subredditSelectValues);
 
-      //convert the result values into an array
-      let storedSubreddits = [];
+      //convert the result values into an array (for testing)
+      let storedSubredditsArray = [];
       subredditResults.forEach((value) => {
-        storedSubreddits.push(value.subredditname);
+        storedSubredditsArray.push(value.subredditname);
       });
 
       //create empty arrays to collect subreddit info
-      const removedSubreddits = [];
-      const newSubreddits = [];
+      let removedSubreddits = [];
+      let newSubreddits = [];
 
-      //loop through each stored subreddit and test if it is in the report data
-      for(let i = 0; i < storedSubreddits.length; i++) {
-        let storedSubreddit = storedSubreddits[i];
+      storedSubreddits.forEach((value, index) => {
+        let storedSubreddit = storedSubreddits[index].subreddit;
         if(!reportData.subreddits.includes(storedSubreddit)) {
           //the new report data does not include the stored subreddit, add it to removedsubreddits array
-          removedSubreddits.push(storedSubreddit);
+          removedSubreddits.push(index);
         }
-      }
+      });
 
       //now test if there are any new subreddits
       for(let i = 0; i < reportData.subreddits.length; i++) {
         let newSubreddit = reportData.subreddits[i];
-        if(!storedSubreddits.includes(newSubreddit)) {
+        //use the array we created to test the new subreddit data
+        if(!storedSubredditsArray.includes(newSubreddit)) {
           //found a subreddit that wasn't previously stored, add it to newSubreddits array
           newSubreddits.push(newSubreddit);
         }
       }
+
+      //remove all links
     }
   },
 
