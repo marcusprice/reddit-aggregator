@@ -61,71 +61,6 @@ module.exports = {
             let reportsSubredditsValues = [reportID, subredditID];
             await pg.query('INSERT INTO ReportsSubreddits (ReportID, SubredditID) VALUES ($1, $2)', reportsSubredditsValues);
           });
-
-          //return the report ID
-          return reportID;
-        })
-        .then(async (reportID) => {
-          //next enter filter-data into filteredIn table
-          //this parameter is optional, test if there is data
-          if(reportData.filteredIn.length > 0) {
-            //there is filtered in data
-            await tools.asyncForEach(reportData.filteredIn, async (filter) => {
-              //first check if filter is already in filteredin table
-              let filteredInValues = [filter.toLowerCase()];
-              let filterResult = await pg.query('SELECT FilteredInID FROM FilteredIn WHERE FilteredIn = $1;', filteredInValues);
-
-              let filterID;
-              if(filterResult.rowCount > 0) {
-                //filter already exists, get it's ID
-                filterID = filterResult.rows[0].filteredinid;
-              } else {
-                //new subreddit, save it into the db
-                filterResult = await pg.query('INSERT INTO FilteredIn (FilteredInFilter) VALUES ($1) RETURNING FilteredInID;', filteredInValues);
-                filterID = filterResult.rows[0].filteredinid;
-              }
-
-              //now insert into the ReportsFilteredIn table
-              let reportsFilteredInValues = [reportID, filterID];
-              await pg.query('INSERT INTO ReportsFilteredIn (ReportID, FilteredInID) VALUES ($1, $2);', reportsFilteredInValues);
-            });
-
-            //once the linking table has been updated return pass the reportID on to the next then block
-            return reportID;
-          } else {
-            return reportID;
-          }
-        })
-        .then(async (reportID) => {
-          //then enter filter data into filtered in table
-          //this parameter is optional, test if there is data
-          if(reportData.filteredOut.length > 0) {
-            //there is filtered in data
-            await tools.asyncForEach(reportData.filteredOut, async (filter) => {
-              //first check if filter is already in filteredin table
-              let filteredOutValues = [filter.toLowerCase()];
-              let filterResult = await pg.query('SELECT FilteredOutID FROM FilteredOut WHERE FilteredOut = $1;', filteredOutValues);
-
-              let filterID;
-              if(filterResult.rowCount > 0) {
-                //filter already exists, get it's ID
-                filterID = filterResult.rows[0].filteredoutid;
-              } else {
-                //new subreddit, save it into the db
-                filterResult = await pg.query('INSERT INTO FilteredOut (FilteredOutFilter) VALUES ($1) RETURNING FilteredOutID;', filteredOutValues);
-                filterID = filterResult.rows[0].filteredoutid;
-              }
-
-              //now insert into the ReportsFiltereedOut table
-              let reportsFilteredOutValues = [reportID, filterID];
-              await pg.query('INSERT INTO ReportsFilteredOut (ReportID, FilteredOutID) VALUES ($1, $2)', reportsFilteredOutValues);
-            });
-
-            //send a true value back
-            callback(null, true);
-          } else {
-            callback(null, true);
-          }
         })
         .catch((error) => {
           //send back the error
@@ -325,7 +260,34 @@ module.exports = {
         }
       }
 
-      //remove all links
+      if(removedSubreddits.length > 0) {
+        //now remove all subreddit relations in linking table
+        await tools.asyncForEach(removedSubreddits, async (subredditID) => {
+          let reportsSubredditsValues = [reportID, subredditID];
+          await pg.query('DELETE FROM ReportsSubreddits WHERE ReportID = $1 AND SubredditID = $2', reportsSubredditsValues);
+        });
+      }
+
+      if(newSubreddits.length > 0) {
+        //now add all new subreddits to the linking table
+        await tools.asyncForEach(newSubreddits, async (subreddit) => {
+          //first see if the subreddit already exists in the sibreddits table
+          let subredditValues = [subreddit.toLowerCase()];
+          let subredditResult = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', subredditValues);
+
+          if(subredditResult.rowCount > 0) {
+            //if subreddit exists already, add it to the linking table
+            let reportsSubredditValues = [reportID, subredditResult.rows[0].subredditid];
+            await pg.query('INSERT INTO ReportsSubreddits (ReportdID, Subreddit) VALUES ($1, $2);', reportsSubredditValues);
+          } else {
+            //new subreddit, add it to subreddits table
+            let subredditResult = await pg.query('INSERT INTO Subreddits (SubredditName) VALUES ($1) RETURNING SubredditID;', subredditValues);
+            //now add it to the linking table
+            let reportsSubredditValues = [reportID, subredditResult.rows[0].subredditid];
+            await pg.query('INSERT INTO ReportsSubreddits (ReportID, SubredditID) VALUES ($1, $2);');
+          }
+        });
+      }
     }
   },
 

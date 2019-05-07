@@ -33,28 +33,6 @@ CREATE TABLE ReportsSubreddits (
   SubredditID SERIAL REFERENCES Subreddits
 );
 
-CREATE TABLE FilteredIn (
-  FilteredInID SERIAL NOT NULL PRIMARY KEY,
-  FilteredInFilter VARCHAR(255)
-);
-
-CREATE TABLE ReportsFilteredIn (
-  ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports ON DELETE CASCADE,
-  FilteredInID SERIAL REFERENCES FilteredIn
-);
-
-CREATE TABLE FilteredOut (
-  FilteredOutID SERIAL NOT NULL PRIMARY KEY,
-  FilteredOutFilter VARCHAR(255)
-);
-
-CREATE TABLE ReportsFilteredOut (
-  ReportsFilteredInID SERIAL NOT NULL PRIMARY KEY,
-  ReportID SERIAL REFERENCES Reports ON DELETE CASCADE,
-  FilteredOutID SERIAL REFERENCES FilteredOut
-);
-
 CREATE TABLE Handles (
   HandleID SERIAL NOT NULL PRIMARY KEY,
   Handle VARCHAR(255)
