@@ -11,8 +11,6 @@ module.exports = {
       'description',
       'notifications',
       'subreddits',
-      'filteredIn',
-      'filteredOut'
     ];
     const validationError = validation.validateInputData(reportData, possibleKeys);
 
@@ -85,8 +83,6 @@ module.exports = {
             //save the data into the output variable
             output = result.rows[0];
             output.subreddits = [];
-            output.filteredIn = [];
-            output.filteredOut = [];
             let reportValues = [reportID];
             let subredditSQL = 'SELECT Subreddits.SubredditName ' +
             'FROM Subreddits ' +
@@ -98,50 +94,6 @@ module.exports = {
             const error = new Error('no reports with that id');
             callback(error, null);
           }
-        })
-        .then((result) => {
-          if(result.rowCount > 0) {
-            //there were subreddits
-            for(let i = 0; i < Object.keys(result.rows).length; i++) {
-              //loop through each entry and add the subreddit name to the output
-              output.subreddits.push(result.rows[i].subreddit);
-            }
-          }
-
-          let reportValues = [reportID];
-          let subredditSQL = 'SELECT FilteredInFilter.FilteredInFilter ' +
-          'FROM FilteredIn ' +
-          'LEFT JOIN ReportsFilteredIn ' +
-          'ON FilteredIn.FilteredInID = ReportsFilteredIn.FilteredInID ' +
-          'WHERE ReportsFilteredIn.ReportID = $1';
-          return pg.query(subredditSQL, reportValues);
-        })
-        .then((result) => {
-          if(result.rowCount > 0) {
-            //there were subreddits
-            for(let i = 0; i < Object.keys(result.rows).length; i++) {
-              //loop through each entry and add the subreddit name to the output
-              output.filteredIn.push(result.rows[i].filteredin);
-            }
-          }
-
-          let reportValues = [reportID];
-          let subredditSQL = 'SELECT FilteredOut.FilteredOutFilter ' +
-          'FROM FilteredOut ' +
-          'LEFT JOIN ReportsFilteredOut ' +
-          'ON FilteredOut.FilteredOutID = ReportsFilteredOut.FilteredOutID ' +
-          'WHERE ReportsFilteredOut.ReportID = $1';
-          return pg.query(subredditSQL, reportValues);
-        })
-        .then((result) => {
-          if(result.rowCount > 0) {
-            //there were subreddits
-            for(let i = 0; i < Object.keys(result.rows).length; i++) {
-              //loop through each entry and add the subreddit name to the output
-              output.filteredOut.push(result.rows[i].filteredout);
-            }
-          }
-          callback(null, output);
         })
         .catch((error) => {
           callback(error, null);
@@ -198,8 +150,6 @@ module.exports = {
       'description',
       'notifications',
       'subreddits',
-      'filteredIn',
-      'filteredOut'
     ];
 
     //check for input validation error
@@ -288,6 +238,8 @@ module.exports = {
           }
         });
       }
+
+      callback(null, true);
     }
   },
 
