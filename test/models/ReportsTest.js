@@ -9,8 +9,6 @@ describe('Reports', () => {
     description: 'Gets the best ask-reddit and news threads with nothing about cars',
     notifications: true,
     subreddits: ['askreddit', 'news'],
-    filteredIn: ['trucks', 'airplanes'],
-    filteredOut: ['cars', 'motocycles']
   };
 
   const reportDataExtraField = {
@@ -19,8 +17,6 @@ describe('Reports', () => {
     description: 'Gets the best ask-reddit threads',
     notifications: true,
     subreddits: ['askreddit'],
-    filteredIn: [],
-    filteredOut: ['cars'],
     extraField: ''
   };
 
@@ -36,8 +32,6 @@ describe('Reports', () => {
     description: 'Gets the best ask-reddit threads',
     notifications: true,
     subreddits: ['askreddit'],
-    filteredIn: [],
-    filteredOut: ['cars'],
     invalidField: '',
   };
 

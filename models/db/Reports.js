@@ -3,7 +3,7 @@ const validation = require('../../lib/validation');
 const tools = require('../../lib/tools');
 
 module.exports = {
-  createReport: (reportData, callback) => {
+  createReport: async (reportData, callback) => {
     //validate input data
     const possibleKeys = [
       'userID',
@@ -33,41 +33,36 @@ module.exports = {
       ];
 
       //first enter initial report data into reports table
-      pg.query(reportSQL, reportValues)
-        .then(async (result) => {
-          //then enter subreddits into subreddit table
+      let result = await pg.query(reportSQL, reportValues);
 
-          //save the report ID into a variable
-          let reportID = result.rows[0].reportid;
-          //loop through the subreddits in the input array and save them in the subreddits table
-          await tools.asyncForEach(reportData.subreddits, async (subreddit) => {
-            //first check if subreddit is already in subreddits table
-            let subredditValues = [subreddit.toLowerCase()];
-            let subredditResult = await pg.query('SELECT SubredditID FROM Subreddits WHERE Subreddit = $1;', subredditValues);
+      //save the report ID into a variable
+      let reportID = result.rows[0].reportid;
+      //loop through the subreddits in the input array and save them in the subreddits table
+      await tools.asyncForEach(reportData.subreddits, async (subreddit) => {
+        //first check if subreddit is already in subreddits table
+        let subredditValues = [subreddit.toLowerCase()];
+        let subredditResult = await pg.query('SELECT SubredditID FROM Subreddits WHERE Subreddit = $1;', subredditValues);
 
-            let subredditID;
-            if(subredditResult.rowCount > 0) {
-              //subreddit already exists, get it's ID
-              subredditID = subredditResult.rows[0].subredditid;
-            } else {
-              //new subreddit, save it into the db
-              subredditResult = await pg.query('INSERT INTO Subreddits (SubredditName) VALUES ($1) RETURNING SubredditID;', subredditValues);
-              subredditID = subredditResult.rows[0].subredditid;
-            }
+        let subredditID;
+        if(subredditResult.rowCount > 0) {
+          //subreddit already exists, get it's ID
+          subredditID = subredditResult.rows[0].subredditid;
+        } else {
+          //new subreddit, save it into the db
+          subredditResult = await pg.query('INSERT INTO Subreddits (SubredditName) VALUES ($1) RETURNING SubredditID;', subredditValues);
+          subredditID = subredditResult.rows[0].subredditid;
+        }
 
-            //now insert into the ReportsSubreddits table
-            let reportsSubredditsValues = [reportID, subredditID];
-            await pg.query('INSERT INTO ReportsSubreddits (ReportID, SubredditID) VALUES ($1, $2)', reportsSubredditsValues);
-          });
-        })
-        .catch((error) => {
-          //send back the error
-          callback(error, null);
-        });
+        //now insert into the ReportsSubreddits table
+        let reportsSubredditsValues = [reportID, subredditID];
+        await pg.query('INSERT INTO ReportsSubreddits (ReportID, SubredditID) VALUES ($1, $2)', reportsSubredditsValues);
+      });
+
+      callback(null, true);
     }
   },
 
-  readReport: (reportID, callback) => {
+  readReport: async (reportID, callback) => {
     if(typeof(reportID) !== 'number') {
       const error = new Error('the input was not a number');
       callback(error, null);
@@ -76,32 +71,33 @@ module.exports = {
       const values = [reportID];
 
       let output = {};
+
       //first get the basic report data
-      pg.query(sql, values)
-        .then((result) => {
-          if(result.rowCount > 0) {
-            //save the data into the output variable
-            output = result.rows[0];
-            output.subreddits = [];
-            let reportValues = [reportID];
-            let subredditSQL = 'SELECT Subreddits.SubredditName ' +
-            'FROM Subreddits ' +
-            'LEFT JOIN ReportsSubreddits ' +
-            'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
-            'WHERE ReportsSubreddits.ReportID = $1';
-            return pg.query(subredditSQL, reportValues);
-          } else {
-            const error = new Error('no reports with that id');
-            callback(error, null);
-          }
-        })
-        .catch((error) => {
-          callback(error, null);
-        });
+      let result = await pg.query(sql, values);
+      if(result.rowCount > 0) {
+        //user data was found, save it into the output variable
+        output = result.rows[0];
+        //set blank subreddits array
+        output.subreddits = [];
+
+        let reportValues = [reportID];
+        let subredditSQL = 'SELECT Subreddits.SubredditName ' +
+        'FROM Subreddits ' +
+        'LEFT JOIN ReportsSubreddits ' +
+        'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
+        'WHERE ReportsSubreddits.ReportID = $1';
+
+        let output.subreddits = await pg.query(subredditSQL, reportValues);
+        callback(null, output);
+      } else {
+        //send back an error
+        const error = new Error('no reports with that id');
+        callback(error, null);
+      }
     }
   },
 
-  readAllReportsByUser: (userID, callback) => {
+  readAllReportsByUser: async (userID, callback) => {
     //first verify that the input is a number
     if(typeof(userID) !== 'number') {
       const error = new Error('the input was not a number');
@@ -113,34 +109,29 @@ module.exports = {
 
       //instantiate output variable
       let output = [];
-      pg.query(sql, value
-      //run initial query)
-      .then(async (result) => {
-        if(result.rowCount > 0) {
-          //there are reports
-          await tools.asyncForEach(result.rows, async (report) => {
-            //loop through each report & add it to the output array
-            let fullReport = await new Promise((resolve, reject) => {
-              module.exports.readReport(report.reportid, (error, result) => {
-                if(error) {
-                  reject(error);
-                } else {
-                  resolve(result);
-                }
-              });
-            })
-            output.push(fullReport);
-          });
+      //run initial query
+      let result = await pg.query(sql, value);
 
-          callback(null, output);
-        } else {
-          const error = new Error('no reports found');
-          callback(error, null);
-        }
-      })
-      .catch((error) => {
+      //test if there were results
+      if(result.rowCount > 0) {
+        //there are reports
+
+        //loop through each report ID to get full report data
+        await tools.asyncForEach(result.rows, async (report) => {
+          //add each report to the output array
+          let fullReport = await new Promise((resolve) => {
+            module.exports.readReport(report.reportid, (error, result) => {
+              resolve(result);
+            });
+          })
+          output.push(fullReport);
+        });
+
+        callback(null, output);
+      } else {
+        const error = new Error('no reports found');
         callback(error, null);
-      });
+      }
     }
   },
 
@@ -192,8 +183,9 @@ module.exports = {
       let removedSubreddits = [];
       let newSubreddits = [];
 
-      storedSubreddits.forEach((value, index) => {
-        let storedSubreddit = storedSubreddits[index].subreddit;
+      //loop through each stored subreddit
+      storedSubreddits.forEach((subreddit) => {
+        let storedSubreddit = subreddit.subredditname;
         if(!reportData.subreddits.includes(storedSubreddit)) {
           //the new report data does not include the stored subreddit, add it to removedsubreddits array
           removedSubreddits.push(index);
@@ -210,6 +202,7 @@ module.exports = {
         }
       }
 
+      //test if there are any subreddits that the user removed
       if(removedSubreddits.length > 0) {
         //now remove all subreddit relations in linking table
         await tools.asyncForEach(removedSubreddits, async (subredditID) => {
@@ -218,6 +211,7 @@ module.exports = {
         });
       }
 
+      //test if the user added any new subreddits
       if(newSubreddits.length > 0) {
         //now add all new subreddits to the linking table
         await tools.asyncForEach(newSubreddits, async (subreddit) => {

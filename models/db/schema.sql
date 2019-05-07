@@ -75,12 +75,20 @@ VALUES ('marcusprice', 'marcusprice88@gmail.com', 'password', 'Marcus', 'Price',
 
 INSERT INTO Reports
 (UserID, Name, Description, DateCreated, Notifications)
-VALUES (1, 'Ask Reddit Report', 'The best ask-reddit posts throughout the day', now(), true);
+VALUES (1, 'Ask Reddit & Shower Thoughts Report', 'Gets my favorite posts', now(), true);
 
 INSERT INTO Subreddits
 (SubredditName)
 VALUES ('askreddit');
 
+INSERT INTO Subreddits
+(SubredditName)
+VALUES ('showerthoughts');
+
 INSERT INTO ReportsSubreddits
 (ReportID, SubredditID)
 VALUES (1, 1);
+
+INSERT INTO ReportsSubreddits
+(ReportID, SubredditID)
+VALUES (1, 2);
