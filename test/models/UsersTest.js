@@ -244,9 +244,9 @@ describe('Users', () => {
     });
   });
 
-  describe('Users.getPassword', () => {
+  describe('Users.readPassword', () => {
     it('should retrieve a password', (done) => {
-      Users.getPassword('marcusprice', (error, result) => {
+      Users.readPassword('marcusprice', (error, result) => {
         expect(result).to.be.a('string');
         expect(error).to.be.a('null');
         done();

@@ -125,10 +125,11 @@ describe('Reports', () => {
 
   describe('Reports.updateReport()', () => {
     it('should return true upon successful update', (done) => {
-      Reports.updateReport(1, {
+      Reports.updateReport(3, {
         name: 'My Ask Reddit Report',
         description: 'Gets the best ask-reddit threads',
-        notifications: true
+        notifications: true,
+        subreddits: ['maxmsp', 'askreddit', 'showerthoughts']
       }, (error, result) => {
         expect(error).to.be.a('null');
         expect(result).to.be.true;
@@ -137,11 +138,12 @@ describe('Reports', () => {
     });
 
     it('should return an error if the input has too many fields', (done) => {
-      Reports.updateReport(1, {
+      Reports.updateReport(3, {
         name: 'Ask Reddit Report',
         extraField: '',
         description: 'Gets the best ask-reddit threads',
-        notifications: true
+        notifications: true,
+        subreddits: ['maxmsp', 'askreddit', 'showerthoughts']
       }, (error, result) => {
         expect(error).to.be.an('error');
         expect(result).to.be.a('null');
@@ -150,7 +152,7 @@ describe('Reports', () => {
     });
 
     it('should return an error if the unput has too little fields', (done) => {
-      Reports.updateReport(1, {
+      Reports.updateReport(3, {
         extraField: '',
         description: 'Gets the best ask-reddit threads',
         subreddits: 'askreddit',
@@ -163,7 +165,7 @@ describe('Reports', () => {
     });
 
     it('should return an error if the input has an invalid field', (done) => {
-      Reports.updateReport(1, {
+      Reports.updateReport(3, {
         name: 'My Ask Reddit Report',
         invalidField: 'Gets the best ask-reddit threads',
         notifications: true
@@ -178,7 +180,7 @@ describe('Reports', () => {
 
   describe('Reports.deleteReport()', () => {
     it('should return true upon successful delete', (done) => {
-      Reports.deleteReport(13, (error, result) => {
+      Reports.deleteReport(1, (error, result) => {
         expect(error).to.be.a('null');
         expect(result).to.be.true;
         done();
