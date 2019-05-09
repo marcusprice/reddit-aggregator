@@ -1,3 +1,4 @@
+const hash = require('password-hash');
 const pg = require('./pg');
 const validation = require('../../lib/validation');
 
@@ -24,7 +25,7 @@ module.exports = {
           const values = [
             userData.username,
             userData.email,
-            userData.password,
+            hash.generate(userData.password),
             userData.firstName,
             userData.lastName
           ];

@@ -136,6 +136,7 @@ module.exports = {
   },
 
   updateReport: async (reportID, reportData, callback) => {
+    //set possible keys array for validation
     const possibleKeys = [
       'name',
       'description',
@@ -146,9 +147,11 @@ module.exports = {
     //check for input validation error
     const validationError = validation.validateInputData(reportData, possibleKeys);
     if(validationError) {
+      //there was a validation error, send it back
       callback(validationError, null);
     } else {
       //input is fine, continue on
+      //sql to update the reports table
       const reportSQL = 'UPDATE Reports ' +
       'SET Name = $1, Description = $2, Notifications = $3 ' +
       'WHERE ReportID = $4;';
@@ -160,7 +163,13 @@ module.exports = {
       ];
 
       //update the reports table
-      await pg.query(reportSQL, reportValues);
+      let reportResult = await pg.query(reportSQL, reportValues);
+      if(reportResult.rowCount < 1) {
+        //send error and return to controlling function
+        const error = new Error('no report with that ID');
+        callback(error, null);
+        return;
+      }
 
       //now check for differences with subreddit array
       const subredditSelectSQL = 'SELECT Subreddits.SubredditID, Subreddits.SubredditName ' +

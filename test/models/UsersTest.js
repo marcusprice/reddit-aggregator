@@ -229,6 +229,7 @@ describe('Users', () => {
   });
 
   describe('Users.deleteUser()', () => {
+
     it('should return true upon successful delete', (done) => {
       Users.deleteUser(userOneID, (error, result) => {
         expect(result).to.be.true;

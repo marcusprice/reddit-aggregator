@@ -71,7 +71,15 @@ CREATE TABLE Comments (
 
 INSERT INTO Users
 (Username, Email, Password, FirstName, LastName, DateCreated, LastLogin)
-VALUES ('marcusprice', 'marcusprice88@gmail.com', 'password', 'Marcus', 'Price', now(), now());
+VALUES (
+  'marcusprice',
+  'marcusprice88@gmail.com',
+  'sha1$c7e1f342$1$b164e85582f94418f3ef0c6412c42fdb55a055e2',
+  'Marcus',
+  'Price',
+  now(),
+  now()
+);
 
 INSERT INTO Reports
 (UserID, Name, Description, DateCreated, Notifications)
