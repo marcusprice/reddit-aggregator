@@ -35,33 +35,28 @@ CREATE TABLE ReportsSubreddits (
 
 CREATE TABLE Handles (
   HandleID SERIAL NOT NULL PRIMARY KEY,
-  Handle VARCHAR(255)
+  HandleName VARCHAR(255)
 );
 
 CREATE TABLE Submissions (
   SubmissionID SERIAL NOT NULL PRIMARY KEY,
+  SubredditID INT REFERENCES Subreddits,
   RedditID VARCHAR(255),
   Title VARCHAR(255),
   URL VARCHAR(255),
   SelfText TEXT,
-  Handle INT REFERENCES Handles,
-  TimePostedUTC INT,
-  Edited INT,
-  Upvotes INT,
-  Downvotes INT,
-  Thumbnail VARCHAR(255)
-);
-
-CREATE TABLE SubredditsSubmissions (
-  SubredditsSubmissionsID INT NOT NULL PRIMARY KEY,
-  SubredditID SERIAL REFERENCES Subreddits,
-  SubmissionID SERIAL REFERENCES Submissions
+  HandleID INT REFERENCES Handles,
+  SubmissionTimePostedUTC INT,
+  SubmissionEdited INT,
+  SubmissionUpvotes INT,
+  SubmissionDownvotes INT,
+  ThumbnailURL VARCHAR(255)
 );
 
 CREATE TABLE Comments (
   CommentID SERIAL NOT NULL PRIMARY KEY,
   SubmissionID SERIAL REFERENCES Submissions,
-  Handle SERIAL REFERENCES Handles,
+  HandleID INT REFERENCES Handles,
   CommentText TEXT,
   DatePosted INT,
   Edits INT,

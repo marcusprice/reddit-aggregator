@@ -136,6 +136,18 @@ module.exports = {
     }
   },
 
+  updatePassword: (userID, newPassword, callback) => {
+    const sql = 'UPDATE Users SET Password = $1 WHERE UserID = $2';
+    const values =[hash.generate(newPassword), userID];
+    pg.query(sql, values, (err, result) => {
+      if(err) {
+        callback(err, null);
+      } else {
+        callback(null, true);
+      }
+    });
+  },
+
   deleteUser: (userID, callback) => {
     //build sql command
     const sql = 'DELETE FROM Users WHERE UserID = $1';
