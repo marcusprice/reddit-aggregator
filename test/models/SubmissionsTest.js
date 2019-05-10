@@ -96,39 +96,39 @@ describe('Submissions', () => {
     });
   });
 
-  describe('Submissions.updateSubmission()', () => {
-    it('should return true upon successful update', (done) => {
-      Submissions.updateSubmission(1, validSubmissionData, (error, result) => {
-        expect(error).to.be.a('null');
-        expect(result).to.be.true;
-        done();
-      });
-    });
-
-    it('should return an error if the input has too many fields', (done) => {
-      Submissions.updateSubmission(1, submissionDataExtraField, (error, result) => {
-        expect(error).to.be.an('error');
-        expect(result).to.be.a('null');
-        done();
-      });
-    });
-
-    it('should return an error if the unput has too little fields', (done) => {
-      Submissions.updateSubmission(1, submissionDataMissingField, (error, result) => {
-        expect(error).to.be.an('error');
-        expect(result).to.be.a('null');
-        done();
-      });
-    });
-
-    it('should return an error if the input has an invalid field', (done) => {
-      Submissions.updateSubmission(1, submissionDatainvalidField, (error, result) => {
-        expect(error).to.be.an('error');
-        expect(result).to.be.a('null');
-        done();
-      });
-    });
-  });
+  // describe('Submissions.updateSubmission()', () => {
+  //   it('should return true upon successful update', (done) => {
+  //     Submissions.updateSubmission(1, validSubmissionData, (error, result) => {
+  //       expect(error).to.be.a('null');
+  //       expect(result).to.be.true;
+  //       done();
+  //     });
+  //   });
+  //
+  //   it('should return an error if the input has too many fields', (done) => {
+  //     Submissions.updateSubmission(1, submissionDataExtraField, (error, result) => {
+  //       expect(error).to.be.an('error');
+  //       expect(result).to.be.a('null');
+  //       done();
+  //     });
+  //   });
+  //
+  //   it('should return an error if the unput has too little fields', (done) => {
+  //     Submissions.updateSubmission(1, submissionDataMissingField, (error, result) => {
+  //       expect(error).to.be.an('error');
+  //       expect(result).to.be.a('null');
+  //       done();
+  //     });
+  //   });
+  //
+  //   it('should return an error if the input has an invalid field', (done) => {
+  //     Submissions.updateSubmission(1, submissionDatainvalidField, (error, result) => {
+  //       expect(error).to.be.an('error');
+  //       expect(result).to.be.a('null');
+  //       done();
+  //     });
+  //   });
+  // });
 
 
   describe('Submissions.deleteSubmission()', () => {

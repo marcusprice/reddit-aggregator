@@ -27,14 +27,17 @@ module.exports = {
 
       //test if the handle exists already or not
       let handleID;
-      const handleResults = await pg.query('SELECT HandleID FROM Handles WHERE Handle = $1', [submissionData.handle]);
+      const handleResults = await pg.query('SELECT HandleID FROM Handles WHERE HandleName = $1', [submissionData.handle]);
       if(handleResults.rowCount > 0) {
         //handle already exists, get it's id
         handleID = handleResults.rows[0].handleid;
       } else {
         //create a new handle and get its id
         handleID = await pg.query('INSERT INTO Handles (HandleName) VALUES ($1) RETURNING HandleID;', [submissionData.handle]);
+        handleID = handleID.rows[0].handleid;
       }
+
+      console.log(handleID);
 
       //now insert the submission data
       const sql = 'INSERT INTO Submissions ' +
@@ -82,42 +85,53 @@ module.exports = {
     }
   },
 
-  updateSubmission: (submissionID, submissionData, callback) => {
-    //validate input data
-    const possibleKeys = [
-      'title',
-      'url',
-      'posterHandle',
-      'upvotes',
-      'downvotes'
-    ];
-    const validationError = validation.validateInputData(submissionData, possibleKeys);
+  readAllSubmissionsBySubreddit: async (subredditName, limit, callback) => {
+    //get the subreddit id
+    const subredditResult = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', [subredditName]);
+    const subredditID = subredditResult.rows[0].subredditid;
 
-    if(validationError) {
-      callback(validationError, null);
-    } else {
-      const sql = 'UPDATE Submissions ' +
-      'SET Title = $1, URL = $2, PosterHandle = $3, Upvotes = $4, Downvotes = $5 ' +
-      'WHERE SubmissionID = $6;';
+    const sql = 'SELECT * FROM Submissions WHERE SubredditID = $1 ORDER BY SubmissionID DESC LIMIT $2;';
 
-      const values = [
-        submissionData.title,
-        submissionData.url,
-        submissionData.posterHandle,
-        submissionData.upvotes,
-        submissionData.downvotes,
-        submissionID
-      ];
-
-      pg.query(sql, values, (err, result) => {
-        if(err) {
-          callback(err, null);
-        } else {
-          callback(null, true);
-        }
-      });
-    }
+    const result = pg.query(sql, [subredditID, limit]);
+    callback(null, result);
   },
+
+  // updateSubmission: (submissionID, submissionData, callback) => {
+  //   //validate input data
+  //   const possibleKeys = [
+  //     'title',
+  //     'url',
+  //     'posterHandle',
+  //     'upvotes',
+  //     'downvotes'
+  //   ];
+  //   const validationError = validation.validateInputData(submissionData, possibleKeys);
+  //
+  //   if(validationError) {
+  //     callback(validationError, null);
+  //   } else {
+  //     const sql = 'UPDATE Submissions ' +
+  //     'SET Title = $1, URL = $2, PosterHandle = $3, Upvotes = $4, Downvotes = $5 ' +
+  //     'WHERE SubmissionID = $6;';
+  //
+  //     const values = [
+  //       submissionData.title,
+  //       submissionData.url,
+  //       submissionData.posterHandle,
+  //       submissionData.upvotes,
+  //       submissionData.downvotes,
+  //       submissionID
+  //     ];
+  //
+  //     pg.query(sql, values, (err, result) => {
+  //       if(err) {
+  //         callback(err, null);
+  //       } else {
+  //         callback(null, true);
+  //       }
+  //     });
+  //   }
+  // },
 
   deleteSubmission: (submissionID, callback) => {
     if(typeof(submissionID) !== 'number') {
