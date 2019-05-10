@@ -37,8 +37,6 @@ module.exports = {
         handleID = handleID.rows[0].handleid;
       }
 
-      console.log(handleID);
-
       //now insert the submission data
       const sql = 'INSERT INTO Submissions ' +
       '(RedditID, SubredditID, Title, URL, SelfText, HandleID, SubmissionTimePostedUTC, SubmissionEdited, SubmissionUpvotes, SubmissionDownvotes, ThumbnailURL)' +
@@ -95,43 +93,6 @@ module.exports = {
     const result = pg.query(sql, [subredditID, limit]);
     callback(null, result);
   },
-
-  // updateSubmission: (submissionID, submissionData, callback) => {
-  //   //validate input data
-  //   const possibleKeys = [
-  //     'title',
-  //     'url',
-  //     'posterHandle',
-  //     'upvotes',
-  //     'downvotes'
-  //   ];
-  //   const validationError = validation.validateInputData(submissionData, possibleKeys);
-  //
-  //   if(validationError) {
-  //     callback(validationError, null);
-  //   } else {
-  //     const sql = 'UPDATE Submissions ' +
-  //     'SET Title = $1, URL = $2, PosterHandle = $3, Upvotes = $4, Downvotes = $5 ' +
-  //     'WHERE SubmissionID = $6;';
-  //
-  //     const values = [
-  //       submissionData.title,
-  //       submissionData.url,
-  //       submissionData.posterHandle,
-  //       submissionData.upvotes,
-  //       submissionData.downvotes,
-  //       submissionID
-  //     ];
-  //
-  //     pg.query(sql, values, (err, result) => {
-  //       if(err) {
-  //         callback(err, null);
-  //       } else {
-  //         callback(null, true);
-  //       }
-  //     });
-  //   }
-  // },
 
   deleteSubmission: (submissionID, callback) => {
     if(typeof(submissionID) !== 'number') {
