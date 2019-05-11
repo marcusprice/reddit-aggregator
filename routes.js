@@ -1,42 +1,62 @@
 const users = require('./controllers/users');
+const reports = require('./controllers/reports');
+const subreddits = require('./controllers/subreddits');
+const submissions = require('./controllers/submissions');
+const tools = require('./lib/tools');
 
 module.exports = (app) => {
-  //logs user on
-  app.get('/api/v1/login', (req, res) => {
-    //first check if password is correct
-    new Promise((resolve, reject) => {
-      users.verifyPassword(req.query.handle, req.query.password, (error, result) => {
-        if(error) {
-          //there was some kind of error
-          reject(error);
-        } else {
-          if(result) {
-            //password was correct
-            resolve(req.query.handle);
-          } else {
-            //password was incorrect
-            const error = new Error('password was incorrect');
-            reject(error);
-          }
-        }
+  //logs user on, gets all the data etc.
+  app.get('/api/v1/login', async (req, res) => {
+    //first verify the user's password
+    const handle = req.query.handle;
+    const password = req.query.password;
+    const validated = await users.validatePassword(handle, password);
+
+    if(validated) {
+      //passwords matched, start putting together the output
+
+      //start output variable with user info
+      let output = await users.getUser(handle);
+      //save the user's reports into the reports property
+      output.reports = await reports.getAllReportsByUser(output.userid);
+
+      //now loop through each report
+      await tools.asyncForEach(output.reports, async (report, reportIndex) => {
+        //create accumulators for subreddits and submissions
+        output.reports[reportIndex].subreddits = [];
+        output.reports[reportIndex].submissions = [];
+
+        //save the subreddits
+        let subredditData = await subreddits.getAllSubredditsByReport(report.reportid);
+
+        //loop through the subreddits and add them to the subreddits property
+        subredditData.forEach((subredditObject, index) => {
+          output.reports[reportIndex].subreddits.push(subredditObject.subredditname);
+        });
+
+        //now loop through each subreddit and create an array of submissions
+        await tools.asyncForEach(output.reports[reportIndex].subreddits, async (subredditName, index) => {
+          //create a property with the subreddit name
+
+          console.log(output.reports[reportIndex].submissions)
+
+          //get all the submissions for that subreddit
+          let submissionData = await submissions.getAllSubmissionsBySubreddit(subredditName);
+          //loop through each submission and add the subreddit name
+          submissionData.forEach((submission, index) => {
+            submissionData[index].subredditname = subredditName;
+          });
+
+          output.reports[reportIndex].submissions.push(submissionData);
+        });
       });
-    })
-    .then((handle) => {
-      //get the user's data (account info & reports)
-      users.getAllData(handle, (err, result) => {
-        if(err) {
-          //there was some kind of error
-          res.json(err);
-        } else {
-          //send results back to the client
-          res.json(result);
-        }
-      });
-    })
-    .catch((err) => {
-      //send the error to the client
-      res.send(500, err.toString());
-    });
+
+      console.log(output.reports);
+      res.json(output);
+    } else {
+      //send back error status
+      res.send('passwords didn\'t match');
+    }
   });
 
   app.get('/', (req, res) => {

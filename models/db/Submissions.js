@@ -83,6 +83,7 @@ module.exports = {
     }
   },
 
+  //TODO: make a join to get the subreddit name
   readAllSubmissionsBySubreddit: async (subredditName, limit, callback) => {
     //get the subreddit id
     const subredditResult = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', [subredditName]);
@@ -90,8 +91,8 @@ module.exports = {
 
     const sql = 'SELECT * FROM Submissions WHERE SubredditID = $1 ORDER BY SubmissionID DESC LIMIT $2;';
 
-    const result = pg.query(sql, [subredditID, limit]);
-    callback(null, result);
+    const result = await pg.query(sql, [subredditID, limit]);
+    callback(null, result.rows);
   },
 
   deleteSubmission: (submissionID, callback) => {

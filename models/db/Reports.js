@@ -97,6 +97,7 @@ module.exports = {
     }
   },
 
+  //todo: this needs to be refactored
   readAllReportsByUser: async (userID, callback) => {
     //first verify that the input is a number
     if(typeof(userID) !== 'number') {

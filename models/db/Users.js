@@ -47,15 +47,15 @@ module.exports = {
     }
   },
 
-  readUser: (identifier, callback) => {
-    if(typeof(identifier) !== 'string' && typeof(identifier) !== 'number') {
+  readUser: (handle, callback) => {
+    if(typeof(handle) !== 'string' && typeof(handle) !== 'number') {
       const error = new Error('input was not a string or number');
       callback(error, null);
     } else {
       //start sql query
       let sql = 'SELECT UserID, Username, Email, FirstName, LastName, LastLogin, DateCreated FROM Users ';
       //determine if the input is a number or string
-      if(typeof(identifier) == 'number') {
+      if(typeof(handle) == 'number') {
         //input is a number
         sql += 'WHERE UserID = $1';
       } else {
@@ -63,7 +63,7 @@ module.exports = {
         sql += 'WHERE Username = $1 OR Email = $1';
       }
 
-      const values = [identifier];
+      const values = [handle];
 
       pg.query(sql, values, (err, result) => {
         if(err) {
