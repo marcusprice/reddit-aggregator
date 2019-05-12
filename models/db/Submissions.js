@@ -95,6 +95,12 @@ module.exports = {
     callback(null, result.rows);
   },
 
+  readHandleBySubmission: async (submissionID, callback) => {
+    const sql = 'SELECT HandleName FROM Handles WHERE HandleID = $1';
+    const result = await pg.query(sql, [submissionID]);
+    callback(null, result.rows[0].handlename);
+  },
+
   deleteSubmission: (submissionID, callback) => {
     if(typeof(submissionID) !== 'number') {
       const error = new Error('the input was not a number');
