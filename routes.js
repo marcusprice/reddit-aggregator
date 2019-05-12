@@ -2,6 +2,7 @@ const users = require('./controllers/users');
 const reports = require('./controllers/reports');
 const subreddits = require('./controllers/subreddits');
 const submissions = require('./controllers/submissions');
+const comments = require('./controllers/comments');
 const handles = require('./controllers/handles');
 const tools = require('./lib/tools');
 

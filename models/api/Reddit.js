@@ -35,5 +35,31 @@ module.exports = {
     .catch((error) => {
       callback(error, null);
     });
+  },
+
+  getTopComments: (submissionID, callabck) => {
+    //user the submissionID to get the comments
+    reddit.getSubmission(submissionID).comments
+    .then((result) => {
+      //output accumulator
+      let output = [];
+      //we only want to collect the top 5 results
+      for(let i = 0; i < 5; i++) {
+        //make sure there is a comment before adding it to the array
+        if(result[i]) {
+          //there is a comment, add it to the array
+          output.push({
+            comment: result[i].body,
+            redditid: result[i].id,
+            handle: result[i].author.name,
+            datePosted: result[i].created_utc,
+            edited: result[i].edited,
+            upvotes: result[i].ups,
+            downvotes: result[i].downs
+          });
+        }
+      }
+      callback(null, output);
+    });
   }
 };
