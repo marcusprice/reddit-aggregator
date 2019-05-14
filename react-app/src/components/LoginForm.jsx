@@ -7,12 +7,22 @@ import Form from 'react-bootstrap/Form';
 import '../css/login-form.css';
 
 class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(action) {
+    if(action === 'about') {
+      this.props.handleToggle(action);
+    }
+  }
+
   render() {
     return(
       <Container className="login-form">
-        <Row
-          className="align-middle"
-        >
+        <Row>
           <Col>
             <Form>
               <h3>Please Sign In</h3>
@@ -32,7 +42,7 @@ class LoginForm extends React.Component {
                 Login
               </Button>
             </Form>
-            <p>New Here? Learn More &amp; Sign Up!</p>
+            <p onClick={() => {this.handleClick('about')}}>New Here? Learn More &amp; Sign Up!</p>
           </ Col>
         </Row>
       </Container>
