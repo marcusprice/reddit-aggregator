@@ -2,11 +2,11 @@ import React from 'react';
 import LandingHeader from './LandingHeader';
 import LoginForm from './LoginForm';
 import About from './About';
+import SignupForm from './SignupForm';
 
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       show: 'loginForm'
     };
@@ -28,8 +28,10 @@ class LandingPage extends React.Component {
   handleDisplay() {
     if(this.state.show === 'loginForm') {
       return <LoginForm handleToggle={this.handleToggle}/>;
+    } else if(this.state.show === 'about') {
+      return <About handleToggle={this.handleToggle}/>;
     } else {
-      return <About  handleToggle={this.handleToggle}/>;
+      return <SignupForm handleToggle={this.handleToggle}/>;
     }
   }
 

@@ -1,0 +1,28 @@
+/* global styles */
+form {
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
+.signup-button-container {
+  text-align: center;
+}
+
+.signup-button {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+/* mobile styles */
+@media only screen and (max-width: 700px) {
+  .signup-form {
+    width: 100%;
+  }
+}
+
+/* desktop stlyes */
+@media only screen and (min-width: 700px) {
+  .signup-form {
+    width: 35%;
+  }
+}
