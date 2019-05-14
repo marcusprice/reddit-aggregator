@@ -1,51 +1,50 @@
 import React from 'react';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
+import LandingPage from './components/LandingPage';
 
-function App() {
-  return (
-    <div className="App">
-      <Jumbotron>
-        <h1 className="display-4">Reddit Aggregator</h1>
-        <p className="lead">Personalized web app to collect the best daily Reddit submissions</p>
-      </Jumbotron>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-      <Container className="login-form">
-        <Row
-          className="align-middle"
-        >
-          <Col>
-            <Form
-              style={{
-                width: '35%',
-                margin: '0 auto'
-              }}>
-              <h3>Please Sign In</h3>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Username or Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter Username or Email" />
-              </Form.Group>
+    this.state = {
+      loggedIn: false
+    };
 
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-              </Form.Group>
-              <Form.Group controlId="formBasicChecbox">
-                <Form.Check type="checkbox" label="Remember Me" />
-              </Form.Group>
-              <Button variant="dark" type="submit" block>
-                Login
-              </Button>
-            </Form>
-          </ Col>
-        </Row>
-      </Container>
-    </div>
-  );
+    this.checkLoginStatus = this.checkLoginStatus.bind(this);
+  }
+
+  checkLoginStatus() {
+    if(this.state.loggedIn) {
+      //user is logged in, show the app
+
+    } else {
+      //check w/server to see if the user is logged in
+      fetch('http://localhost:5000/api/v1/checkLoginStatus')
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if(response.loggedIn) {
+            //user is logged in
+          } else {
+            //user is logged out, show landing page
+            this.setState({loggedIn: false});
+          }
+        });
+    }
+    if(this.state.loggedIn) {
+
+    } else {
+      return <LandingPage />;
+    }
+  }
+
+  render() {
+    return(
+      <div className="App">
+        {this.checkLoginStatus()}
+      </div>
+    );
+  }
 }
 
 export default App;

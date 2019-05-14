@@ -1,0 +1,23 @@
+/* global styles */
+.login-form {
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
+.login-form p {
+  text-align: center;
+  margin-top: 1rem;
+}
+/* mobile styles */
+@media only screen and (max-width: 700px) {
+  .login-form {
+    width: 100%;
+  }
+}
+
+/* desktop stlyes */
+@media only screen and (min-width: 700px) {
+  .login-form {
+    width: 35%;
+  }
+}

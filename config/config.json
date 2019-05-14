@@ -1,8 +1,10 @@
 {
   "development": {
-    "dbname": "RedditAggregatorDev"
+    "dbname": "RedditAggregatorDev",
+    "cors": true
   },
   "production": {
-    "dbname": "RedditAggregator"
+    "dbname": "RedditAggregator",
+    "cors": false
   }
 }

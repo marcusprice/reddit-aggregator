@@ -4,6 +4,10 @@ const helpers = require('./lib/helpers');
 
 module.exports = (app) => {
   //logs user on, gets all the data etc.
+  app.get('/api/v1/checkLoginStatus', (req, res) => {
+    res.json({loggedIn: false});
+  });
+
   app.get('/api/v1/login', async (req, res) => {
     //first verify the user's password
     const handle = req.query.handle;

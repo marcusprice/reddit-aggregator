@@ -5,6 +5,7 @@ const credentials = require('./credentials');
 const configFile = require('./config.json')[mode];
 
 module.exports = {
+  cors: configFile.cors,
   db: {
     host: credentials.db.host,
     username: credentials.db.username,
