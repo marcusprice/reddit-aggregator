@@ -37,7 +37,7 @@ module.exports = {
     });
   },
 
-  getTopComments: (submissionID, callabck) => {
+  getTopComments: (submissionID, callback) => {
     //user the submissionID to get the comments
     reddit.getSubmission(submissionID).comments
     .then((result) => {

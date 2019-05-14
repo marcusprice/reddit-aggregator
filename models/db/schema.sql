@@ -57,6 +57,7 @@ CREATE TABLE Comments (
   CommentID SERIAL NOT NULL PRIMARY KEY,
   SubmissionID SERIAL REFERENCES Submissions,
   HandleID INT REFERENCES Handles,
+  RedditID VARCHAR(255),
   CommentText TEXT,
   DatePosted INT,
   Edits INT,
@@ -80,6 +81,10 @@ INSERT INTO Reports
 (UserID, Name, Description, DateCreated, Notifications)
 VALUES (1, 'Ask Reddit & Shower Thoughts Report', 'Gets my favorite posts', now(), true);
 
+INSERT INTO Reports
+(UserID, Name, Description, DateCreated, Notifications)
+VALUES (1, 'News & Politics Report', 'Gets my favorite  news & politics stories', now(), true);
+
 INSERT INTO Subreddits
 (SubredditName)
 VALUES ('askreddit');
@@ -88,6 +93,14 @@ INSERT INTO Subreddits
 (SubredditName)
 VALUES ('showerthoughts');
 
+INSERT INTO Subreddits
+(SubredditName)
+VALUES ('politics');
+
+INSERT INTO Subreddits
+(SubredditName)
+VALUES ('news');
+
 INSERT INTO ReportsSubreddits
 (ReportID, SubredditID)
 VALUES (1, 1);
@@ -95,3 +108,11 @@ VALUES (1, 1);
 INSERT INTO ReportsSubreddits
 (ReportID, SubredditID)
 VALUES (1, 2);
+
+INSERT INTO ReportsSubreddits
+(ReportID, SubredditID)
+VALUES (2, 3);
+
+INSERT INTO ReportsSubreddits
+(ReportID, SubredditID)
+VALUES (2, 4);

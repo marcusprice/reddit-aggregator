@@ -21,42 +21,53 @@ module.exports = {
     if(validationError) {
       callback(validationError, null);
     } else {
-      //get the subreddit id
-      let subreddit = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', [subredditName]);
-      let subredditID = subreddit.rows[0].subredditid;
+      //first see if the submission has already been saved
+      const uniqueCheck = await pg.query('SELECT * FROM Submissions WHERE RedditID = $1;', [submissionData.redditID]);
+      if(uniqueCheck.rowCount < 1) {
+        //get the subreddit id
+        let subreddit = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', [subredditName]);
+        let subredditID = subreddit.rows[0].subredditid;
 
-      //test if the handle exists already or not
-      let handleID;
-      const handleResults = await pg.query('SELECT HandleID FROM Handles WHERE HandleName = $1', [submissionData.handle]);
-      if(handleResults.rowCount > 0) {
-        //handle already exists, get it's id
-        handleID = handleResults.rows[0].handleid;
+        //test if the handle exists already or not
+        let handleID;
+        const handleResults = await pg.query('SELECT HandleID FROM Handles WHERE HandleName = $1', [submissionData.handle]);
+        if(handleResults.rowCount > 0) {
+          //handle already exists, get it's id
+          handleID = handleResults.rows[0].handleid;
+        } else {
+          //create a new handle and get its id
+          handleID = await pg.query('INSERT INTO Handles (HandleName) VALUES ($1) RETURNING HandleID;', [submissionData.handle]);
+          handleID = handleID.rows[0].handleid;
+        }
+
+        //now insert the submission data
+        const sql = 'INSERT INTO Submissions ' +
+        '(RedditID, SubredditID, Title, URL, SelfText, HandleID, SubmissionTimePostedUTC, SubmissionEdited, SubmissionUpvotes, SubmissionDownvotes, ThumbnailURL)' +
+        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING SubmissionID;';
+        const values = [
+          submissionData.redditID,
+          subredditID,
+          submissionData.title,
+          submissionData.url,
+          submissionData.selfText,
+          handleID,
+          submissionData.submissionTimePostedUTC,
+          submissionData.submissionEdited,
+          submissionData.submissionUpvotes,
+          submissionData.submissionDownvotes,
+          submissionData.thumbnailURL
+        ];
+
+        pg.query(sql, values, (err, result) => {
+          if(err) {
+            callback(err, null);
+          } else {
+            callback(null, result.rows[0].submissionid);
+          }
+        });
       } else {
-        //create a new handle and get its id
-        handleID = await pg.query('INSERT INTO Handles (HandleName) VALUES ($1) RETURNING HandleID;', [submissionData.handle]);
-        handleID = handleID.rows[0].handleid;
+        callback(null, null);
       }
-
-      //now insert the submission data
-      const sql = 'INSERT INTO Submissions ' +
-      '(RedditID, SubredditID, Title, URL, SelfText, HandleID, SubmissionTimePostedUTC, SubmissionEdited, SubmissionUpvotes, SubmissionDownvotes, ThumbnailURL)' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING SubmissionID;';
-      const values = [
-        submissionData.redditID,
-        subredditID,
-        submissionData.title,
-        submissionData.url,
-        submissionData.selfText,
-        handleID,
-        submissionData.submissionTimePostedUTC,
-        submissionData.submissionEdited,
-        submissionData.submissionUpvotes,
-        submissionData.submissionDownvotes,
-        submissionData.thumbnailURL
-      ];
-
-      await pg.query(sql, values);
-      callback(null, true);
     }
   },
 
