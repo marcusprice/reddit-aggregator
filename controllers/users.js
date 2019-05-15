@@ -30,5 +30,17 @@ module.exports = {
         }
       });
     });
+  },
+
+  createUser: (userData) => {
+    return new Promise((resolve, reject) => {
+      Users.createUser(userData, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result)
+        }
+      });
+    });
   }
 };

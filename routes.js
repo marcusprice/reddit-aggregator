@@ -8,6 +8,15 @@ module.exports = (app) => {
     res.json({loggedIn: false});
   });
 
+  app.post('/api/v1/createUser', async (req, res) => {
+    let result = users.createUser(req.body);
+    if(result) {
+      res.json({userCreated: true});
+    } else {
+      res.json({userCreated: false});
+    }
+  });
+
   app.get('/api/v1/login', async (req, res) => {
     //first verify the user's password
     const handle = req.query.handle;

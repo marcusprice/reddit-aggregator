@@ -2,8 +2,11 @@ const config = require('./config/config');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
+const bodyParser = require('body-parser');
 
-//if cors is enabled use it (developement only) 
+app.use(bodyParser.json());
+
+// if cors is enabled use it (developement only)
 if(config.cors) {
   const cors = require('cors');
   app.use(cors());

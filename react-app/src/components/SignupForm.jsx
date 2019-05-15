@@ -10,6 +10,16 @@ class SignupForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.createNewUser = this.createNewUser.bind(this);
+    this.state = {
+      username: '',
+      email: '',
+      password: '',
+      passwordCheck: '',
+      firstName: '',
+      lastName: ''
+    }
   }
 
   handleClick(action) {
@@ -20,49 +30,90 @@ class SignupForm extends React.Component {
     }
   }
 
+  handleChange(e) {
+    if(e.target.id === 'username') {this.setState({username: e.target.value})}
+    if(e.target.id === 'email') {this.setState({email: e.target.value})}
+    if(e.target.id === 'password') {this.setState({password: e.target.value})}
+    if(e.target.id === 'passwordCheck') {this.setState({passwordCheck: e.target.value})}
+    if(e.target.id === 'firstName') {this.setState({firstName: e.target.value})}
+    if(e.target.id === 'lastName') {this.setState({lastName: e.target.value})}
+  }
+
+  createNewUser(event) {
+    event.preventDefault();
+    fetch('http://localhost:5000/api/v1/createUser', {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'omit',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrer: 'no-referrer',
+      body: JSON.stringify({
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName
+      })
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        console.log('user created?');
+        console.log(response.userCreated);
+      });
+  }
+
   render() {
     return(
       <Container className="signup-form">
         <Row>
           <Col>
-            <Form>
+            <Form className="signupForm" onSubmit={this.createNewUser}>
+
               <h3>Sign Up</h3>
-              <Form.Group controlId="formBasicText">
+              <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" placeholder="Enter a Username" />
+                <Form.Control value={this.state.username} onChange={this.handleChange} required="required" type="text" placeholder="Enter a Username" />
               </Form.Group>
 
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter your Email" />
+                <Form.Control value={this.state.email} onChange={this.handleChange} required="required" type="email" placeholder="Enter your Email" />
               </Form.Group>
 
-              <Form.Group controlId="formBasicPassword">
+              <Form.Group controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control value={this.state.password} onChange={this.handleChange} required="required" type="password" placeholder="Password" />
               </Form.Group>
 
-              <Form.Group controlId="formBasicPassword2">
+              <Form.Group controlId="passwordCheck">
                 <Form.Label>Retype Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Form.Control value={this.state.passwordCheck} onChange={this.handleChange} required="required" type="password" placeholder="Password" />
               </Form.Group>
 
-              <Form.Group controlId="formBasicText">
+              <Form.Group controlId="firstName">
                 <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Your First Name" />
+                <Form.Control value={this.state.firstName} onChange={this.handleChange} required="required" type="text" placeholder="Enter Your First Name" />
               </Form.Group>
 
-              <Form.Group controlId="formBasicText">
+              <Form.Group controlId="lastName">
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Your Last Name" />
+                <Form.Control  value={this.state.lastName} onChange={this.handleChange} required="required" type="text" placeholder="Enter Your Last Name" />
               </Form.Group>
 
               <Button variant="dark" type="submit" block>
                 Create Account
               </Button>
+
             </Form>
           </ Col>
         </Row>
+
         <Container style={{textAlign: 'center', marginBottom: '2rem'}} className="singup-button-conatiner">
           <Button
             variant="dark"
@@ -74,6 +125,7 @@ class SignupForm extends React.Component {
             variant="dark"
             className="signup-button" onClick={() => {this.handleClick('about')}}>Back to About</Button>
         </Container>
+
       </Container>
     );
   }
