@@ -1,55 +1,67 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import ForgotPasswordForm from './ForgotPasswordForm';
+import NewPasswordSent from './NewPasswordSent';
+import Spinner from 'react-bootstrap/Spinner';
 
 class ForgotPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: ''
+      showForm: true,
+      showSpinner: false
     };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.requestNewPassword = this.requestNewPassword.bind(this);
+    this.handleDisplay = this.handleDisplay.bind(this);
+    this.handleSpinner = this.handleSpinner.bind(this);
   }
 
-  handleClick(action) {
-    this.props.handleToggle(action);
+  handleDisplay() {
+    if(this.state.showForm) {
+      return <ForgotPasswordForm handleToggle={this.props.handleToggle} requestNewPassword={this.requestNewPassword}/>;
+    } else {
+      //show message
+      return <NewPasswordSent handleToggle={this.props.handleToggle}/>;
+    }
   }
 
-  handleChange(e) {
-    if(e.target.id === 'email') {this.setState({email: e.target.value})}
+  handleSpinner() {
+    if(this.state.showSpinner) {
+      return <Spinner animation="border" variant="dark"/>;
+    }
   }
 
-  requestNewPassword() {
-
+  requestNewPassword(email) {
+    this.setState({showSpinner: true});
+    fetch('http://localhost:5000/api/v1/forgotPassword', {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'omit',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrer: 'no-referrer',
+      body: JSON.stringify({
+        email: email
+      })
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        if(response.result) {
+          this.setState({showForm: false, showSpinner: false});
+        }
+      });
   }
 
   render() {
     return(
-      <Container style={{width: '35%'}}className="forgot-password-form">
-        <Row>
-          <Col>
-            <Form>
-              <h3>Request A New Password</h3>
-              <Form.Group controlId="email">
-                <Form.Label>Enter Your Email</Form.Label>
-                <Form.Control value={this.state.email} onChange={this.handleChange} type="email" placeholder="Enter Email" />
-              </Form.Group>
-
-              <Button className="forgot-password-button" variant="dark" type="submit" block>
-                Send New Password
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-        <Container style={{textAlign: 'center'}} className="forgot-password-button-conatiner">
-          <Button size="sm" variant="dark" className="about-button" onClick={() => {this.handleClick('loginForm')}}>Back to Sign In</Button>
-        </Container>
-      </Container>
+      <div>
+        {this.handleDisplay()}
+        {this.handleSpinner()}
+      </div>
     );
   }
 };

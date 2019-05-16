@@ -18,5 +18,9 @@ module.exports = {
     clientSecret: credentials.reddit.clientSecret,
     username: credentials.reddit.username,
     password: credentials.reddit.password,
+  },
+  email: {
+    user: credentials.email.username,
+    password: credentials.email.password
   }
 }
