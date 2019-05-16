@@ -1,4 +1,5 @@
 import React from 'react';
+//import RedditAggregator from './components/RedditAggregator';
 import LandingPage from './components/LandingPage';
 
 class App extends React.Component {
@@ -6,42 +7,45 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      serverCheck: true,
+      userData: null
     };
 
-    this.checkLoginStatus = this.checkLoginStatus.bind(this);
+    this.handleDisplay = this.handleDisplay.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  checkLoginStatus() {
-    if(this.state.loggedIn) {
-      //user is logged in, show the app
-
-    } else {
-      //check w/server to see if the user is logged in
-      fetch('http://localhost:5000/api/v1/checkLoginStatus')
+  handleDisplay() {
+    if(!this.state.serverCheck) {
+      fetch('/api/v1/checkLoginStatus')
         .then((response) => {
           return response.json();
         })
-        .then((response) => {
-          if(response.loggedIn) {
-            //user is logged in
+        .then((result) => {
+          if(result.loggedIn) {
+            this.setState({loggedIn: true, serverCheck: true, userData: result.userData});
           } else {
-            //user is logged out, show landing page
-            this.setState({loggedIn: false});
+            this.setState({loggedIn: false, serverCheck: true});
           }
         });
-    }
-    if(this.state.loggedIn) {
-
     } else {
-      return <LandingPage />;
+      if(this.state.loggedIn) {
+        //return <RedditAggregator userData={this.state.userData} />;
+      } else {
+        return <LandingPage handleLogin={this.handleLogin} />;
+      }
     }
+  }
+
+  handleLogin(userData) {
+    this.setState({userData: userData, loggedIn: true});
   }
 
   render() {
     return(
-      <div className="App">
-        {this.checkLoginStatus()}
+      <div className="app">
+        {this.handleDisplay()}
       </div>
     );
   }

@@ -33,8 +33,8 @@ class About extends React.Component {
         Sound cool? Go ahead and sign up, it just takes a minute.
         </p>
         <Container style={{textAlign: 'center'}} className="about-button-conatiner">
-          <Button variant="dark" className="about-button" onClick={() => {this.handleClick('signup')}}>Sign Up</Button>
-          <Button variant="dark" className="about-button" onClick={() => {this.handleClick('loginForm')}}>Back to Sign In</Button>
+          <Button size="sm" variant="dark" className="about-button" onClick={() => {this.handleClick('signUpForm')}}>Sign Up</Button>
+          <Button size="sm" variant="dark" className="about-button" onClick={() => {this.handleClick('loginForm')}}>Back to Sign In</Button>
         </Container>
       </Container>
     );

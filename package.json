@@ -25,6 +25,7 @@
     "mocha": "^6.1.4",
     "password-hash": "^1.2.2",
     "pg": "^7.10.0",
+    "sendmail": "^1.4.1",
     "snoowrap": "^1.15.2"
   }
 }

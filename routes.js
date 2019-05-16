@@ -8,13 +8,24 @@ module.exports = (app) => {
     res.json({loggedIn: false});
   });
 
-  app.post('/api/v1/createUser', async (req, res) => {
-    let result = users.createUser(req.body);
-    if(result) {
-      res.json({userCreated: true});
-    } else {
-      res.json({userCreated: false});
-    }
+  app.post('/api/v1/createUser', (req, res) => {
+    users.createUser(req.body)
+      .then((result) => {
+        res.json({userCreated: true});
+      })
+      .catch((error) => {
+        res.json({userCreated: false, reason: error.toString()});
+      });
+  });
+
+  app.post('/api/v1/forgotPassword', (req, res) => {
+    users.createTempPassword(req.body.email)
+      .then((result) => {
+        res.json({result: result});
+      })
+      .catch((error) => {
+        res.json({result: false});
+      });
   });
 
   app.get('/api/v1/login', async (req, res) => {

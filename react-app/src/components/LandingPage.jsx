@@ -3,6 +3,7 @@ import LandingHeader from './LandingHeader';
 import LoginForm from './LoginForm';
 import About from './About';
 import SignupForm from './SignupForm';
+import ForgotPassword from './ForgotPassword';
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -16,12 +17,15 @@ class LandingPage extends React.Component {
   }
 
   handleToggle(action) {
+    window.scrollTo(0, 0);
     if(action === 'loginForm') {
       this.setState({show: 'loginForm'});
     } else if(action === 'about') {
       this.setState({show: 'about'});
-    } else {
+    } else if(action === 'signUpForm') {
       this.setState({show: 'signUpForm'});
+    } else {
+      this.setState({show: 'forgotPassword'});
     }
   }
 
@@ -30,8 +34,10 @@ class LandingPage extends React.Component {
       return <LoginForm handleToggle={this.handleToggle}/>;
     } else if(this.state.show === 'about') {
       return <About handleToggle={this.handleToggle}/>;
-    } else {
+    } else if(this.state.show === 'signUpForm') {
       return <SignupForm handleToggle={this.handleToggle}/>;
+    } else {
+      return <ForgotPassword handleToggle={this.handleToggle}/>;
     }
   }
 

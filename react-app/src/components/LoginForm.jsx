@@ -14,9 +14,7 @@ class LoginForm extends React.Component {
   }
 
   handleClick(action) {
-    if(action === 'about') {
-      this.props.handleToggle(action);
-    }
+    this.props.handleToggle(action);
   }
 
   render() {
@@ -43,6 +41,7 @@ class LoginForm extends React.Component {
               </Button>
             </Form>
             <p onClick={() => {this.handleClick('about')}}>New Here? Learn More &amp; Sign Up!</p>
+            <p onClick={() => {this.handleClick('forgotPassword')}}>Forgot Password?</p>
           </ Col>
         </Row>
       </Container>

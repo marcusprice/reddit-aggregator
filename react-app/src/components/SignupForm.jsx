@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import '../css/signup-form.css';
 
 class SignupForm extends React.Component {
@@ -12,13 +13,16 @@ class SignupForm extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.createNewUser = this.createNewUser.bind(this);
+    this.handleAlert = this.handleAlert.bind(this);
     this.state = {
       username: '',
       email: '',
       password: '',
       passwordCheck: '',
       firstName: '',
-      lastName: ''
+      lastName: '',
+      showWarning: false,
+      warning: ''
     }
   }
 
@@ -39,38 +43,63 @@ class SignupForm extends React.Component {
     if(e.target.id === 'lastName') {this.setState({lastName: e.target.value})}
   }
 
+  handleAlert() {
+    if(this.state.showWarning) {
+      window.scrollTo(0, 0);
+      return <Alert
+        onClose={() => {this.setState({showWarning: false, alertShown: false})}}
+        dismissible
+        variant="danger">
+          {this.state.warning}
+      </Alert>;
+    }
+  }
+
   createNewUser(event) {
     event.preventDefault();
-    fetch('http://localhost:5000/api/v1/createUser', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'omit',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrer: 'no-referrer',
-      body: JSON.stringify({
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName
+    if(this.state.password === this.state.passwordCheck) {
+      //create new user
+      fetch('http://localhost:5000/api/v1/createUser', {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'omit',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrer: 'no-referrer',
+        body: JSON.stringify({
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password,
+          firstName: this.state.firstName,
+          lastName: this.state.lastName
+        })
       })
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        console.log('user created?');
-        console.log(response.userCreated);
-      });
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if(response.userCreated) {
+
+          } else {
+            //show warning
+            if(response.reason === 'Error: username or email already exists') {
+              this.setState({showWarning: true, warning: 'Username and/or Email Already In Use'});
+            }
+          }
+        });
+    } else {
+      //send warning
+      this.setState({showWarning: true, warning: 'Passwords Do Not Match'});
+    }
   }
 
   render() {
     return(
       <Container className="signup-form">
+        {this.handleAlert()}
         <Row>
           <Col>
             <Form className="signupForm" onSubmit={this.createNewUser}>
@@ -116,12 +145,15 @@ class SignupForm extends React.Component {
 
         <Container style={{textAlign: 'center', marginBottom: '2rem'}} className="singup-button-conatiner">
           <Button
+            size="sm"
             variant="dark"
             className="signup-button"
             onClick={() => {this.handleClick('loginForm')}}>
             Back to Sign In
           </Button>
+
           <Button
+            size="sm"
             variant="dark"
             className="signup-button" onClick={() => {this.handleClick('about')}}>Back to About</Button>
         </Container>
