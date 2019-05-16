@@ -44,7 +44,7 @@ class LandingPage extends React.Component {
   render() {
     return(
       <div>
-        <LandingHeader />
+        <LandingHeader handleToggle={this.handleToggle}/>
         {this.handleDisplay()}
       </div>
     );

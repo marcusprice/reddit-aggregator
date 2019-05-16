@@ -24,7 +24,7 @@ module.exports = (app) => {
         res.json({result: result});
       })
       .catch((error) => {
-        res.json({result: false});
+        res.json({result: false, reason: error.toString()});
       });
   });
 
