@@ -22,5 +22,8 @@ module.exports = {
   email: {
     user: credentials.email.username,
     password: credentials.email.password
+  },
+  session: {
+    secret: credentials.session.secret
   }
 }

@@ -4,6 +4,18 @@ const tools = require('../lib/tools');
 const helpers = require('../lib/helpers');
 
 module.exports = {
+  getUser: (handle) => {
+    return new Promise((resolve, reject) => {
+      Users.readUser(handle, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   validatePassword: (handle, password) => {
     return new Promise((resolve, reject) => {
       Users.readPassword(handle, (error, result) => {
@@ -17,18 +29,6 @@ module.exports = {
             //passwords don't match
             resolve(false);
           }
-        }
-      });
-    });
-  },
-
-  getUser: (handle) => {
-    return new Promise((resolve, reject) => {
-      Users.readUser(handle, (error, result) => {
-        if(error) {
-          reject(error);
-        } else {
-          resolve(result);
         }
       });
     });

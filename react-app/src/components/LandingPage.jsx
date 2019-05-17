@@ -31,7 +31,7 @@ class LandingPage extends React.Component {
 
   handleDisplay() {
     if(this.state.show === 'loginForm') {
-      return <LoginForm handleToggle={this.handleToggle}/>;
+      return <LoginForm handleLogin={this.props.handleLogin} handleToggle={this.handleToggle}/>;
     } else if(this.state.show === 'about') {
       return <About handleToggle={this.handleToggle}/>;
     } else if(this.state.show === 'signUpForm') {

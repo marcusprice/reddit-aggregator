@@ -1,15 +1,15 @@
 import React from 'react';
-//import RedditAggregator from './components/RedditAggregator';
 import LandingPage from './components/LandingPage';
+import Dashboard from './components/Dashboard';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      userData: null,
       loggedIn: false,
-      serverCheck: true,
-      userData: null
+      serverCheck: false,
     };
 
     this.handleDisplay = this.handleDisplay.bind(this);
@@ -18,7 +18,7 @@ class App extends React.Component {
 
   handleDisplay() {
     if(!this.state.serverCheck) {
-      fetch('/api/v1/checkLoginStatus')
+      fetch('http://localhost:5000/api/v1/checkLoginStatus')
         .then((response) => {
           return response.json();
         })
@@ -31,15 +31,15 @@ class App extends React.Component {
         });
     } else {
       if(this.state.loggedIn) {
-        //return <RedditAggregator userData={this.state.userData} />;
+        return <Dashboard loggedIn={this.state.loggedIn} userData={this.state.userData} />;
       } else {
         return <LandingPage handleLogin={this.handleLogin} />;
       }
     }
   }
 
-  handleLogin(userData) {
-    this.setState({userData: userData, loggedIn: true});
+  handleLogin(user) {
+    this.setState({userData: user.userData, loggedIn: user.loggedIn});
   }
 
   render() {
