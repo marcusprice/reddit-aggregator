@@ -9,7 +9,7 @@ module.exports = (app) => {
     if(req.session.loggedIn && req.session.rememberMe) {
       output.loggedIn = true;
       //get user data
-      output.userData = await helpers.getAllData(handle, users);
+      output.userData = await helpers.getAllData(req.session.userID, users);
       res.json(output);
     } else {
       output.loggedIn = true;
@@ -39,27 +39,27 @@ module.exports = (app) => {
   });
 
   app.get('/api/v1/login', async (req, res) => {
-    console.log(req.session.rememberMe);
+    let output = {};
 
-    //first verify the user's password
     const handle = req.query.handle;
     const password = req.query.password;
     const validated = await users.validatePassword(handle, password);
 
-    let output = {};
     if(validated) {
+      //get all of the user's data
+      output.userData = await helpers.getAllData(handle, users);
+      //set logged in status to true
+      output.loggedIn = true;
+
       //set session variables
       req.session.loggedIn = true;
+      req.session.userID = output.userData.userid;
       if(req.query.rememberMe === 'true') {
         req.session.rememberMe = true;
       } else {
         req.session.rememberMe = false;
       }
 
-      //get all of the user's data
-      output.userData = await helpers.getAllData(handle, users);
-      //set logged in status to true
-      output.loggedIn = true;
       res.json(output);
     } else {
       //send back issue
@@ -67,6 +67,12 @@ module.exports = (app) => {
       output.reason = 'passwords didn\'t match';
       res.json({output});
     }
+  });
+
+  app.get('/api/vi/logout', (req, res) => {
+    req.session.loggedIn = false;
+    req.session.rememberMe = false;
+    res.json({loggedOut: true});
   });
 
   app.get('/', (req, res) => {

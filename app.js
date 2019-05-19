@@ -10,8 +10,7 @@ app.use(session({
   secret: config.session.secret,
   cookie: {
     maxAge: 60000,
-    secure: false,
-    domain: 'localhost:3000'
+    secure: false
   },
   resave: true,
   saveUninitialized: true
