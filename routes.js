@@ -4,15 +4,17 @@ const helpers = require('./lib/helpers');
 
 module.exports = (app) => {
   //logs user on, gets all the data etc.
+  let output = {};
   app.get('/api/v1/checkLoginStatus', async (req, res) => {
     if(req.session.loggedIn && req.session.rememberMe) {
-      let output = {};
       output.loggedIn = true;
       //get user data
-      output.userData = await helpers.getAllData(handle);
+      output.userData = await helpers.getAllData(handle, users);
       res.json(output);
     } else {
-      res.json({loggedIn: false});
+      output.loggedIn = true;
+      output.userData = await helpers.getAllData('marcusprice', users);
+      res.json(output);
     }
   });
 

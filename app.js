@@ -8,7 +8,11 @@ const cookieParser = require('cookie-parser');
 
 app.use(session({
   secret: config.session.secret,
-  cookie: {maxAge: 60000, secure: false},
+  cookie: {
+    maxAge: 60000,
+    secure: false,
+    domain: 'localhost:3000'
+  },
   resave: true,
   saveUninitialized: true
 }));

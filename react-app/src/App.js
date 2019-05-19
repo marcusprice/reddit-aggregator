@@ -22,7 +22,7 @@ class App extends React.Component {
         .then((response) => {
           return response.json();
         })
-        .then((result) => {
+        .then((result) => {       
           if(result.loggedIn) {
             this.setState({loggedIn: true, serverCheck: true, userData: result.userData});
           } else {
