@@ -29,7 +29,7 @@ class LoginForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch('http://localhost:5000/api/v1/login?handle=' +
+    fetch('http://localhost:5000/login?handle=' +
     this.state.handle + '&password=' + this.state.password +
     '&rememberMe=' + this.state.rememberMe)
       .then((response) => {

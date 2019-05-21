@@ -21,7 +21,7 @@ class App extends React.Component {
 
   componentDidMount() {
     //run once to see if the user is logged in or not
-    fetch('http://localhost:5000/api/v1/checkLoginStatus')
+    fetch('http://localhost:5000/checkLoginStatus')
       .then(res => res.json())
       .then((result) => {
         const reports = List(result.userData.reports);

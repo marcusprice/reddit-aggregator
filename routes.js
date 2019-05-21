@@ -5,7 +5,7 @@ const helpers = require('./lib/helpers');
 module.exports = (app) => {
   //logs user on, gets all the data etc.
   let output = {};
-  app.get('/api/v1/checkLoginStatus', async (req, res) => {
+  app.get('/checkLoginStatus', async (req, res) => {
     if(req.session.loggedIn && req.session.rememberMe) {
       output.loggedIn = true;
       //get user data
@@ -21,7 +21,7 @@ module.exports = (app) => {
     }
   });
 
-  app.post('/api/v1/forgotPassword', (req, res) => {
+  app.post('/forgotPassword', (req, res) => {
     users.createTempPassword(req.body.email)
       .then((result) => {
         res.json({result: result});
@@ -31,7 +31,7 @@ module.exports = (app) => {
       });
   });
 
-  app.post('/api/v1/createUser', (req, res) => {
+  app.post('/createUser', (req, res) => {
     users.createUser(req.body)
       .then((result) => {
         res.json({userCreated: true});
@@ -41,7 +41,7 @@ module.exports = (app) => {
       });
   });
 
-  app.get('/api/v1/login', async (req, res) => {
+  app.get('/login', async (req, res) => {
     let output = {};
 
     const handle = req.query.handle;
@@ -72,7 +72,7 @@ module.exports = (app) => {
     }
   });
 
-  app.get('/api/vi/logout', (req, res) => {
+  app.get('/logout', (req, res) => {
     req.session.loggedIn = false;
     req.session.rememberMe = false;
     res.json({loggedOut: true});
