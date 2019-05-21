@@ -1,6 +1,7 @@
 import React from 'react';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
+import { List } from 'immutable';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,29 +10,35 @@ class App extends React.Component {
     this.state = {
       userData: null,
       loggedIn: false,
-      serverCheck: false,
+      serverChecked: false,
+      initialLoad: true,
+      reports: []
     };
 
     this.handleDisplay = this.handleDisplay.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  handleDisplay() {
-    if(!this.state.serverCheck) {
-      fetch('http://localhost:5000/api/v1/checkLoginStatus')
-        .then((response) => {
-          return response.json();
-        })
-        .then((result) => {
-          if(result.loggedIn) {
-            this.setState({loggedIn: true, serverCheck: true, userData: result.userData});
-          } else {
-            this.setState({loggedIn: false, serverCheck: true});
-          }
+  componentDidMount() {
+    //run once to see if the user is logged in or not
+    fetch('http://localhost:5000/api/v1/checkLoginStatus')
+      .then(res => res.json())
+      .then((result) => {
+        const reports = List(result.userData.reports);
+        this.setState({
+          loggedIn: result.loggedIn,
+          userData: result.userData,
+          serverChecked: true,
+          initialLoad: false,
+          reports: reports
         });
-    } else {
+      });
+  }
+
+  handleDisplay() {
+    if(!this.state.initialLoad) {
       if(this.state.loggedIn) {
-        return <Dashboard loggedIn={this.state.loggedIn} userData={this.state.userData} />;
+        return <Dashboard reports={this.state.reports} userData={this.state.userData} />;
       } else {
         return <LandingPage handleLogin={this.handleLogin} />;
       }

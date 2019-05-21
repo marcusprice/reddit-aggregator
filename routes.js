@@ -12,8 +12,11 @@ module.exports = (app) => {
       output.userData = await helpers.getAllData(req.session.userID, users);
       res.json(output);
     } else {
+      console.log('yo');
       output.loggedIn = true;
       output.userData = await helpers.getAllData('marcusprice', users);
+      output.reports = output.userData.reports;
+      console.log(output);
       res.json(output);
     }
   });
