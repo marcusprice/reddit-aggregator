@@ -23,7 +23,10 @@ class Dashboard extends React.Component {
         reports={this.props.reports}
       />;
     } else if(this.state.show === 'createReport') {
-      return <CreateReport changeView={this.changeView}/>;
+      return <CreateReport
+        userID={this.props.userData.userid}
+        changeView={this.changeView}
+      />;
     }
   }
 

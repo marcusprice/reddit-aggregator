@@ -17,7 +17,6 @@ class ReportList extends React.Component {
   }
 
   render() {
-    console.log(this.props.reports.toArray());
     let reports = this.props.reports.toArray();
     //convert the reports into an array of arrays (3 reports max each)
     var reportGroupArray = [];

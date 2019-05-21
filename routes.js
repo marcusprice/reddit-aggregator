@@ -1,4 +1,5 @@
 const users = require('./controllers/users');
+const reports = require('./controllers/reports');
 const tools = require('./lib/tools');
 const helpers = require('./lib/helpers');
 
@@ -9,14 +10,14 @@ module.exports = (app) => {
     if(req.session.loggedIn && req.session.rememberMe) {
       output.loggedIn = true;
       //get user data
-      output.userData = await helpers.getAllData(req.session.userID, users);
+      output.userData = await users.getUser(req.session.userID);
+      output.reportData = await helpers.getAllReportData(req.session.userID);
       res.json(output);
     } else {
-      console.log('yo');
       output.loggedIn = true;
-      output.userData = await helpers.getAllData('marcusprice', users);
-      output.reports = output.userData.reports;
-      console.log(output);
+      //get user data
+      output.userData = await users.getUser(1);
+      output.reportData = await helpers.getAllReportData(1);
       res.json(output);
     }
   });
@@ -25,6 +26,16 @@ module.exports = (app) => {
     users.createTempPassword(req.body.email)
       .then((result) => {
         res.json({result: result});
+      })
+      .catch((error) => {
+        res.json({result: false, reason: error.toString()});
+      });
+  });
+
+  app.post('/createReport', (req, res) => {
+    reports.createReport(req.body)
+      .then((result) => {
+        res.json({reportCreated: result});
       })
       .catch((error) => {
         res.json({result: false, reason: error.toString()});

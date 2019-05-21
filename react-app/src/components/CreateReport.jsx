@@ -56,12 +56,22 @@ class CreateReport extends React.Component {
       redirect: 'follow',
       referrer: 'no-referrer',
       body: JSON.stringify({
-        reportName: this.state.reportName,
-        reportDescription: this.state.reportDescription,
+        userID: this.props.userID,
+        name: this.state.reportName,
+        description: this.state.reportDescription,
         subreddits: subreddits,
         notifications: this.state.notifications
       })
     })
+      .then(res => res.json())
+      .then((response) => {
+        if(response.reportCreated) {
+          this.props.changeView('reports');
+        } else {
+          //handle server error
+          console.log(response);
+        }
+      });
   }
 
   handleClick() {
@@ -91,6 +101,7 @@ class CreateReport extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     const { subreddits, suggestions } = this.state;
     return(
       <Container>

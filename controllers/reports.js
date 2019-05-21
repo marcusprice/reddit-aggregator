@@ -11,5 +11,17 @@ module.exports = {
         }
       });
     });
+  },
+
+  createReport(reportData) {
+    return new Promise((resolve, reject) => {
+      Reports.createReport(reportData, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 };

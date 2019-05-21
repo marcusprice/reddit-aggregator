@@ -24,7 +24,7 @@ class App extends React.Component {
     fetch('http://localhost:5000/checkLoginStatus')
       .then(res => res.json())
       .then((result) => {
-        const reports = List(result.userData.reports);
+        const reports = List(result.reportData);
         this.setState({
           loggedIn: result.loggedIn,
           userData: result.userData,

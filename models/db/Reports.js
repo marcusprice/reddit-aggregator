@@ -130,8 +130,7 @@ module.exports = {
 
         callback(null, output);
       } else {
-        const error = new Error('no reports found');
-        callback(error, null);
+        callback(null, []);
       }
     }
   },
