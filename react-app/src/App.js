@@ -17,6 +17,7 @@ class App extends React.Component {
 
     this.handleDisplay = this.handleDisplay.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.updateReports = this.updateReports.bind(this);
   }
 
   componentDidMount() {
@@ -35,10 +36,17 @@ class App extends React.Component {
       });
   }
 
+  updateReports(reportData) {
+    const reports = List(reportData);
+    this.setState({
+      reports: reports
+    });
+  }
+
   handleDisplay() {
     if(!this.state.initialLoad) {
       if(this.state.loggedIn) {
-        return <Dashboard reports={this.state.reports} userData={this.state.userData} />;
+        return <Dashboard updateReports={this.updateReports} reports={this.state.reports} userData={this.state.userData} />;
       } else {
         return <LandingPage handleLogin={this.handleLogin} />;
       }

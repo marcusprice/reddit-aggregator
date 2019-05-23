@@ -43,7 +43,7 @@ CREATE TABLE Submissions (
   SubredditID INT REFERENCES Subreddits,
   RedditID VARCHAR(255),
   Title VARCHAR(255),
-  URL VARCHAR(255),
+  URL TEXT,
   SelfText TEXT,
   HandleID INT REFERENCES Handles,
   SubmissionTimePostedUTC INT,

@@ -11,5 +11,17 @@ module.exports = {
         }
       });
     });
+  },
+
+  getAllSubreddits: () => {
+    return new Promise((resolve, reject) => {
+      Subreddits.readAllSubreddits((error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 };

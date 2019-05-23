@@ -6,8 +6,8 @@ module.exports = {
     .then((result) => {
       //convert unix timestamp from miliseconds (js standard) to seconds
       let now = Math.floor(Date.now() / 1000);
-      //test if more than 1 hour has passed
-      if(now - result['0'].created_utc > 3600) {
+      //test if more than 2 hour has passed
+      if(now - result['0'].created_utc > 4000) {
         //more than 1 hour has passed since last post, do not collect data
         const error = new Error('more than 1 hour has elapsed since the last post');
         callback(error, null);

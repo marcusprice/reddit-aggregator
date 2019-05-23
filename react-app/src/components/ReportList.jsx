@@ -9,11 +9,22 @@ import Button from 'react-bootstrap/Button';
 class ReportList extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    this.createReport = this.createReport.bind(this);
+    this.updateReportData = this.updateReportData.bind(this);
   }
 
-  handleClick() {
+  createReport(event) {
+    event.preventDefault();
     this.props.changeView('createReport');
+  }
+
+  updateReportData(event) {
+    event.preventDefault();
+    fetch('http://localhost:5000/updateReportData?userID=' + this.props.userInfo.userid)
+      .then(res => res.json())
+      .then((reports) => {
+        this.props.updateReports(reports);
+      });
   }
 
   render() {
@@ -29,8 +40,8 @@ class ReportList extends React.Component {
         <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
           <h1 style={{fontWeight: '300'}}>Reports</h1>
           <p className="lead">Welcome {this.props.userInfo.firstname}! Below are your reports.</p>
-          <Button onClick={this.handleClick} style={{marginRight: '1rem'}}>Create New Report</Button>
-          <Button style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
+          <Button onClick={this.createReport} style={{marginRight: '1rem'}}>Create New Report</Button>
+          <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
         </Jumbotron>
 
         <Container style={{margin: '0 auto'}} >
@@ -42,7 +53,7 @@ class ReportList extends React.Component {
                   reportGroup.map((report, index) => {
                     return(
                       <Col key={index} style={{textAlign: 'left'}}>
-                        <ReportCard report={report} key={report.reportid}/>
+                        <ReportCard changeView={this.props.changeView} report={report} key={report.reportid}/>
                       </Col>
                     )
                   })

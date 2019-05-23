@@ -23,7 +23,8 @@ class CreateReport extends React.Component {
       reportName: '',
       reportDescription: '',
       subreddits: [],
-      notifications: false
+      suggestions: [],
+      notifications: false,
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -32,6 +33,18 @@ class CreateReport extends React.Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.createReport = this.createReport.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:5000/getSubreddits')
+      .then(res => res.json())
+      .then((result) => {
+        let subreddits = [];
+        result.forEach((value) => {
+          subreddits.push({text: value.subredditname, id: value.subredditname});
+        });
+        this.setState({suggestions: subreddits});
+      });
   }
 
   handleChange(event) {
@@ -65,8 +78,10 @@ class CreateReport extends React.Component {
     })
       .then(res => res.json())
       .then((response) => {
+        console.log(response);
         if(response.reportCreated) {
           this.props.changeView('reports');
+          this.props.updateReports(response.reportData)
         } else {
           //handle server error
           console.log(response);
@@ -132,9 +147,7 @@ class CreateReport extends React.Component {
                     tagInputField: 'form-control',
                     selected: 'selectedClass',
                     tag: 'btn btn-secondary tag-button',
-                    remove: 'tag-button-remove',
-                    suggestions: 'suggestionsClass',
-                    activeSuggestion: 'activeSuggestionClass'
+                    remove: 'tag-button-remove'
                   }}
                   allowDeleteFromEmptyInput={false}
                   tags={subreddits}

@@ -13,6 +13,27 @@ form {
   margin-left: 5px;
 }
 
+.ReactTags__suggestions ul {
+    list-style-type: none;
+    margin-left: 0;
+    padding: 0;
+    box-shadow: .05em .01em .5em rgba(0,0,0,.2);
+    background: white;
+}
+.ReactTags__suggestions li {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    margin: 0;
+}
+.ReactTags__suggestions li mark {
+    background: none;
+}
+
+.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+    background: #b7cfe0;
+    cursor: pointer;
+}
+
 /* tablet & mobile styles */
 @media only screen and (max-width: 700px) {
   .createReportForm {

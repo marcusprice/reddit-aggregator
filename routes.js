@@ -1,4 +1,5 @@
 const users = require('./controllers/users');
+const subreddits = require('./controllers/subreddits');
 const reports = require('./controllers/reports');
 const tools = require('./lib/tools');
 const helpers = require('./lib/helpers');
@@ -32,14 +33,27 @@ module.exports = (app) => {
       });
   });
 
-  app.post('/createReport', (req, res) => {
+  app.get('/getSubreddits', async (req, res) => {
+    const subredditData = await subreddits.getAllSubreddits();
+    console.log(subredditData);
+    res.json(subredditData);
+  });
+
+  app.post('/createReport', async (req, res) => {
     reports.createReport(req.body)
-      .then((result) => {
-        res.json({reportCreated: result});
+      .then(async (result) => {
+        //USE A SESSION VAR IN PRODUCTION!
+        let reports = await helpers.getAllReportData(req.body.userID);
+        res.json({reportCreated: result, reportData: reports});
       })
       .catch((error) => {
         res.json({result: false, reason: error.toString()});
       });
+  });
+
+  app.get('/updateReportData', async (req, res) => {
+    let reports = await helpers.getAllReportData(parseInt(req.query.userID));
+    res.json(reports);
   });
 
   app.post('/createUser', (req, res) => {
@@ -64,6 +78,9 @@ module.exports = (app) => {
       output.userData = await helpers.getAllData(handle, users);
       //set logged in status to true
       output.loggedIn = true;
+
+      output.userData = await users.getUser(handle);
+      output.reportData = await helpers.getAllReportData(output.userData.userid);
 
       //set session variables
       req.session.loggedIn = true;
