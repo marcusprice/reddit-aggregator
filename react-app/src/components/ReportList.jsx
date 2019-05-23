@@ -1,13 +1,25 @@
 import React from 'react';
 import ReportCard from './ReportCard';
 import Jumbotron from 'react-bootstrap/Jumbotron';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
 class ReportList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showAlert: false
+    };
+
     this.createReport = this.createReport.bind(this);
     this.updateReportData = this.updateReportData.bind(this);
+    this.handleAlert = this.handleAlert.bind(this);
+  }
+
+  handleAlert() {
+    if(this.state.showAlert) {
+      return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="success">All Reports Updated</Alert>;
+    }
   }
 
   createReport(event) {
@@ -21,6 +33,7 @@ class ReportList extends React.Component {
       .then(res => res.json())
       .then((reports) => {
         this.props.updateReports(reports);
+        this.setState({showAlert: true});
       });
   }
 
@@ -37,12 +50,15 @@ class ReportList extends React.Component {
           <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
         </Jumbotron>
 
-        <div style={{display: 'flex', flexWrap:'wrap', width: '80%', margin: '0 auto', justifyContent: 'space-between'}} >
-        {
-          reports.map((report, index) => {
-            return(<ReportCard changeView={this.props.changeView} report={report} reportIndex={index} key={report.reportid}/>)
-          })
-        }
+        <div style={{width: '80%', margin: '0 auto',}}>
+          {this.handleAlert()}
+          <div style={{display: 'flex', flexWrap:'wrap', width: '100%', margin: '0 auto', justifyContent: 'space-between'}} >
+          {
+            reports.map((report, index) => {
+              return(<ReportCard changeView={this.props.changeView} report={report} reportIndex={index} key={report.reportid}/>)
+            })
+          }
+          </div>
         </div>
       </div>
     );

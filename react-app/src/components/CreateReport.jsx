@@ -132,7 +132,7 @@ class CreateReport extends React.Component {
 
               <Form.Group controlId="reportDescription">
                 <Form.Label>Report Description</Form.Label>
-                <Form.Control value={this.state.reportDescription} onChange={this.handleChange} as="textarea" rows="3" placeholder="Enter Report Description" />
+                <Form.Control value={this.state.reportDescription} onChange={this.handleChange} as="textarea" rows="3" placeholder="Enter Report Description (or none at all)" />
               </Form.Group>
 
               <Form.Group controlId="subreddits">

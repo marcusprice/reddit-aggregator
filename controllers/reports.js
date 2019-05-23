@@ -23,5 +23,17 @@ module.exports = {
         }
       });
     });
+  },
+
+  deleteReport(reportID) {
+    return new Promise((resolve, reject) => {
+      Reports.deleteReport(reportID, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      })
+    })
   }
 };

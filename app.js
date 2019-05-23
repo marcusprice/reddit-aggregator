@@ -26,7 +26,16 @@ if(config.cors) {
   app.use(cors());
 }
 
-const routes = require('./routes')(app);
+//serve app
+app.get('/', (req, res) => {
+  res.send('./public/index.html');
+});
+
+//routes
+const authRoutes = require('./routes/authRoutes.js')(app);
+const reportRoutes = require('./routes/reportRoutes.js')(app);
+const subredditRoutes = require('./routes/subredditRoutes.js')(app);
+const userRoutes = require('./routes/userRoutes.js')(app);
 
 app.listen(port, () => {
   console.log('express started');

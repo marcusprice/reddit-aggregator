@@ -1,13 +1,9 @@
-const users = require('./controllers/users');
-const subreddits = require('./controllers/subreddits');
-const reports = require('./controllers/reports');
-const tools = require('./lib/tools');
-const helpers = require('./lib/helpers');
+const users = require('../controllers/users');
+const helpers = require('../lib/helpers');
 
 module.exports = (app) => {
-  //logs user on, gets all the data etc.
-  let output = {};
   app.get('/checkLoginStatus', async (req, res) => {
+    let output = {};
     if(req.session.loggedIn && req.session.rememberMe) {
       output.loggedIn = true;
       //get user data
@@ -21,49 +17,6 @@ module.exports = (app) => {
       output.reportData = await helpers.getAllReportData(1);
       res.json(output);
     }
-  });
-
-  app.post('/forgotPassword', (req, res) => {
-    users.createTempPassword(req.body.email)
-      .then((result) => {
-        res.json({result: result});
-      })
-      .catch((error) => {
-        res.json({result: false, reason: error.toString()});
-      });
-  });
-
-  app.get('/getSubreddits', async (req, res) => {
-    const subredditData = await subreddits.getAllSubreddits();
-    console.log(subredditData);
-    res.json(subredditData);
-  });
-
-  app.post('/createReport', async (req, res) => {
-    reports.createReport(req.body)
-      .then(async (result) => {
-        //USE A SESSION VAR IN PRODUCTION!
-        let reports = await helpers.getAllReportData(req.body.userID);
-        res.json({reportCreated: result, reportData: reports});
-      })
-      .catch((error) => {
-        res.json({result: false, reason: error.toString()});
-      });
-  });
-
-  app.get('/updateReportData', async (req, res) => {
-    let reports = await helpers.getAllReportData(parseInt(req.query.userID));
-    res.json(reports);
-  });
-
-  app.post('/createUser', (req, res) => {
-    users.createUser(req.body)
-      .then((result) => {
-        res.json({userCreated: true});
-      })
-      .catch((error) => {
-        res.json({userCreated: false, reason: error.toString()});
-      });
   });
 
   app.get('/login', async (req, res) => {
@@ -105,8 +58,4 @@ module.exports = (app) => {
     req.session.rememberMe = false;
     res.json({loggedOut: true});
   });
-
-  app.get('/', (req, res) => {
-    res.send('./public/index.html');
-  });
-}
+};
