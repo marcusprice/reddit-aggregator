@@ -11,21 +11,22 @@ class ReportCard extends React.Component {
 
   handleClick(event) {
     event.preventDefault();
-    this.props.changeView('viewReport', this.props.report);
+    this.props.changeView('viewReport', this.props.reportIndex);
   }
 
   render() {
     return(
-      <Card style={{ width: '18rem', margin: '0 auto', marginBottom: '3rem'}}>
-        <Card.Header variant="dark" as="h5"></Card.Header>
+      <Card style={{ width: '19rem', marginBottom: '3rem'}}>
+        <Card.Header variant="dark">RA Report</Card.Header>
         <Card.Body>
-          <Card.Title>{this.props.report.name}</Card.Title>
+          <Card.Title onClick={this.handleClick} style={{cursor: 'pointer'}}>{this.props.report.name}</Card.Title>
           <Card.Text>
             {this.props.report.description}
           </Card.Text>
           <ButtonGroup>
-            <Button size="sm" variant="outline-secondary" onClick={this.handleClick}>View Report</Button>
-            <Button size="sm" variant="outline-secondary">Edit Report</Button>
+            <Button size="sm" variant="outline-secondary" onClick={this.handleClick}>View</Button>
+            <Button size="sm" variant="outline-secondary">Edit</Button>
+            <Button size="sm" variant="outline-secondary">Delete</Button>
           </ButtonGroup>
         </Card.Body>
       </Card>

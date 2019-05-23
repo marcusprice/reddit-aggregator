@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import ReportList from './ReportList';
 import CreateReport from './CreateReport';
 import ViewReport from './ViewReport';
@@ -10,7 +11,7 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       show: 'reports',
-      reportData: {}
+      reportIndex: 0
     };
 
     this.handleView = this.handleView.bind(this);
@@ -32,19 +33,21 @@ class Dashboard extends React.Component {
         changeView={this.changeView}
       />;
     } else if(this.state.show === 'viewReport') {
+      let reports = this.props.reports.toArray();
       return <ViewReport
-        report={this.state.reportData}
+        reportIndex={this.state.reportIndex}
+        report={reports[this.state.reportIndex]}
         changeView={this.changeView}
         userInfo={this.props.userData}
-        updateReports={this.props.updateReports}        
+        updateReports={this.props.updateReports}
       />;
     }
   }
 
-  changeView(view, reportData = null) {
+  changeView(view, reportIndex = null) {
     window.scrollTo(0,0);
     if(view === 'viewReport') {
-      this.setState({show: view, reportData: reportData});
+      this.setState({show: view, reportIndex: reportIndex});
     } else {
       this.setState({show: view});
     }
@@ -53,12 +56,13 @@ class Dashboard extends React.Component {
   render() {
     return(
       <div>
-        <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home">Reddit Aggregator</Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="#home">Reports</Nav.Link>
-            <Nav.Link href="#features">Account Settings</Nav.Link>
-          </Nav>
+        <Navbar style={{display: 'flex', justifyContent: 'space-between'}} bg="dark" variant="dark">
+          <Navbar.Brand style={{cursor: 'pointer'}} onClick={() => {this.changeView('reports')}}>Reddit Aggregator</Navbar.Brand>
+          <DropdownButton variant="secondary" id="dropdown-basic-button" title="Menu" alignRight>
+            <Dropdown.Item href="#/action-1">Reports</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Create Report</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Account Settings</Dropdown.Item>
+          </DropdownButton>
         </Navbar>
         {this.handleView()}
       </div>

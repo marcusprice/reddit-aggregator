@@ -78,13 +78,11 @@ class CreateReport extends React.Component {
     })
       .then(res => res.json())
       .then((response) => {
-        console.log(response);
         if(response.reportCreated) {
           this.props.changeView('reports');
           this.props.updateReports(response.reportData)
         } else {
           //handle server error
-          console.log(response);
         }
       });
   }
@@ -116,7 +114,6 @@ class CreateReport extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     const { subreddits, suggestions } = this.state;
     return(
       <Container>

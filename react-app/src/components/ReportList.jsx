@@ -1,8 +1,5 @@
 import React from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import ReportCard from './ReportCard';
-import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 
@@ -30,10 +27,6 @@ class ReportList extends React.Component {
   render() {
     let reports = this.props.reports.toArray();
     //convert the reports into an array of arrays (3 reports max each)
-    var reportGroupArray = [];
-    while (reports.length > 0) {
-      reportGroupArray.push(reports.splice(0, 3));
-    }
 
     return(
       <div>
@@ -44,25 +37,13 @@ class ReportList extends React.Component {
           <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
         </Jumbotron>
 
-        <Container style={{margin: '0 auto'}} >
+        <div style={{display: 'flex', flexWrap:'wrap', width: '80%', margin: '0 auto', justifyContent: 'space-between'}} >
         {
-          reportGroupArray.map((reportGroup, groupIndex) => {
-            return(
-              <Row style={{margin: '0 auto', textAlign:'left'}} key={groupIndex}>
-                {
-                  reportGroup.map((report, index) => {
-                    return(
-                      <Col key={index} style={{textAlign: 'left'}}>
-                        <ReportCard changeView={this.props.changeView} report={report} key={report.reportid}/>
-                      </Col>
-                    )
-                  })
-                }
-              </Row>
-            )
+          reports.map((report, index) => {
+            return(<ReportCard changeView={this.props.changeView} report={report} reportIndex={index} key={report.reportid}/>)
           })
         }
-        </Container>
+        </div>
       </div>
     );
   }
