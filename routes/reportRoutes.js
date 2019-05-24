@@ -20,11 +20,11 @@ module.exports = (app) => {
   });
 
   app.get('/deleteReport', async (req, res) => {
-    const reportID = req.query.reportID;
-    const userID = req.query.userID;
+    const reportID = parseInt(req.query.reportID);
+    const userID = parseInt(req.query.userID);
     reports.deleteReport(reportID)
       .then(async (result) => {
-        let reports = await helpers.getAllReportData(req.body.userID);
+        let reports = await helpers.getAllReportData(userID);
         res.json({reportDeleted: result, reportData: reports});
       })
       .catch((error) => {

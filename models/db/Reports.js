@@ -105,7 +105,7 @@ module.exports = {
       callback(error, null);
     } else {
       //get all of the user's reports (IDs only)
-      const sql = 'SELECT ReportID FROM Reports WHERE UserID = $1';
+      const sql = 'SELECT ReportID FROM Reports WHERE UserID = $1 ORDER BY ReportID DESC;';
       const value = [userID];
 
       //instantiate output variable

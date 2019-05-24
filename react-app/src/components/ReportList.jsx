@@ -3,16 +3,22 @@ import ReportCard from './ReportCard';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 class ReportList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAlert: false
+      showAlert: false,
+      showModal: false,
+      deleteReportName: '',
+      deleteReportID: 0
     };
 
     this.createReport = this.createReport.bind(this);
+    this.showDeleteReportWarning = this.showDeleteReportWarning.bind(this);
     this.updateReportData = this.updateReportData.bind(this);
+    this.deleteReport = this.deleteReport.bind(this);
     this.handleAlert = this.handleAlert.bind(this);
   }
 
@@ -27,6 +33,15 @@ class ReportList extends React.Component {
     this.props.changeView('createReport');
   }
 
+  showDeleteReportWarning(reportIndex) {
+    let reports = this.props.reports.toArray();
+    this.setState({
+      showModal: true,
+      deleteReportName: reports[reportIndex].name,
+      deleteReportID: reports[reportIndex].reportid
+    });
+  }
+
   updateReportData(event) {
     event.preventDefault();
     fetch('http://localhost:5000/updateReportData?userID=' + this.props.userInfo.userid)
@@ -34,6 +49,17 @@ class ReportList extends React.Component {
       .then((reports) => {
         this.props.updateReports(reports);
         this.setState({showAlert: true});
+      });
+  }
+
+  deleteReport(event) {
+    event.preventDefault();
+    fetch('http://localhost:5000/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.state.deleteReportID)
+      .then(res => res.json())
+      .then((response) => {
+        console.log(response);
+        this.props.updateReports(response.reportData);
+        this.setState({showModal: false});
       });
   }
 
@@ -50,12 +76,33 @@ class ReportList extends React.Component {
           <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
         </Jumbotron>
 
+        <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete Report</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete your {this.state.deleteReportName} report?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => {this.setState({showModal: false})}}>
+              Cancel
+            </Button>
+            <Button onClick={this.deleteReport} variant="danger">
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <div style={{width: '80%', margin: '0 auto',}}>
           {this.handleAlert()}
           <div style={{display: 'flex', flexWrap:'wrap', width: '100%', margin: '0 auto', justifyContent: 'space-between'}} >
           {
             reports.map((report, index) => {
-              return(<ReportCard changeView={this.props.changeView} report={report} reportIndex={index} key={report.reportid}/>)
+              return(<ReportCard
+                showDeleteReportWarning={this.showDeleteReportWarning}
+                changeView={this.props.changeView}
+                report={report}
+                reportIndex={index}
+                key={report.reportid}/>
+              )
             })
           }
           </div>
