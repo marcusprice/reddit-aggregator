@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 app.use(session({
   secret: config.session.secret,
   cookie: {
-    maxAge: 60000,
+    expires: new Date(Date.now() + (7 * 86400 * 1000)),
     secure: false
   },
   resave: true,
@@ -26,7 +26,6 @@ if(config.cors) {
   app.use(cors());
 }
 
-//serve app
 app.get('/', (req, res) => {
   res.send('./public/index.html');
 });

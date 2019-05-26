@@ -4,6 +4,7 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import '../css/report-list.css';
 
 class ReportList extends React.Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class ReportList extends React.Component {
 
         <div style={{width: '80%', margin: '0 auto',}}>
           {this.handleAlert()}
-          <div style={{display: 'flex', flexWrap:'wrap', width: '100%', margin: '0 auto', justifyContent: 'space-between'}} >
+          <div className="grid">
           {
             reports.map((report, index) => {
               return(<ReportCard

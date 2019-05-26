@@ -13,7 +13,7 @@ module.exports = {
     });
   },
 
-  createReport(reportData) {
+  createReport: (reportData) => {
     return new Promise((resolve, reject) => {
       Reports.createReport(reportData, (error, result) => {
         if(error) {
@@ -25,7 +25,19 @@ module.exports = {
     });
   },
 
-  deleteReport(reportID) {
+  editReport: (reportID, reportData) => {
+    return new Promise((resolve, reject) => {
+      Reports.updateReport(reportID, reportData, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
+  deleteReport: (reportID) => {
     return new Promise((resolve, reject) => {
       Reports.deleteReport(reportID, (error, result) => {
         if(error) {

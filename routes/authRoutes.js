@@ -11,8 +11,8 @@ module.exports = (app) => {
       output.reportData = await helpers.getAllReportData(req.session.userID);
       res.json(output);
     } else {
+      //output.loggedIn = false;
       output.loggedIn = true;
-      //get user data
       output.userData = await users.getUser(1);
       output.reportData = await helpers.getAllReportData(1);
       res.json(output);
@@ -27,11 +27,8 @@ module.exports = (app) => {
     const validated = await users.validatePassword(handle, password);
 
     if(validated) {
-      //get all of the user's data
-      output.userData = await helpers.getAllData(handle, users);
-      //set logged in status to true
-      output.loggedIn = true;
-
+      //set output properties
+      output.loggedIn = validated;
       output.userData = await users.getUser(handle);
       output.reportData = await helpers.getAllReportData(output.userData.userid);
 

@@ -53,8 +53,13 @@ class App extends React.Component {
     }
   }
 
-  handleLogin(user) {
-    this.setState({userData: user.userData, loggedIn: user.loggedIn});
+  handleLogin(response) {
+    const reports = List(response.reportData);
+    this.setState({
+      userData: response.userData,
+      loggedIn: response.loggedIn,
+      reports: reports
+    });
   }
 
   render() {

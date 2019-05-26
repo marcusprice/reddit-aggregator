@@ -5,6 +5,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ReportList from './ReportList';
 import CreateReport from './CreateReport';
 import ViewReport from './ViewReport';
+import EditReport from './EditReport';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -41,12 +42,21 @@ class Dashboard extends React.Component {
         userInfo={this.props.userData}
         updateReports={this.props.updateReports}
       />;
+    } else if(this.state.show === 'editReport') {
+      let reports = this.props.reports.toArray();
+      return <EditReport
+        reportIndex={this.state.reportIndex}
+        report={reports[this.state.reportIndex]}
+        changeView={this.changeView}
+        userInfo={this.props.userData}
+        updateReports={this.props.updateReports}
+      />;
     }
   }
 
   changeView(view, reportIndex = null) {
     window.scrollTo(0,0);
-    if(view === 'viewReport') {
+    if(view === 'viewReport' || view === 'editReport') {
       this.setState({show: view, reportIndex: reportIndex});
     } else {
       this.setState({show: view});
@@ -59,9 +69,10 @@ class Dashboard extends React.Component {
         <Navbar style={{display: 'flex', justifyContent: 'space-between'}} bg="dark" variant="dark">
           <Navbar.Brand style={{cursor: 'pointer'}} onClick={() => {this.changeView('reports')}}>Reddit Aggregator</Navbar.Brand>
           <DropdownButton variant="secondary" id="dropdown-basic-button" title="Menu" alignRight>
-            <Dropdown.Item href="#/action-1">Reports</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Create Report</Dropdown.Item>
+            <Dropdown.Item onClick={() => {this.setState({show: 'reports'})}}>Reports</Dropdown.Item>
+            <Dropdown.Item onClick={() => {this.setState({show: 'createReport'})}}>Create Report</Dropdown.Item>
             <Dropdown.Item href="#/action-3">Account Settings</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
           </DropdownButton>
         </Navbar>
         {this.handleView()}

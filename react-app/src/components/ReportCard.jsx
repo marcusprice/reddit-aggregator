@@ -13,6 +13,7 @@ class ReportCard extends React.Component {
   handleClick(event) {
     event.preventDefault();
     if(event.target.id === 'viewReport') this.props.changeView('viewReport', this.props.reportIndex);
+    if(event.target.id === 'editReport') this.props.changeView('editReport', this.props.reportIndex);
     if(event.target.id === 'deleteReport') this.props.showDeleteReportWarning(this.props.reportIndex);
   }
 
@@ -31,7 +32,7 @@ class ReportCard extends React.Component {
           </Card.Text>
           <ButtonGroup>
             <Button id="viewReport" size="sm" variant="outline-secondary" onClick={this.handleClick}>View</Button>
-            <Button size="sm" variant="outline-secondary">Edit</Button>
+            <Button id="editReport" size="sm" variant="outline-secondary" onClick={this.handleClick}>Edit</Button>
             <Button id="deleteReport" size="sm" variant="outline-secondary" onClick={this.handleClick}>Delete</Button>
           </ButtonGroup>
         </Card.Body>
