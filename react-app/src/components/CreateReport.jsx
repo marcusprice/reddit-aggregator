@@ -114,7 +114,6 @@ class CreateReport extends React.Component {
   }
 
   render() {
-    console.log(this.state.subreddits);
     const { subreddits, suggestions } = this.state;
     return(
       <Container>

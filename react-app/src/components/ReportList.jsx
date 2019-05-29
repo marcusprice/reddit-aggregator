@@ -73,8 +73,10 @@ class ReportList extends React.Component {
         <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
           <h1 style={{fontWeight: '300'}}>Reports</h1>
           <p className="lead">Welcome {this.props.userInfo.firstname}! Below are your reports.</p>
-          <Button onClick={this.createReport} style={{marginRight: '1rem'}}>Create New Report</Button>
-          <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}}variant="dark">Refresh Report Data</Button>
+          <div className="button-container">
+            <Button className="action-button" onClick={this.createReport}>Create New Report</Button>
+            <Button className="action-button" onClick={this.updateReportData} variant="dark">Refresh Report Data</Button>
+          </div>
         </Jumbotron>
 
         <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})}>

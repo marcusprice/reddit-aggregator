@@ -5,6 +5,7 @@ import SubredditList from './SubredditList';
 import Submissions from './Submissions';
 import Spinner from 'react-bootstrap/Spinner';
 import Modal from 'react-bootstrap/Modal';
+import '../css/view-report.css';
 
 class ViewReport extends React.Component {
   constructor(props) {
@@ -17,7 +18,6 @@ class ViewReport extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
-    this.showSubmissions = this.showSubmissions.bind(this);
     this.updateSubredditIndex = this.updateSubredditIndex.bind(this);
     this.updateReportData = this.updateReportData.bind(this);
     this.handleSpinner = this.handleSpinner.bind(this);
@@ -68,13 +68,6 @@ class ViewReport extends React.Component {
       });
   }
 
-  showSubmissions() {
-    return <Submissions
-      subredditName={this.props.report.subreddits[this.state.subredditIndex]}
-      submissions={this.props.report.submissions[this.state.subredditIndex]}
-    />;
-  }
-
   updateSubredditIndex(index) {
     this.setState({subredditIndex: index});
   }
@@ -100,12 +93,17 @@ class ViewReport extends React.Component {
         <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
           <h1 style={{fontWeight: '300'}}>{this.props.report.name}</h1>
           <p className="lead">{this.props.report.description}</p>
-          <Button onClick={this.handleClick} style={{marginRight: '1rem'}}>Back to Reports</Button>
-          <Button onClick={this.updateReportData} style={{marginLeft: '1rem'}} variant="dark">{this.handleSpinner()}</Button>
-          <Button onClick={(event) => {event.preventDefault(); this.showDeleteReportWarning()}} style={{marginRight: '1rem'}}>Delete Report</Button>
+          <div className="button-container">
+            <Button className="action-button" onClick={this.handleClick} >Back to Reports</Button>
+            <Button className="action-button" onClick={this.updateReportData} variant="dark">{this.handleSpinner()}</Button>
+            <Button className="action-button" onClick={(event) => {event.preventDefault(); this.showDeleteReportWarning()}}>Delete Report</Button>
+          </div>
         </Jumbotron>
         <SubredditList updateSubredditIndex={this.updateSubredditIndex} subreddits={this.props.report.subreddits}/>
-        {this.showSubmissions()}
+        <Submissions
+          subredditName={this.props.report.subreddits[this.state.subredditIndex]}
+          submissions={this.props.report.submissions[this.state.subredditIndex]}
+        />
       </div>
     );
   }
