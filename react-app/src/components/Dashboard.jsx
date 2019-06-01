@@ -6,6 +6,7 @@ import ReportList from './ReportList';
 import CreateReport from './CreateReport';
 import ViewReport from './ViewReport';
 import EditReport from './EditReport';
+import AccountSettings from './AccountSettings';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -51,6 +52,8 @@ class Dashboard extends React.Component {
         userInfo={this.props.userData}
         updateReports={this.props.updateReports}
       />;
+    } else {
+      return <AccountSettings />;
     }
   }
 
@@ -71,7 +74,7 @@ class Dashboard extends React.Component {
           <DropdownButton variant="secondary" id="dropdown-basic-button" title="Menu" alignRight>
             <Dropdown.Item onClick={() => {this.setState({show: 'reports'})}}>Reports</Dropdown.Item>
             <Dropdown.Item onClick={() => {this.setState({show: 'createReport'})}}>Create Report</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Account Settings</Dropdown.Item>
+            <Dropdown.Item onClick={() => {this.setState({show: 'AccountSettings'})}}>Account Settings</Dropdown.Item>
             <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
           </DropdownButton>
         </Navbar>
