@@ -1,6 +1,4 @@
 import React from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Jumbotron from 'react-bootstrap/Jumbotron';
@@ -54,7 +52,7 @@ class AccountSettings extends React.Component {
   handleAlert() {
     if(this.state.showAlert) {
       if(this.state.alert === 'Passwords do not match') {
-        return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="danger">{this.state.alert}</Alert>;        
+        return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="danger">{this.state.alert}</Alert>;
       } else {
         return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="success">{this.state.alert}</Alert>;
         }
@@ -115,12 +113,14 @@ class AccountSettings extends React.Component {
       })
         .then((res => res.json()))
         .then((response) => {
-          this.setState({
-            showAlert: true,
-            alert: 'Your password has been changed'
-          }, () => {
-            window.scrollTo(0, 0);
-          });
+          if(response.passwordChanged === true) {
+            this.setState({
+              showAlert: true,
+              alert: 'Your password has been changed'
+            }, () => {
+              window.scrollTo(0, 0);
+            });
+          }
         });
     } else {
       this.setState({
@@ -143,22 +143,22 @@ class AccountSettings extends React.Component {
         <Form onSubmit={this.updateUserInfo} className="signup-form">
           {this.handleAlert()}
           <h2>User Info</h2>
-          <Form.Group controlId="username">
+          <Form.Group>
             <Form.Label>Username</Form.Label>
             <Form.Control value={this.state.username} id="username" onChange={this.handleChange} required="required" type="text" placeholder="Enter a Username" />
           </Form.Group>
 
-          <Form.Group controlId="email">
+          <Form.Group>
             <Form.Label>Email</Form.Label>
             <Form.Control value={this.state.email} id="email" onChange={this.handleChange} required="required" type="email" placeholder="Enter your Email" />
           </Form.Group>
 
-          <Form.Group controlId="firstName">
+          <Form.Group>
             <Form.Label>First Name</Form.Label>
             <Form.Control value={this.state.firstName} id="firstName" onChange={this.handleChange} required="required" type="text" placeholder="Enter Your First Name" />
           </Form.Group>
 
-          <Form.Group controlId="lastName">
+          <Form.Group>
             <Form.Label>Last Name</Form.Label>
             <Form.Control value={this.state.lastName} id="lastName" onChange={this.handleChange} required="required" type="text" placeholder="Enter Your Last Name" />
           </Form.Group>
@@ -167,14 +167,14 @@ class AccountSettings extends React.Component {
             Update User Info
           </Button>
         </Form>
-        <Form className="signup-form" onSubmit={this.changePassword}>
+        <Form style={{marginTop: '3rem'}}className="signup-form password-form" onSubmit={this.changePassword}>
           <h2>Change Password</h2>
-          <Form.Group controlId="password">
+          <Form.Group>
             <Form.Label>New Password</Form.Label>
             <Form.Control value={this.state.password} id="password" onChange={this.handleChange} required="required" type="password" placeholder="Enter a Username" />
           </Form.Group>
 
-          <Form.Group controlId="passwordCheck">
+          <Form.Group>
             <Form.Label>Re-type Password</Form.Label>
             <Form.Control value={this.state.passwordCheck} id="passwordCheck" onChange={this.handleChange} required="required" type="password" placeholder="Enter your Email" />
           </Form.Group>

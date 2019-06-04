@@ -23,8 +23,7 @@ class EditReport extends React.Component {
       reportName: '',
       reportDescription: '',
       subreddits: [],
-      suggestions: [],
-      notifications: false,
+      suggestions: []
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -98,7 +97,7 @@ class EditReport extends React.Component {
         name: this.state.reportName,
         description: this.state.reportDescription,
         subreddits: subreddits,
-        notifications: this.state.notifications
+        notifications: false
       })
     })
       .then(res => res.json())
@@ -153,12 +152,9 @@ class EditReport extends React.Component {
                   handleDrag={this.handleDrag}
                   delimiters={delimiters}
                   placeholder={'Add a new subreddit'}
+                  autofocus={false}
                 />
 
-              </Form.Group>
-
-              <Form.Group controlId="notifications">
-                <Form.Check  value={this.state.reportDescription} onChange={this.handleChange} type="checkbox" label="Email Notifications" />
               </Form.Group>
 
               <Button variant="dark" type="submit" block>

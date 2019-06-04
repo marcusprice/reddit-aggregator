@@ -12,6 +12,8 @@
 @media only screen and (max-width: 700px) {
   .signup-form {
     width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .signup-button {
@@ -30,4 +32,5 @@
     margin-right: 1rem;
     margin-left: 1rem;
   }
+
 }

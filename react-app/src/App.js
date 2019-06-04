@@ -17,6 +17,7 @@ class App extends React.Component {
 
     this.handleDisplay = this.handleDisplay.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.updateReports = this.updateReports.bind(this);
     this.updateUserData = this.updateUserData.bind(this);
   }
@@ -59,6 +60,7 @@ class App extends React.Component {
           updateUserData={this.updateUserData}
           reports={this.state.reports}
           userData={this.state.userData}
+          handleLogout={this.handleLogout}
         />;
       } else {
         return <LandingPage handleLogin={this.handleLogin} />;
@@ -72,6 +74,14 @@ class App extends React.Component {
       userData: response.userData,
       loggedIn: response.loggedIn,
       reports: reports
+    });
+  }
+
+  handleLogout() {
+    this.setState({
+      userData: {},
+      loggedIn: false,
+      reports: []
     });
   }
 

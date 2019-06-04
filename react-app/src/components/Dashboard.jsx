@@ -18,9 +18,11 @@ class Dashboard extends React.Component {
 
     this.handleView = this.handleView.bind(this);
     this.changeView = this.changeView.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   handleView() {
+    window.scrollTo(0, 0);
     if(this.state.show === 'reports') {
       return <ReportList
         updateReports={this.props.updateReports}
@@ -70,6 +72,16 @@ class Dashboard extends React.Component {
     }
   }
 
+  logout() {
+    fetch('http://localhost:5000/logout')
+      .then(res => res.json())
+      .then((response) => {
+        if(response.loggedOut) {
+          this.props.handleLogout();
+        }
+      });
+  }
+
   render() {
     return(
       <div>
@@ -79,7 +91,7 @@ class Dashboard extends React.Component {
             <Dropdown.Item onClick={() => {this.setState({show: 'reports'})}}>Reports</Dropdown.Item>
             <Dropdown.Item onClick={() => {this.setState({show: 'createReport'})}}>Create Report</Dropdown.Item>
             <Dropdown.Item onClick={() => {this.setState({show: 'AccountSettings'})}}>Account Settings</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
+            <Dropdown.Item onClick={() => {this.logout()}}>Logout</Dropdown.Item>
           </DropdownButton>
         </Navbar>
         {this.handleView()}
