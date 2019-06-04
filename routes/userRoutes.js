@@ -21,6 +21,16 @@ module.exports = (app) => {
       });
   });
 
+  app.post('/changePassword', (req, res) => {
+    users.changePassword(req.body.userID, req.body.password)
+      .then((result) => {
+        res.json({passwordChanged: true});
+      })
+      .catch(() => {
+        res.json({passwordChanged: false});
+      });
+  });
+
   app.post('/forgotPassword', (req, res) => {
     users.createTempPassword(req.body.email)
       .then((result) => {

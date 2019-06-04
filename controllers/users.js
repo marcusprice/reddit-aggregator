@@ -58,6 +58,18 @@ module.exports = {
     });
   },
 
+  changePassword: (userID, newPassword) => {
+    return new Promise((resolve, reject) => {
+      Users.updatePassword(userID, newPassword, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  },
+
   createTempPassword: (email) => {
     return new Promise((resolve, reject) => {
       //get the user data
