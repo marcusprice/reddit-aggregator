@@ -40,7 +40,19 @@ module.exports = {
         if(error) {
           reject(error);
         } else {
-          resolve(result)
+          resolve(result);
+        }
+      });
+    });
+  },
+
+  editUser: (userID, userData) => {
+    return new Promise((resolve, reject) => {
+      Users.updateUser(userID, userData, (error, result) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(result);
         }
       });
     });

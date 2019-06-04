@@ -11,6 +11,16 @@ module.exports = (app) => {
       });
   });
 
+  app.post('/editUser', (req, res) => {
+    users.editUser(req.body.userID, req.body.userData)
+      .then((result) => {
+        res.json({userEdited: true, userData: result})
+      })
+      .catch((error) => {
+        res.json({userEdited: false, reason: error.toString()});
+      });
+  });
+
   app.post('/forgotPassword', (req, res) => {
     users.createTempPassword(req.body.email)
       .then((result) => {

@@ -112,7 +112,8 @@ module.exports = {
         .then(() => {
           //handles are unique, okay to update user
           //build sql query
-          const sql = 'UPDATE Users SET Username = $1, Email = $2, FirstName = $3, LastName = $4, LastLogin = now() WHERE UserID = $5;';
+          const sql = 'UPDATE Users SET Username = $1, Email = $2, FirstName = $3, LastName = $4, LastLogin = now() WHERE UserID = $5 ' +
+          'RETURNING UserID, Username, Email, FirstName, LastName;';
 
           const values = [
             updatedUserData.username,
@@ -126,7 +127,7 @@ module.exports = {
             if(err) {
               callback(err, null);
             } else {
-              callback(null, true);
+              callback(null, result.rows[0]);
             }
           });
         })

@@ -53,7 +53,11 @@ class Dashboard extends React.Component {
         updateReports={this.props.updateReports}
       />;
     } else {
-      return <AccountSettings />;
+      return <AccountSettings
+        userInfo={this.props.userData}
+        changeView={this.changeView}
+        updateUserData={this.props.updateUserData}
+      />;
     }
   }
 

@@ -18,6 +18,7 @@ class App extends React.Component {
     this.handleDisplay = this.handleDisplay.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.updateReports = this.updateReports.bind(this);
+    this.updateUserData = this.updateUserData.bind(this);
   }
 
   componentDidMount() {
@@ -43,10 +44,22 @@ class App extends React.Component {
     });
   }
 
+  updateUserData(userData) {
+    console.log(userData);
+    this.setState({
+      userData: userData
+    });
+  }
+
   handleDisplay() {
     if(!this.state.initialLoad) {
       if(this.state.loggedIn) {
-        return <Dashboard updateReports={this.updateReports} reports={this.state.reports} userData={this.state.userData} />;
+        return <Dashboard
+          updateReports={this.updateReports}
+          updateUserData={this.updateUserData}
+          reports={this.state.reports}
+          userData={this.state.userData}
+        />;
       } else {
         return <LandingPage handleLogin={this.handleLogin} />;
       }
