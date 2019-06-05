@@ -73,7 +73,7 @@ class Dashboard extends React.Component {
   }
 
   logout() {
-    fetch('http://localhost:5000/logout')
+    fetch('/logout')
       .then(res => res.json())
       .then((response) => {
         if(response.loggedOut) {

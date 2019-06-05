@@ -11,10 +11,10 @@ module.exports = (app) => {
       output.reportData = await helpers.getAllReportData(req.session.userID);
       res.json(output);
     } else {
-      //output.loggedIn = false;
-      output.loggedIn = true;
-      output.userData = await users.getUser(1);
-      output.reportData = await helpers.getAllReportData(1);
+      output.loggedIn = false;
+      // output.loggedIn = true;
+      // output.userData = await users.getUser(1);
+      // output.reportData = await helpers.getAllReportData(1);
       res.json(output);
     }
   });
@@ -24,29 +24,31 @@ module.exports = (app) => {
 
     const handle = req.query.handle;
     const password = req.query.password;
-    const validated = await users.validatePassword(handle, password);
 
-    if(validated) {
-      //set output properties
-      output.loggedIn = validated;
-      output.userData = await users.getUser(handle);
-      output.reportData = await helpers.getAllReportData(output.userData.userid);
+    try {
+      const validated = await users.validatePassword(handle, password);
+      if(validated) {
+        //set output properties
+        output.loggedIn = validated;
+        output.userData = await users.getUser(handle);
+        output.reportData = await helpers.getAllReportData(output.userData.userid);
 
-      //set session variables
-      req.session.loggedIn = true;
-      req.session.userID = output.userData.userid;
-      if(req.query.rememberMe === 'true') {
-        req.session.rememberMe = true;
+        //set session variables
+        req.session.loggedIn = true;
+        req.session.userID = output.userData.userid;
+        if(req.query.rememberMe === 'true') {
+          req.session.rememberMe = true;
+        } else {
+          req.session.rememberMe = false;
+        }
+
+        res.json(output);
       } else {
-        req.session.rememberMe = false;
+        //send back issue
+        res.json({loggedIn: false, reason: 'password didn\'t match'});
       }
-
-      res.json(output);
-    } else {
-      //send back issue
-      output.loggedIn = false;
-      output.reason = 'passwords didn\'t match';
-      res.json({output});
+    } catch(error) {
+      res.json({loggedIn: false, reason: error.toString()});
     }
   });
 

@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import '../css/login-form.css';
 
 class LoginForm extends React.Component {
@@ -13,12 +14,15 @@ class LoginForm extends React.Component {
     this.state = {
       handle: '',
       password: '',
-      rememberMe: 0
+      rememberMe: 0,
+      showAlert: false,
+      alert: ''
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleAlert = this.handleAlert.bind(this);
   }
 
   handleChange(event) {
@@ -38,6 +42,17 @@ class LoginForm extends React.Component {
       .then((response) => {
         if(response.loggedIn) {
           this.props.handleLogin(response);
+        } else {
+          let alert;
+          if(response.reason === 'password didn\'t match') {
+            alert = 'Incorrect Password';
+          } else {
+            alert = 'Incorrect Username or Email';
+          }
+          this.setState({
+            showAlert: true,
+            alert: alert
+          });
         }
       });
   }
@@ -46,16 +61,23 @@ class LoginForm extends React.Component {
     this.props.handleToggle(action);
   }
 
+  handleAlert() {
+    if(this.state.showAlert) {
+      return <Alert dismissible onClose={() => {this.setState({showAlert: false})}} variant="danger">{this.state.alert}</Alert>
+    }
+  }
+
   render() {
     return(
       <Container className="login-form">
         <Row>
           <Col>
             <Form onSubmit={this.handleSubmit}>
+              {this.handleAlert()}
               <h3>Please Sign In</h3>
               <Form.Group controlId="handle">
                 <Form.Label>Username or Email</Form.Label>
-                <Form.Control value={this.state.handle} onChange={this.handleChange} type="email" placeholder="Enter Username or Email" />
+                <Form.Control value={this.state.handle} onChange={this.handleChange} type="text" placeholder="Enter Username or Email" />
               </Form.Group>
 
               <Form.Group controlId="password">

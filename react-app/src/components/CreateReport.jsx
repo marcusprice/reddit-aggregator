@@ -35,7 +35,7 @@ class CreateReport extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:5000/getSubreddits')
+    fetch('/getSubreddits')
       .then(res => res.json())
       .then((result) => {
         let subreddits = [];
@@ -57,7 +57,7 @@ class CreateReport extends React.Component {
 
     let subreddits = this.state.subreddits.map(value => value.text);
 
-    fetch('http://localhost:5000/createReport', {
+    fetch('/createReport', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',

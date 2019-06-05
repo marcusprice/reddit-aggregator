@@ -92,7 +92,7 @@ module.exports = {
           const error = new Error('handle was not found');
           callback(error, null);
         } else {
-          callback(null, result.rows[0].password);
+          callback(null, result.rows[0].password); 
         }
       }
     });
