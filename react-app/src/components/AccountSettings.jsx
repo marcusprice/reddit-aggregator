@@ -51,7 +51,7 @@ class AccountSettings extends React.Component {
 
   handleAlert() {
     if(this.state.showAlert) {
-      if(this.state.alert === 'Passwords do not match') {
+      if(this.state.alert === 'Passwords do not match' || this.state.alert === 'Username and/or Email already in use') {
         return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="danger">{this.state.alert}</Alert>;
       } else {
         return <Alert onClose={() => {this.setState({showAlert: false})}} dismissible variant="success">{this.state.alert}</Alert>;
@@ -61,7 +61,7 @@ class AccountSettings extends React.Component {
 
   updateUserInfo(event) {
     event.preventDefault();
-    fetch('/editUser', {
+    fetch('http://localhost:5000/editUser', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -83,20 +83,29 @@ class AccountSettings extends React.Component {
     })
       .then((res => res.json()))
       .then((response) => {
-        this.setState({
-          showAlert: true,
-          alert: 'Your account info has been updated'
-        }, () => {
-          window.scrollTo(0, 0);
-          this.props.updateUserData(response.userData);
-        });
+        if(response.userEdited) {
+          this.setState({
+            showAlert: true,
+            alert: 'Your account info has been updated'
+          }, () => {
+            window.scrollTo(0, 0);
+            this.props.updateUserData(response.userData);
+          });
+        } else {
+          this.setState({
+            showAlert: true,
+            alert: 'Username and/or Email already in use'
+          }, () => {
+            window.scrollTo(0, 0);
+          });
+        }
       });
   }
 
   changePassword(event) {
     event.preventDefault();
     if(this.state.password === this.state.passwordCheck) {
-      fetch('/changePassword', {
+      fetch('http://localhost:5000/changePassword', {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',

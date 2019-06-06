@@ -13,7 +13,8 @@ class ReportList extends React.Component {
       showAlert: false,
       showModal: false,
       deleteReportName: '',
-      deleteReportID: 0
+      deleteReportID: 0,
+      plurals: ''
     };
 
     this.createReport = this.createReport.bind(this);
@@ -58,21 +59,48 @@ class ReportList extends React.Component {
     fetch('http://localhost:5000/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.state.deleteReportID)
       .then(res => res.json())
       .then((response) => {
-        console.log(response);
         this.props.updateReports(response.reportData);
         this.setState({showModal: false});
       });
   }
 
+  handlePlural() {
+    let state;
+    switch(this.props.reports.size) {
+      case 0:
+        state = 'Click "Create Report" to make your first report!';
+        break;
+      case 1:
+        state = 'Below is your report. Click "Create Report" to make another.';
+        break;
+      default:
+        state = 'Below are your reports.';
+        break;
+    }
+
+    if(this.state.plurals !== state) {
+      this.setState({
+        plurals: state
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.handlePlural();
+  }
+
+  componentDidUpdate() {
+    this.handlePlural();
+  }
+
   render() {
     let reports = this.props.reports.toArray();
-    //convert the reports into an array of arrays (3 reports max each)
 
     return(
       <div>
         <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
           <h1 style={{fontWeight: '300'}}>Reports</h1>
-          <p className="lead">Welcome {this.props.userInfo.firstname}! Below are your reports.</p>
+          <p className="lead">Welcome {this.props.userInfo.firstname}! {this.state.plurals}</p>
           <div className="button-container">
             <Button className="action-button" onClick={this.createReport}>Create New Report</Button>
             <Button className="action-button" onClick={this.updateReportData} variant="dark">Refresh Report Data</Button>

@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import '../css/report-form.css';
 import { WithContext as ReactTags } from 'react-tag-input';
 
@@ -23,7 +24,8 @@ class CreateReport extends React.Component {
       reportName: '',
       reportDescription: '',
       subreddits: [],
-      suggestions: []
+      suggestions: [],
+      showAlert: false
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -32,10 +34,11 @@ class CreateReport extends React.Component {
     this.handleDrag = this.handleDrag.bind(this);
     this.createReport = this.createReport.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleAlert = this.handleAlert.bind(this);
   }
 
   componentDidMount() {
-    fetch('/getSubreddits')
+    fetch('http://localhost:5000/getSubreddits')
       .then(res => res.json())
       .then((result) => {
         let subreddits = [];
@@ -54,36 +57,40 @@ class CreateReport extends React.Component {
 
   createReport(event) {
     event.preventDefault();
-
-    let subreddits = this.state.subreddits.map(value => value.text);
-
-    fetch('/createReport', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'omit',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrer: 'no-referrer',
-      body: JSON.stringify({
-        userID: this.props.userID,
-        name: this.state.reportName,
-        description: this.state.reportDescription,
-        subreddits: subreddits,
-        notifications: false
-      })
-    })
-      .then(res => res.json())
-      .then((response) => {
-        if(response.reportCreated) {
-          this.props.changeView('reports');
-          this.props.updateReports(response.reportData)
-        } else {
-          //handle server error
-        }
+    if(this.state.subreddits.length < 1) {
+      this.setState({
+        showAlert: true
       });
+    } else {
+      let subreddits = this.state.subreddits.map(value => value.text);
+      fetch('http://localhost:5000/createReport', {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'omit',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrer: 'no-referrer',
+        body: JSON.stringify({
+          userID: this.props.userID,
+          name: this.state.reportName,
+          description: this.state.reportDescription,
+          subreddits: subreddits,
+          notifications: false
+        })
+      })
+        .then(res => res.json())
+        .then((response) => {
+          if(response.reportCreated) {
+            this.props.changeView('reports');
+            this.props.updateReports(response.reportData)
+          } else {
+            //handle server error
+          }
+        });
+    }
   }
 
   handleClick() {
@@ -112,6 +119,12 @@ class CreateReport extends React.Component {
       this.setState({ subreddits: newSubreddits });
   }
 
+  handleAlert() {
+    if(this.state.showAlert) {
+      return <Alert variant="danger" onClose={() => {this.setState({showAlert: false})}}  dismissible>You need at least 1 subreddit to create a report</Alert>;
+    }
+  }
+
   render() {
     const { subreddits, suggestions } = this.state;
     return(
@@ -124,6 +137,7 @@ class CreateReport extends React.Component {
         <Row>
           <Col>
             <Form className="createReportForm" onSubmit={this.createReport}>
+              {this.handleAlert()}
               <Form.Group controlId="reportName">
                 <Form.Label>Report Name</Form.Label>
                 <Form.Control value={this.state.reportName} onChange={this.handleChange} required="required" type="text" placeholder="Enter a Report Name" />

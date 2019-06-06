@@ -46,7 +46,6 @@ class App extends React.Component {
   }
 
   updateUserData(userData) {
-    console.log(userData);
     this.setState({
       userData: userData
     });

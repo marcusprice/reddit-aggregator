@@ -36,7 +36,7 @@ class ForgotPassword extends React.Component {
 
   requestNewPassword(email) {
     this.setState({showSpinner: true});
-    fetch('/forgotPassword', {
+    fetch('http://localhost:5000/forgotPassword', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -57,7 +57,6 @@ class ForgotPassword extends React.Component {
         if(response.result) {
           this.setState({showForm: false, showSpinner: false});
         } else {
-          console.log(response);
           this.setState({showTrue: false, showSpinner: false, showWarning: true});
         }
       });

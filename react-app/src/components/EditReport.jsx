@@ -81,7 +81,7 @@ class EditReport extends React.Component {
 
     let subreddits = this.state.subreddits.map(value => value.text);
 
-    fetch('/editReport', {
+    fetch('http://localhost:5000/editReport', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
