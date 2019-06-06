@@ -11,10 +11,10 @@ module.exports = (app) => {
       output.reportData = await helpers.getAllReportData(req.session.userID);
       res.json(output);
     } else {
-      output.loggedIn = false;
-      // output.loggedIn = true;
-      // output.userData = await users.getUser(1);
-      // output.reportData = await helpers.getAllReportData(1);
+      //output.loggedIn = false;
+      output.loggedIn = true;
+      output.userData = await users.getUser(3);
+      output.reportData = await helpers.getAllReportData(3);
       res.json(output);
     }
   });
