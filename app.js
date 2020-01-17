@@ -20,12 +20,6 @@ app.use(cookieParser(config.session.secret));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// if cors is enabled use it (developement only)
-if(config.cors) {
-  const cors = require('cors');
-  app.use(cors());
-}
-
 app.get('/', (req, res) => {
   res.send('./public/index.html');
 });
