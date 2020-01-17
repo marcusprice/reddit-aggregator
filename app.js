@@ -5,11 +5,11 @@ const port = process.env.PORT || 5000;
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-//sessions store loggedin & rememberme states for 7 days
+//sessions store loggedin, rememberme states & userid for 7 days
 app.use(session({
   secret: config.session.secret,
   cookie: {
-    expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 3)),
+    expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 7)),
     secure: false
   },
   resave: true,
