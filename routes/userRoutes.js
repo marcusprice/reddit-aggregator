@@ -1,4 +1,9 @@
-const users = require('../controllers/users');
+/**
+ * User Routes
+ * @module userRoutes
+ */
+
+const users = require('../controllers/users');  //users controller
 
 module.exports = (app) => {
   app.post('/createUser', (req, res) => {
