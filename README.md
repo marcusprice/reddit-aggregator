@@ -26,6 +26,17 @@ It's built in the MVC (model-view-controller) design pattern, separating concern
 * Immutable.js
 
 ## Installation
+
+There are 5 steps for installing the development environment for Reddit Aggregator:
+
+1. Cloning Project & Installing Dependencies
+2. Setting up the Database
+3. Setting Up the Reddit API for Snoowrap
+4. Setting Environment Variables
+5. Setting Up cron to Grab Reddit Data
+
+This section walks you though each of these steps.
+
 ### Cloning Project & Installing Dependencies
 
 The first thing you need to do is clone the project and install the dependencies. To do this, open up a terminal window and navigate to the directory you want to keep the repository in. Once you are there run the following 3 commands:
@@ -54,7 +65,7 @@ You will need to set up credentials for the Reddit API so the Snoowrap wrapper c
 2. Navigate to https://www.reddit.com/prefs/apps and click on the Create an App button at the bottom.
 3. Enter "Reddit Aggregator" for the name, **click the radio button that says "script",** enter a short description of what you're doing and lastly a url to your forked version of this repository in both the "url" & "redirect" uri inputs.
 4. After you click "create app" a secret client key and a client ID will be produced - make a note of both of these as you will need to enter them as environment variables for the next step of the installation process.
-5. You will also need to make up a user agent, which is basically a short description of what the app does. Something like "Grabs the top posts from various subreddits" should be sufficient.
+5. You will also need to make up a user agent, which is basically a short description of what the app does. Something like "Grabs the top posts from various subreddits each hour" should be sufficient.
 
 [More info on the Reddit API](https://www.reddit.com/wiki/api#wiki_reddit_api_access)
 
@@ -78,10 +89,6 @@ EMAIL_PASSWORD={replace with SMTP password}
 SESSION_SECRET={replace with session secret key}
 ```
 
-### Configuration
-
-At the moment there is not much to the config file - it's just a place to save the environment variables into a config object which is used all throughout the application. The database that is used is determined by the mode. To switch between Development and Production mode the environment variable in the .env file just needs to be set to either "Development" or "Production" respectively.
-
 ### Setting Up cron to Grab Reddit Data
 
 The last thing you need to do for the application to be functional is set up a crontab for grabbing reddit posts each hour. Fire up a terminal window and enter the following command:
@@ -96,12 +103,14 @@ This will set up a cron job which will execute the reddit-content-grabber script
 
 ## Development
 
-### Starting the environment
-If you don't use it already, I highly recommend the nodemon package which makes development much easier by restarting your server each time you save. It's really helpful in our situation since the backend and frontend are decoupled. You can install this on your machine with the following command:
+This section is a general breakdown of the development environment, app architecture, testing and suggested workflows for the app.
+
+### Starting the Environment
+If you don't use it already, I highly recommend the nodemon package which makes development much easier by restarting your server each time you save. You can install this on your machine with the following command:
 
 `npm install nodemon -g`
 
-The client is bootstrapped with [Create-React-App](https://create-react-app.dev/) and is proxied to the backend which is set on port 5000 (if no port environment variable is set). This allows us to make requests to our backend without causing any CORS issues. Because the backend & frontend are separated, it's required to start the server on port 5000 first and then start up create-react-app. If the client is initialized before the backend the browser will log some errors about it.
+The client is bootstrapped with [Create-React-App](https://create-react-app.dev/) and is proxied to the backend which is set on port 5000 (if no port environment variable is set). This allows us to make requests to our backend without causing any CORS issues. Because the backend & frontend are separated, it's required to start the server on port 5000 first and then start up Create-React-App. If the client is initialized before the backend the browser will log some errors about it.
 
 To start the backend server, open a terminal window and navigate to the root directory of the app and run the following command:
 
@@ -113,7 +122,10 @@ This starts the server and each time a change is made nodemon will restart it wi
 
 This starts the frontend server and now any changes you make on the backend or frontend will be updated immediately.
 
-### Workflow
+### App Architecture
+
+#### Model-View-Controller Pattern
+
 Reddit Aggregator follows a MVC pattern, so typically the api request/response cycle goes as follows:
 
 **Fetch Request from Client > Route > Controller > Model > Database**
@@ -121,3 +133,11 @@ Reddit Aggregator follows a MVC pattern, so typically the api request/response c
 ...then
 
 **Database > Model > Controller > Route > Return Data to Client**
+
+However there are a few exceptions, particularly if a route/endpoint doesn't require serving the client with data beyond a success response (logging out of an account, for example).
+
+#### Backend/Frontend Communication
+
+Since the frontend (via Create-React-App) is a different process ran on a separate port as the backend, the frontend is proxied to the express server to allow http requests while avoiding CORS issues.
+
+Users of the app will make basic CRUD operations to the database through the app interface.
