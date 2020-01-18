@@ -13,6 +13,19 @@ module.exports = {
     });
   },
 
+  readReport: (reportID) => {
+    //TODO: make sure user ID matches ID associated with the report
+    return new Promise((resolve, reject) => {
+      Reports.readReport(reportID, (error, results) => {
+        if(error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  },
+
   createReport: (reportData) => {
     return new Promise((resolve, reject) => {
       Reports.createReport(reportData, (error, result) => {

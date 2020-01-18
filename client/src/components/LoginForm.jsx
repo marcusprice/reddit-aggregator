@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import '../css/login-form.css';
+import Loader from 'react-loader-spinner'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class LoginForm extends React.Component {
       password: '',
       rememberMe: 0,
       showAlert: false,
-      alert: ''
+      alert: '',
+      showLoader: false
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,6 +34,7 @@ class LoginForm extends React.Component {
   }
 
   handleSubmit(event) {
+    this.setState({showLoader: true})
     event.preventDefault();
     fetch('/login?handle=' +
     this.state.handle + '&password=' + this.state.password +
@@ -51,6 +54,7 @@ class LoginForm extends React.Component {
           }
           this.setState({
             showAlert: true,
+            showLoader: false,
             alert: alert
           });
         }
@@ -64,6 +68,27 @@ class LoginForm extends React.Component {
   handleAlert() {
     if(this.state.showAlert) {
       return <Alert dismissible onClose={() => {this.setState({showAlert: false})}} variant="danger">{this.state.alert}</Alert>
+    }
+  }
+
+  handleLoader() {
+    if(this.state.showLoader) {
+      return(
+        <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+          <Loader
+            type="Puff"
+            color="#343a40"
+            height={100}
+            width={100}
+          />
+        </div>
+      )
+    } else {
+      return(
+        <Button variant="dark" type="submit" block>
+          Login
+        </Button>
+      )
     }
   }
 
@@ -87,9 +112,7 @@ class LoginForm extends React.Component {
               <Form.Group controlId="rememberMe">
                 <Form.Check onChange={this.handleChange} type="checkbox" label="Remember Me" />
               </Form.Group>
-              <Button variant="dark" type="submit" block>
-                Login
-              </Button>
+              {this.handleLoader()}
             </Form>
             <p onClick={() => {this.handleClick('about')}}>New Here? Learn More &amp; Sign Up!</p>
             <p onClick={() => {this.handleClick('forgotPassword')}}>Forgot Password?</p>

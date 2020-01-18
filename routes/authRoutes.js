@@ -98,7 +98,7 @@ module.exports = (app) => {
     req.session.loggedIn = false;
     req.session.rememberMe = false;
 
-    //send client json object with success message 
+    //send client json object with success message
     res.json({ loggedOut: true });
   });
 };

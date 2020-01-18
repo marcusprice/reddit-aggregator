@@ -1,4 +1,4 @@
-const Submissions = require('../models/db/submissions');
+const Submissions = require('../models/db/Submissions');
 
 module.exports = {
   getAllSubmissionsBySubreddit: (subredditName) => {
