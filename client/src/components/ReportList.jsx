@@ -46,7 +46,7 @@ class ReportList extends React.Component {
 
   updateReportData(event) {
     event.preventDefault();
-    fetch('http://localhost:5000/updateReportData?userID=' + this.props.userInfo.userid)
+    fetch('/updateReportData?userID=' + this.props.userInfo.userid)
       .then(res => res.json())
       .then((reports) => {
         this.props.updateReports(reports);
@@ -56,7 +56,7 @@ class ReportList extends React.Component {
 
   deleteReport(event) {
     event.preventDefault();
-    fetch('http://localhost:5000/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.state.deleteReportID)
+    fetch('/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.state.deleteReportID)
       .then(res => res.json())
       .then((response) => {
         this.props.updateReports(response.reportData);

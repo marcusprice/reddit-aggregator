@@ -1,8 +1,8 @@
 {
-  "development": {
+  "Development": {
     "dbname": "RedditAggregatorDev"
   },
-  "production": {
-    "dbname": "RedditAggregator",
+  "Production": {
+    "dbname": "RedditAggregator"
   }
 }

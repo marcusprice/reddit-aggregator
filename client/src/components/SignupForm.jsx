@@ -59,7 +59,7 @@ class SignupForm extends React.Component {
     event.preventDefault();
     if(this.state.password === this.state.passwordCheck) {
       //create new user
-      fetch('http://localhost:5000/createUser', {
+      fetch('/createUser', {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',

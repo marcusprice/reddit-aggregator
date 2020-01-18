@@ -61,7 +61,7 @@ class AccountSettings extends React.Component {
 
   updateUserInfo(event) {
     event.preventDefault();
-    fetch('http://localhost:5000/editUser', {
+    fetch('/editUser', {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -105,7 +105,7 @@ class AccountSettings extends React.Component {
   changePassword(event) {
     event.preventDefault();
     if(this.state.password === this.state.passwordCheck) {
-      fetch('http://localhost:5000/changePassword', {
+      fetch('/changePassword', {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
