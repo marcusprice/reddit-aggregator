@@ -76,7 +76,7 @@ class LoginForm extends React.Component {
       return(
         <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
           <Loader
-            type="Puff"
+            type="BallTriangle"
             color="#343a40"
             height={100}
             width={100}
