@@ -1,7 +1,6 @@
+require('dotenv').config()
 const mode = process.env.MODE;
 const configFile = require('./config.json')[mode];
-
-console.log(mode);
 
 module.exports = {
   db: {
