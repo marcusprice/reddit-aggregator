@@ -23,7 +23,6 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.1",
-    "immutable": "^4.0.0-rc.12",
     "mocha": "^6.1.4",
     "nodemailer": "^6.2.1",
     "password-hash": "^1.2.2",
