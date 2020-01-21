@@ -4,7 +4,8 @@
   "description": "Personalized web app to collect the best daily Reddit submissions",
   "main": "app.js",
   "scripts": {
-    "test": "mocha -recursive || true"
+    "test": "mocha -recursive || true",
+    "start": "node app"
   },
   "repository": {
     "type": "git",
