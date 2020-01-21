@@ -7,7 +7,7 @@
 .login-form p {
   text-align: center;
   margin-top: 1rem;
-  cursor: pointer;  
+  cursor: pointer;
 }
 /* mobile styles */
 @media only screen and (max-width: 700px) {

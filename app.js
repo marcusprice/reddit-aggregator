@@ -18,10 +18,10 @@ app.use(session({
 }));
 
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/client/build'));
 
 app.get('/', (req, res) => {
-  res.send('./public/index.html');
+  res.send('/client/build/index.html');
 });
 
 //routes (see routes dir)
