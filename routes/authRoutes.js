@@ -63,7 +63,7 @@ module.exports = (app) => {
 
         //set session variables for logged in state and userID
         req.session.loggedIn = true;
-        req.session.userID = output.userData.userid;
+        req.session.userID = output.userData.userid;  //this CANNOT be set from user input, needs DB return value
 
         if(rememberMe === 'true') { //user requested to be remembered
           //set remember me session to true

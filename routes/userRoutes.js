@@ -36,13 +36,17 @@ module.exports = (app) => {
    * @return {string/json} - success/fail reposnse
    */
   app.post('/editUser', (req, res) => {
-    users.editUser(req.body.userID, req.body.userData)
-      .then((result) => {
-        res.json({userEdited: true, userData: result})
-      })
-      .catch((error) => {
-        res.json({userEdited: false, reason: error.toString()});
-      });
+    if(req.session.loggedIn && req.session.userID) {    //if the user is logged in and the user ID is set
+      users.editUser(req.session.userID, req.body.userData)
+        .then((result) => {
+          res.json({userEdited: true, userData: result})
+        })
+        .catch((error) => {
+          res.json({userEdited: false, reason: error.toString()});
+        });
+    } else {  //user is not logged in (possibly malacious activity!)
+      res.json({userEdited: false, reason: 'user isn\'t logged in'});
+    }
   });
 
   /**
@@ -53,13 +57,17 @@ module.exports = (app) => {
    * @return {string/json} - success/fail reposnse
    */
   app.post('/changePassword', (req, res) => {
-    users.changePassword(req.body.userID, req.body.password)
-      .then((result) => {
-        res.json({passwordChanged: true});
-      })
-      .catch(() => {
-        res.json({passwordChanged: false});
-      });
+    if(req.session.loggedIn && req.session.userID) {    //if the user is logged in and the user ID is set
+      users.changePassword(req.session.userID, req.body.password)
+        .then((result) => {
+          res.json({passwordChanged: true});
+        })
+        .catch(() => {
+          res.json({passwordChanged: false});
+        });
+    } else {  //user is not logged in (possibly malacious activity!)
+      res.json({passwordChanged: false, reason: 'user isn\'t logged in'});
+    }
   });
 
   /**
