@@ -16,7 +16,7 @@ module.exports = (app) => {
    * Endpoint to collect all subreddits (used for auto-suggestion when creating or editing a report)
    * @param {object} req - the express request object
    * @param {object} res - the express response object
-   * @return {string/json} - report data
+   * @return {string/json} - subreddit data
    */
 
   app.get('/getSubreddits', async (req, res) => {
@@ -26,7 +26,7 @@ module.exports = (app) => {
       res.json(subredditData);
     } else {  //user is not logged in
       //send failure notice
-      res.json({result: 'failed', reason: 'mot logged in'});
+      res.json({result: 'failed', reason: 'not logged in'});
     }
   });
 };
