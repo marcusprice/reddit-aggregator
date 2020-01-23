@@ -35,6 +35,8 @@ module.exports = (app) => {
   });
 
 
+
+
   /**
    * Login
    * Endpoint to log user in
@@ -84,6 +86,8 @@ module.exports = (app) => {
     //convert output object to json and send to client
     res.json(output);
   });
+
+
 
 
   /**
