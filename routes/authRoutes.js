@@ -101,6 +101,7 @@ module.exports = (app) => {
     //set logged in & remember me session variables to false
     req.session.loggedIn = false;
     req.session.rememberMe = false;
+    req.session.userID = null;
 
     //send client json object with success message
     res.json({ loggedOut: true });

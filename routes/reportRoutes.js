@@ -7,7 +7,7 @@ const reports = require('../controllers/reports');
 const helpers = require('../lib/helpers');
 
 /**
- * Enpoint for report taks
+ * Enpoint for report tasks
  * @param {object} app - instance of express
  */
 module.exports = (app) => {
