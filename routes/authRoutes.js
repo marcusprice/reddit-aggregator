@@ -4,6 +4,7 @@
  */
 
 const users = require('../controllers/users');  //users controller
+const reports = require('../controllers/reports');  //reports controller
 const helpers = require('../lib/helpers');      //helper library
 
 /**
@@ -27,7 +28,8 @@ module.exports = (app) => {
 
       //add user data & report data to output object
       output.userData = await users.getUser(req.session.userID);
-      output.reportData = await helpers.getAllReportData(req.session.userID);
+      output.reportData = await reports.getAllReportsByUser(req.session.userID);
+      console.log(output.reportData);
     }
 
     //convert output object to json and send to client
@@ -51,34 +53,28 @@ module.exports = (app) => {
     const password = req.query.password;
     const rememberMe = req.query.rememberMe;
 
-    try {
-      //try to validate user
-      const validated = await users.validatePassword(handle, password);
-      if(validated) { //user is validated
+    //validate user
+    const validated = await users.validatePassword(handle, password);
+    if(validated) { //user is validated
+      //set logged in to true, save user & report data
+      output.loggedIn = true;
+      output.userData = await users.getUser(handle);
+      output.reportData = await reports.getAllReportsByUser(output.userData.userid);
 
-        //set logged in to true, save user & report data
-        output.loggedIn = true;
-        output.userData = await users.getUser(handle);
-        output.reportData = await helpers.getAllReportData(output.userData.userid);
+      //set session variables for logged in state and userID
+      req.session.loggedIn = true;
+      req.session.userID = output.userData.userid;  //this CANNOT be set from user input, needs DB return value
 
-        //set session variables for logged in state and userID
-        req.session.loggedIn = true;
-        req.session.userID = output.userData.userid;  //this CANNOT be set from user input, needs DB return value
-
-        if(rememberMe === 'true') { //user requested to be remembered
-          //set remember me session to true
-          req.session.rememberMe = true;
-        } else {  //user doesn't want to be remembered
-          //set remember me session to true
-          req.session.rememberMe = false;
-        }
-      } else {  //user is not validated
-        //set reason property
-        output.reason = 'Username/email or password didn\'t match';
+      if(rememberMe === 'true') { //user requested to be remembered
+        //set remember me session to true
+        req.session.rememberMe = true;
+      } else {  //user doesn't want to be remembered
+        //set remember me session to true
+        req.session.rememberMe = false;
       }
-    } catch(error) {  //there was some kind of error
-      //convert error to string and set the reason
-      output.reason = error.toString()
+    } else {  //user is not validated
+      //set reason property
+      output.reason = 'Username/email or password didn\'t match';
     }
 
     //convert output object to json and send to client
