@@ -1,5 +1,4 @@
 const pg = require('./pg');
-const validation = require('../../lib/validation');
 
 module.exports = {
   readAllSubreddits: (callback) => {

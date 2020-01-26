@@ -28,6 +28,9 @@ module.exports = (app) => {
       });
   });
 
+
+
+
   /**
    * Edit User
    * Endpoint for editing user info
@@ -49,6 +52,9 @@ module.exports = (app) => {
     }
   });
 
+
+
+
   /**
    * Change User's Password
    * Endpoint for editing user info
@@ -69,6 +75,9 @@ module.exports = (app) => {
       res.json({passwordChanged: false, reason: 'user isn\'t logged in'});
     }
   });
+
+
+
 
   /**
    * Forgot Password

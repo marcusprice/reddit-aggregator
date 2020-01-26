@@ -14,11 +14,9 @@ module.exports = {
     ];
     const validationError = validation.validateInputData(reportData, possibleKeys);
 
-    if(validationError) {
-      //there input is invalid, send back an error
+    if(validationError) { //the input is invalid, send back an error
       callback(validationError, null);
-    } else {
-      //input was fine, continue on
+    } else {  //input was fine, continue on
       //sql for the standard report data
       const reportSQL = 'INSERT INTO Reports ' +
       '(UserID, Name, Description, DateCreated, LastEdit, Notifications) ' +
