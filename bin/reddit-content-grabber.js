@@ -8,7 +8,6 @@ const Comments = require('../models/db/Comments');
 const tools = require('../lib/tools');
 
 const getSubmissions = async () => {
-  console.log('start');
   //first get a list of all the subreddits
   let subredditList = await new Promise((resolve) => {
     Subreddits.readAllSubreddits((error, result) => {
@@ -96,7 +95,6 @@ const getSubmissions = async () => {
       }
     }
   });
-  console.log('end');
   process.exit();
 };
 

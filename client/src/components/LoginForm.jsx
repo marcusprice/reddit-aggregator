@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import '../css/login-form.css';
-import Loader from 'react-loader-spinner'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -75,12 +74,7 @@ class LoginForm extends React.Component {
     if(this.state.showLoader) {
       return(
         <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-          <Loader
-            type="BallTriangle"
-            color="#343a40"
-            height={100}
-            width={100}
-          />
+          Replace with Loader
         </div>
       )
     } else {

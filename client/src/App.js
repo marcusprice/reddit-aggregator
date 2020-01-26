@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import { List } from 'immutable';
-import Loader from 'react-loader-spinner'
 
 const App = () => {
   let [userData, setUserData] = useState(null)
@@ -53,13 +52,8 @@ const App = () => {
     } else {
       return (
         <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems:'center', height: '100vh'}}>
-          <Loader
-            type="BallTriangle"
-            color="#343a40"
-            height={100}
-            width={100}
-          />
-      </div>
+          Ugh
+        </div>
     )
     }
   }

@@ -14,7 +14,8 @@ class ViewReport extends React.Component {
     this.state = {
       subredditIndex: 0,
       showSpinner: false,
-      showModal: false
+      showModal: false,
+      reportData: null
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -23,11 +24,22 @@ class ViewReport extends React.Component {
     this.handleSpinner = this.handleSpinner.bind(this);
     this.showDeleteReportWarning = this.showDeleteReportWarning.bind(this);
     this.deleteReport = this.deleteReport.bind(this);
+    this.handleDislpay = this.handleDisplay(this);
   }
 
   //grab report data from the server
   componentDidMount() {
-
+    fetch('/getReport?reportID=' + this.props.key, {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    })
+      .then(response => response.json())
+      .then((result) => {
+        this.setState({reportData: result})
+        console.log(result);
+      })
   }
 
   handleClick(event) {
@@ -51,7 +63,7 @@ class ViewReport extends React.Component {
 
   deleteReport(event) {
     event.preventDefault();
-    fetch('/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.props.report.reportid)
+    fetch('/deleteReport?userID='+this.props.userInfo.userid+'&reportID='+this.state.reportData.reportid)
       .then(res => res.json())
       .then((response) => {
         this.props.updateReports(response.reportData);
@@ -77,40 +89,54 @@ class ViewReport extends React.Component {
     this.setState({subredditIndex: index});
   }
 
+  handleDisplay() {
+    if(this.state.reportData === null) {
+      return(
+        <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems:'center', height: '100%'}}>
+          Replace with loader
+        </div>
+      )
+    } else {
+      return(
+        <div>
+          <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})}>
+            <Modal.Header closeButton>
+              <Modal.Title>Delete Report</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete your {this.state.reportData.name} report?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => {this.setState({showModal: false})}}>
+                Cancel
+              </Button>
+              <Button onClick={this.deleteReport} variant="danger">
+                Delete
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
+            <h1 style={{fontWeight: '300'}}>{this.state.reportData.name}</h1>
+            <p className="lead">{this.state.reportData.description}</p>
+            <div className="button-container">
+              <Button className="action-button" onClick={this.handleClick} >Back to Reports</Button>
+              <Button className="action-button" onClick={this.updateReportData} variant="dark">{this.handleSpinner()}</Button>
+              <Button className="action-button" onClick={(event) => {event.preventDefault(); this.showDeleteReportWarning()}}>Delete Report</Button>
+            </div>
+          </Jumbotron>
+          <SubredditList updateSubredditIndex={this.updateSubredditIndex} subreddits={this.state.reportData.subreddits}/>
+          <Submissions
+            subredditName={this.state.reportData.subreddits[this.state.subredditIndex]}
+            submissions={this.state.reportData.submissions[this.state.subredditIndex]}
+          />
+        </div>
+      );
+    }
+  }
+
   render() {
     return(
-      <div>
-        <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete Report</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Are you sure you want to delete your {this.props.report.name} report?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => {this.setState({showModal: false})}}>
-              Cancel
-            </Button>
-            <Button onClick={this.deleteReport} variant="danger">
-              Delete
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        <Jumbotron style={{backgroundColor: '#FFF', textAlign: 'center', padding: '92px 0px 92px 0px'}}>
-          <h1 style={{fontWeight: '300'}}>{this.props.report.name}</h1>
-          <p className="lead">{this.props.report.description}</p>
-          <div className="button-container">
-            <Button className="action-button" onClick={this.handleClick} >Back to Reports</Button>
-            <Button className="action-button" onClick={this.updateReportData} variant="dark">{this.handleSpinner()}</Button>
-            <Button className="action-button" onClick={(event) => {event.preventDefault(); this.showDeleteReportWarning()}}>Delete Report</Button>
-          </div>
-        </Jumbotron>
-        <SubredditList updateSubredditIndex={this.updateSubredditIndex} subreddits={this.props.report.subreddits}/>
-        <Submissions
-          subredditName={this.props.report.subreddits[this.state.subredditIndex]}
-          submissions={this.props.report.submissions[this.state.subredditIndex]}
-        />
-      </div>
-    );
+      this.handleDislpay()
+    )
   }
 }
 
