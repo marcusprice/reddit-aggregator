@@ -33,11 +33,6 @@ CREATE TABLE ReportsSubreddits (
   SubredditID SERIAL REFERENCES Subreddits
 );
 
-CREATE TABLE Handles (
-  HandleID SERIAL NOT NULL PRIMARY KEY,
-  HandleName VARCHAR(255)
-);
-
 CREATE TABLE Submissions (
   SubmissionID SERIAL NOT NULL PRIMARY KEY,
   SubredditID INT REFERENCES Subreddits,
@@ -45,7 +40,7 @@ CREATE TABLE Submissions (
   Title VARCHAR(255),
   URL TEXT,
   SelfText TEXT,
-  HandleID INT REFERENCES Handles,
+  SubmissionPosterHandle VARCHAR(255),
   SubmissionTimePostedUTC INT,
   SubmissionEdited INT,
   SubmissionUpvotes INT,
@@ -56,9 +51,9 @@ CREATE TABLE Submissions (
 CREATE TABLE Comments (
   CommentID SERIAL NOT NULL PRIMARY KEY,
   SubmissionID SERIAL REFERENCES Submissions,
-  HandleID INT REFERENCES Handles,
   RedditID VARCHAR(255),
   CommentText TEXT,
+  CommentPosterHandle VARCHAR(255),
   DatePosted INT,
   Edits INT,
   Upvotes INT,

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('dotenv').config()
 const Reddit = require('../models/api/Reddit');
 const Subreddits = require('../models/db/Subreddits');

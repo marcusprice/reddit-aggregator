@@ -29,7 +29,6 @@ module.exports = (app) => {
       //add user data & report data to output object
       output.userData = await users.getUser(req.session.userID);
       output.reportData = await reports.getAllReportsByUser(req.session.userID);
-      console.log(output.reportData);
     }
 
     //convert output object to json and send to client
@@ -60,6 +59,7 @@ module.exports = (app) => {
       output.loggedIn = true;
       output.userData = await users.getUser(handle);
       output.reportData = await reports.getAllReportsByUser(output.userData.userid);
+      console.log(output.reportData);
 
       //set session variables for logged in state and userID
       req.session.loggedIn = true;

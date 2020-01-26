@@ -25,6 +25,11 @@ class ViewReport extends React.Component {
     this.deleteReport = this.deleteReport.bind(this);
   }
 
+  //grab report data from the server
+  componentDidMount() {
+
+  }
+
   handleClick(event) {
     event.preventDefault();
     this.props.changeView('reports');

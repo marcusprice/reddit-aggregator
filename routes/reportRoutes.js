@@ -19,6 +19,13 @@ module.exports = (app) => {
       });
   });
 
+  app.get('/getReport', async (req, res) => {
+    let output = {report: null}
+    const reportID = parseInt(req.query.reportID);
+    output.report = await helpers.getAllReportData(reportID);
+    res.json(output);
+  })
+
   app.get('/deleteReport', async (req, res) => {
     const reportID = parseInt(req.query.reportID);
     const userID = parseInt(req.query.userID);
