@@ -28,21 +28,9 @@ module.exports = {
         let subreddit = await pg.query('SELECT SubredditID FROM Subreddits WHERE SubredditName = $1', [subredditName]);
         let subredditID = subreddit.rows[0].subredditid;
 
-        //test if the handle exists already or not
-        let handleID;
-        const handleResults = await pg.query('SELECT HandleID FROM Handles WHERE HandleName = $1', [submissionData.handle]);
-        if(handleResults.rowCount > 0) {
-          //handle already exists, get it's id
-          handleID = handleResults.rows[0].handleid;
-        } else {
-          //create a new handle and get its id
-          handleID = await pg.query('INSERT INTO Handles (HandleName) VALUES ($1) RETURNING HandleID;', [submissionData.handle]);
-          handleID = handleID.rows[0].handleid;
-        }
-
         //now insert the submission data
         const sql = 'INSERT INTO Submissions ' +
-        '(RedditID, SubredditID, Title, URL, SelfText, HandleID, SubmissionTimePostedUTC, SubmissionEdited, SubmissionUpvotes, SubmissionDownvotes, ThumbnailURL)' +
+        '(RedditID, SubredditID, Title, URL, SelfText, SubmissionPosterHandle, SubmissionTimePostedUTC, SubmissionEdited, SubmissionUpvotes, SubmissionDownvotes, ThumbnailURL)' +
         'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING SubmissionID;';
         const values = [
           submissionData.redditID,
@@ -50,7 +38,7 @@ module.exports = {
           submissionData.title,
           submissionData.url,
           submissionData.selfText,
-          handleID,
+          submissionData.handle,
           submissionData.submissionTimePostedUTC,
           submissionData.submissionEdited,
           submissionData.submissionUpvotes,
@@ -60,12 +48,15 @@ module.exports = {
 
         pg.query(sql, values, (err, result) => {
           if(err) {
+            //there was an error, send it back
             callback(err, null);
           } else {
+            //successful entry, send back the submission id
             callback(null, result.rows[0].submissionid);
           }
         });
       } else {
+        //duplicate submission, send back a null value
         callback(null, null);
       }
     }
@@ -104,12 +95,6 @@ module.exports = {
 
     const result = await pg.query(sql, [subredditID, limit]);
     callback(null, result.rows);
-  },
-
-  readHandleBySubmission: async (submissionID, callback) => {
-    const sql = 'SELECT HandleName FROM Handles WHERE HandleID = $1';
-    const result = await pg.query(sql, [submissionID]);
-    callback(null, result.rows[0].handlename);
   },
 
   deleteSubmission: (submissionID, callback) => {

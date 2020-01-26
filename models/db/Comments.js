@@ -14,26 +14,14 @@ module.exports = {
       //first see if the comment has already been saved
       const uniqueCheck = await pg.query('SELECT * FROM Comments WHERE RedditID = $1', [commentData.redditid]);
       if(uniqueCheck.rowCount < 1) {
-        //see if the handle aready exists
-        let handleResult = await pg.query('SELECT HandleID FROM Handles WHERE HandleName = $1', [commentData.handle]);
-        let handleID;
-        if(handleResult.rowCount > 0) {
-          //the handle already exists
-          handleID = handleResult.rows[0].handleid;
-        } else {
-          //we need to create a new handle
-          handleID = await pg.query('INSERT INTO Handles (HandleName) VALUES ($1) RETURNING HandleID;', [commentData.handle]);
-          handleID = handleID.rows[0].handleid;
-        }
-
-        //now save the comment data into the db
-        const sql = 'INSERT INTO Comments (CommentText, RedditID, SubmissionID, HandleID, DatePosted, Edits, Upvotes, Downvotes)' +
+        //save the comment data into the db
+        const sql = 'INSERT INTO Comments (CommentText, RedditID, SubmissionID, CommentPosterHandle, DatePosted, Edits, Upvotes, Downvotes)' +
         'VALUES ($1, $2, $3, $4, $5, $6, $7, $8);';
         const values = [
           commentData.comment,
           commentData.redditid,
           commentData.submissionID,
-          handleID,
+          commentData.handle,
           commentData.datePosted,
           commentData.edited,
           commentData.upvotes,
@@ -42,13 +30,15 @@ module.exports = {
 
         pg.query(sql, values, (err, result) => {
           if(err) {
+            //there was an error, send it back
             callback(err, null);
           } else {
+            //successful insert, send back true value
             callback(null, true);
           }
         });
       } else {
-        callback('blah', null);
+        callback('comment already exists', null);
       }
     }
   },

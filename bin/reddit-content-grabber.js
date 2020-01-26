@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 require('dotenv').config()
 const Reddit = require('../models/api/Reddit');
 const Subreddits = require('../models/db/Subreddits');
 const Submissions = require('../models/db/Submissions');
 const Comments = require('../models/db/Comments');
-const tools = require('./tools');
+const tools = require('../lib/tools');
 
 const getSubmissions = async () => {
   //first get a list of all the subreddits

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
+<<<<<<< HEAD
+import { List } from 'immutable';
+=======
 import { List } from 'immutable'; //reports array need to use immutable.js - see issue on github for more info
 import Loader from 'react-loader-spinner'
+>>>>>>> master
 
 const App = () => {
   let [userData, setUserData] = useState(null)              //user data
@@ -54,13 +58,8 @@ const App = () => {
       }
     } else {  //no response from the server yet, show the loader
         <div style={{width: '100%', display: 'flex', justifyContent: 'center', alignItems:'center', height: '100vh'}}>
-          <Loader
-            type="BallTriangle"
-            color="#343a40"
-            height={100}
-            width={100}
-          />
-      </div>
+          Ugh
+        </div>
     )
     }
   }

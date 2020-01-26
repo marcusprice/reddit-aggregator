@@ -12,8 +12,8 @@ class ReportCard extends React.Component {
 
   handleClick(event) {
     event.preventDefault();
-    if(event.target.id === 'viewReport') this.props.changeView('viewReport', this.props.reportIndex);
-    if(event.target.id === 'editReport') this.props.changeView('editReport', this.props.reportIndex);
+    if(event.target.id === 'viewReport') this.props.changeView('viewReport', this.props.key);
+    if(event.target.id === 'editReport') this.props.changeView('editReport', this.props.key);
     if(event.target.id === 'deleteReport') this.props.showDeleteReportWarning(this.props.reportIndex);
   }
 
