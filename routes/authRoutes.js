@@ -61,7 +61,6 @@ module.exports = (app) => {
       output.loggedIn = true;
       output.userData = await users.getUser(handle);
       output.reportData = await reports.getAllReportsByUser(output.userData.userid);
-      console.log(output.reportData);
 
       //set session variables for logged in state and userID
       req.session.loggedIn = true;
@@ -78,7 +77,6 @@ module.exports = (app) => {
       //set reason property
       output.reason = 'Username/email or password didn\'t match';
     }
-
     //convert output object to json and send to client
     res.json(output);
   });

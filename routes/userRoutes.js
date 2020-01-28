@@ -21,9 +21,13 @@ module.exports = (app) => {
   app.post('/createUser', (req, res) => {
     users.createUser(req.body)
       .then((result) => {
-        res.json({userCreated: true});
+        req.session.loggedIn = true;
+        req.session.userID = result.userData.userid;
+
+        res.json({userCreated: true, userData: result.userData});
       })
       .catch((error) => {
+        console.log({userCreated: false, reason: error.toString()});
         res.json({userCreated: false, reason: error.toString()});
       });
   });
@@ -86,13 +90,13 @@ module.exports = (app) => {
    * @param {object} res - the express response object
    * @return {string/json} - success/fail reposnse
    */
-  app.post('/forgotPassword', (req, res) => {
-    users.createTempPassword(req.body.email)
+  app.get('/forgotPassword', (req, res) => {
+    users.createTempPassword(req.query.email)
       .then((result) => {
-        res.json({result: result});
+        res.json({tempPasswordSet: result});
       })
       .catch((error) => {
-        res.json({result: false, reason: error.toString()});
+        res.json({tempPasswordSet: false, reason: error.toString()});
       });
   });
 }

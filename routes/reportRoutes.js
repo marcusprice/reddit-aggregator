@@ -58,15 +58,12 @@ module.exports = (app) => {
     }
   });
 
-<<<<<<< HEAD
   app.get('/getReport', async (req, res) => {
     let output = {report: null}
     const reportID = parseInt(req.query.reportID);
     output.report = await helpers.getAllReportData(reportID);
     res.json(output);
   })
-
-=======
 
 
 
@@ -111,7 +108,6 @@ module.exports = (app) => {
    * @param {object} res - the express response object
    * @return {string/json} - result and an updated array of reports or reason of error
    */
->>>>>>> master
   app.get('/deleteReport', async (req, res) => {
     const reportID = parseInt(req.query.reportID);
     const userID = parseInt(req.query.userID);

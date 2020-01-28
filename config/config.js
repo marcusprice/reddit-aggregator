@@ -17,8 +17,10 @@ module.exports = {
     password: process.env.REDDIT_PASSWORD,            //reddit API password (see readme & snoowrap docs)
   },
   email: {
-    user: process.env.EMAIL_USERNAME,                 //email SMTP username
-    password: process.env.EMAIL_PASSWORD              //email SMTP password
+    service: process.env.EMAIL_SERVICE,          //email service
+    username: process.env.EMAIL_USERNAME,                 //email SMTP username
+    password: process.env.EMAIL_PASSWORD,             //email SMTP password
+    testAddress: process.env.EMAIL_TEST_ADDRESS       //email test address
   },
   session: {
     secret: process.env.SESSION_SECRET                //secret session key

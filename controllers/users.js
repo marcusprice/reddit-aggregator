@@ -8,7 +8,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Users.readUser(handle, (error, result) => {
         if(error) {
-          reject(error);
+          resolve(error);
         } else {
           resolve(result);
         }
@@ -20,7 +20,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       Users.readPassword(handle, (error, result) => {
         if(error) {
-          reject(error)
+          resolve(false) 
         } else {
           if(hash.verify(password, result)) {
             //passwords match

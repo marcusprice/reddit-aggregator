@@ -19,7 +19,7 @@ module.exports = {
           //build sql query
           const sql = 'INSERT INTO Users ' +
           '(Username, Email, Password, FirstName, LastName, DateCreated, LastLogin) ' +
-          'VALUES ($1, $2, $3, $4, $5, now(), now());';
+          'VALUES ($1, $2, $3, $4, $5, now(), now()) RETURNING UserID, Username, Email, FirstName, LastName, LastLogin, DateCreated;';
 
           //store the input values into an array for query input
           const values = [
@@ -37,12 +37,12 @@ module.exports = {
               callback(err, null);
             } else {
               //send back a true value signaling successful db entry
-              callback(null, true);
+              callback(null, {userCreated: true, userData: result.rows[0]});
             }
           });
         })
         .catch((err) => {
-          callback(err, null);
+          callback('Username and/or email already exists', null);
         });
     }
   },
@@ -89,10 +89,9 @@ module.exports = {
         callback(err, null);
       } else {
         if(result.rows.length < 1) {
-          const error = new Error('handle was not found');
-          callback(error, null);
+          callback('User was not found', null);
         } else {
-          callback(null, result.rows[0].password); 
+          callback(null, result.rows[0].password);
         }
       }
     });
