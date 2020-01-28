@@ -5,12 +5,14 @@ import Alert from 'react-bootstrap/Alert';
 
 const ForgotPassword = (props) => {
 
-  let [email, setEmail] = useState('');
-  let [showAlert, setShowAlert] = useState(false);
-  let [alertMessage, setAlertMessage] = useState('');
-  let [alertVariant, setAlertVariant] = useState('');
+  let [email, setEmail] = useState('');                 //email state variable
+  let [showAlert, setShowAlert] = useState(false);      //alert state variable
+  let [alertMessage, setAlertMessage] = useState('');   //alert message state variable
+  let [alertVariant, setAlertVariant] = useState('');   //alert variant state variable
 
+  //requests a temp password
   const requestNewPassword = () => {
+    //set url query string
     const url = '/forgotPassword?email=' + email;
     fetch(url, {
       headers: {
@@ -20,13 +22,12 @@ const ForgotPassword = (props) => {
     })
       .then(response => response.json())
       .then((result) => {
-        console.log(result);
-        if(result.tempPasswordSet) {
+        if(result.tempPasswordSet) {  //the password has been reset
           //alert user that temp password has been set
           setAlertVariant('success');
           setAlertMessage('A temporary password has been sent to your email')
-        } else {
-          //email wasn't found
+        } else {  //email wasn't found
+          //alert the user
           setAlertVariant('danger');
           setAlertMessage('This email is not registered with Reddit Aggregator');
         }
@@ -35,9 +36,21 @@ const ForgotPassword = (props) => {
       })
   }
 
+  //used when the user closes the alert notification
+  const handleClose = () => {
+    //set the show alert state to false
+    setShowAlert(false);
+
+    if(alertVariant === 'success') {  //temp password was set and sent to email
+      //bring user to login screen
+      props.setView('login');
+    }
+  }
+
+  //shows alert
   const handleAlert = () => {
     if(showAlert) {
-      return <Alert variant={alertVariant} onClose={() => {setShowAlert(false); props.setView('login'); }} dismissible>{ alertMessage }</Alert>;
+      return <Alert variant={ alertVariant } onClose={ handleClose } dismissible>{ alertMessage }</Alert>;
     }
   }
 

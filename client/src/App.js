@@ -4,10 +4,10 @@ import Spinner from 'react-bootstrap/Spinner';
 
 const App = () => {
 
-  let [serverChecked, setServerChecked] = useState(false);
-  let [userLoggedIn, setUserLoggedIn] = useState(false);
-  let [userData, setUserData] = useState({});
-  let [reportData, setReportData] = useState([]);
+  let [serverChecked, setServerChecked] = useState(false);  //serverChecked state to manage initial server check
+  let [userLoggedIn, setUserLoggedIn] = useState(false);    //loggedIn state to manage user's login state
+  let [userData, setUserData] = useState({});               //userData stores the user's basic info
+  let [reportData, setReportData] = useState([]);           //reportData stores the user's basic report info (without submission data)
 
   //first check the server to see if the user is logged in or not
   useEffect(() => {
@@ -33,17 +33,18 @@ const App = () => {
 
   //to toggle the display between loading, loginscreen & dashboard
   const handleDisplay = () => {
-    if(serverChecked) {
-      if(userLoggedIn) {
+    let output;
+    if(serverChecked) { //server has responded
+      if(userLoggedIn) {  //user is logged in
         //show dashboard
-        return(
+        output = (
           <div>
             This is a dashbaord
           </div>
         );
-      } else {
+      } else {  //user is not logged in
         //show landing area
-        return (
+        output = (
           <Landing
             setUserLoggedIn={setUserLoggedIn}
             setUserData={setUserData}
@@ -51,14 +52,17 @@ const App = () => {
           />
         );
       }
-    } else {
+    } else {  //server has yet to respond
       //show loading icon
-      return(
+      output = (
         <div style={{width: '100vw', height: '100vh', diplay: 'flex', alignItems: 'center', justifyContent: 'center'}}>
           <Spinner animation="grow" />
         </div>
       );
     }
+
+    //return result
+    return output;
   }
 
   return(

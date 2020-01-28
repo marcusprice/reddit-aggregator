@@ -6,20 +6,24 @@ import Spinner from 'react-bootstrap/Spinner';
 
 const SignUp = (props) => {
   //state variables
-  let [username, setUserName] = useState('');
-  let [email, setEmail] = useState('');
-  let [password, setPassword] = useState('');
-  let [reTypedPassword, setReTypedPassword] = useState('');
-  let [firstName, setFirstName] = useState('');
-  let [lastName, setLastName] = useState('');
-  let [showAlert, setShowAlert] = useState(false);
-  let [alertReason, setAlertReason] = useState('The passwords you entered didn\'t match');
-  let [showSpinner, setShowSpinner] = useState(false);
+  let [username, setUserName] = useState('');                                                 //username state variable
+  let [email, setEmail] = useState('');                                                       //email state variable
+  let [password, setPassword] = useState('');                                                 //password state variable
+  let [reTypedPassword, setReTypedPassword] = useState('');                                   //reTyped password state variable
+  let [firstName, setFirstName] = useState('');                                               //first name state variable
+  let [lastName, setLastName] = useState('');                                                 //last name state variable
+  let [showAlert, setShowAlert] = useState(false);                                            //show alert state variable
+  let [alertReason, setAlertReason] = useState('The passwords you entered didn\'t match');    //alert message  state variable
+  let [showSpinner, setShowSpinner] = useState(false);                                        //spinner state variable
 
+  //attempt signing up
   const signUp = () => {
 
     if(password === reTypedPassword) {  //if passwords match
+      //start the spinner (prevents the user from double clicking AND shows that the the request is being processed (see handleSpinner))
       setShowSpinner(true);
+
+      //compile user data into an object
       const userData = {
         username: username,
         email: email,
@@ -37,17 +41,16 @@ const SignUp = (props) => {
         },
         body: JSON.stringify(userData)
       })
-        .then((response) => {
-          return response.json();
-        })
+        .then(response => response.json())
         .then((result) => {
+          //the server has responded, show the sign up button again
           setShowSpinner(false);
           if(result.userCreated) {
-            console.log(result);
-            props.setReportData([]);
+            //set user data, report data (to empty array) and set logged in to true (all parent functions from App.js)
             props.setUserData(result.userData);
+            props.setReportData([]);
             props.setUserLoggedIn(true);
-          } else {
+          } else {  //there was a problem with the server, send the error
             setAlertReason(result.reason);
             setShowAlert(true);
           }
@@ -59,26 +62,32 @@ const SignUp = (props) => {
     }
   }
 
+  //displays an alert to the user
   const handleAlert = () => {
     if(showAlert) {
       return <Alert onClose={() => {setShowAlert(false)}} dismissible>{alertReason}</Alert>;
     }
   }
 
+  //shows a spinner when processing requests with the server
   const handleSpinner = () => {
-    if(showSpinner) {
-      return (
+    let output;
+    if(showSpinner) { //processing server request
+      output = (
         <div style={{width: '100%', textAlign: 'center'}}>
           <Spinner animation="grow" />
         </div>
       );
-    } else {
-      return (
+    } else {  //not processing a server request
+      output = (
         <Button variant="dark" type="submit" className="form-action-button">
           Sign Up
         </Button>
       );
     }
+
+    //return the result
+    return output;
   }
 
   return(
@@ -94,7 +103,7 @@ const SignUp = (props) => {
 
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Enter a Username"  require="required" value={email} onChange={(e) => {setEmail(e.target.value)}} />
+          <Form.Control type="email" placeholder="Enter your email"  require="required" value={email} onChange={(e) => {setEmail(e.target.value)}} />
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">

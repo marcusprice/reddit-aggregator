@@ -6,8 +6,9 @@ import SignUp from './landing-components/SignUp';
 import ForgotPassword from './landing-components/ForgotPassword';
 
 const Landing = (props) => {
-  let [view, setView] = useState('login');
+  let [view, setView] = useState('login');  //used to manage what the user is currently seeing
 
+  //toggles user view/returns the different landing components
   const handleView = () => {
     let output;
     switch(view) {
@@ -57,7 +58,7 @@ const Landing = (props) => {
   return(
     <div>
       <LandingHeader/>
-      {handleView()}
+      { handleView() }
     </div>
   )
 }
