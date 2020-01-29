@@ -73,7 +73,7 @@ const ForgotPassword = (props) => {
         </ul>
       </Form>
     </div>
-  )
+  );
 }
 
 export default ForgotPassword;

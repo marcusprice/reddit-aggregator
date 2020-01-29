@@ -34,3 +34,15 @@ ul li {
   margin-bottom: 8px;
   cursor: pointer;
 }
+
+.report-card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* grid-gap: 10px; */
+}
+
+.dashboard-header {
+  max-width: 1024px;
+  margin: 0 auto;
+  text-align: center;
+}

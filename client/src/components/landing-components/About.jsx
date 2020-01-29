@@ -18,7 +18,7 @@ const About = (props) => {
         <li onClick={() => {props.setView('login')}}>Back to Login</li>
       </ul>
     </div>
-  )
+  );
 }
 
 export default About;

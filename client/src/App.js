@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Landing from './components/Landing';
+import Dashboard from './components/Dashboard'
 import Spinner from 'react-bootstrap/Spinner';
 
 const App = () => {
@@ -38,9 +39,13 @@ const App = () => {
       if(userLoggedIn) {  //user is logged in
         //show dashboard
         output = (
-          <div>
-            This is a dashbaord
-          </div>
+          <Dashboard
+            setUserLoggedIn={setUserLoggedIn}
+            setUserData={setUserData}
+            setReportData={setReportData}
+            userData={userData}
+            reportData={reportData}
+          />
         );
       } else {  //user is not logged in
         //show landing area
@@ -67,7 +72,7 @@ const App = () => {
 
   return(
     handleDisplay()
-  )
+  );
 }
 
 export default App;

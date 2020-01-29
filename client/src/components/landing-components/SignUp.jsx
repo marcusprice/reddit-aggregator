@@ -131,7 +131,7 @@ const SignUp = (props) => {
         <li onClick={() => {props.setView('login')}}>Back to Login</li>
       </ul>
     </div>
-  )
+  );
 }
 
 export default SignUp;

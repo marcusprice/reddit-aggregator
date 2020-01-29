@@ -75,17 +75,6 @@ module.exports = {
       if(result.rowCount > 0) {
         //report data was found, save it into the output variable
         output = result.rows[0];
-        //set blank subreddits array
-        output.subreddits = [];
-
-        let reportValues = [reportID];
-        let subredditSQL = 'SELECT Subreddits.SubredditName ' +
-        'FROM Subreddits ' +
-        'LEFT JOIN ReportsSubreddits ' +
-        'ON Subreddits.SubredditID = ReportsSubreddits.SubredditID ' +
-        'WHERE ReportsSubreddits.ReportID = $1';
-
-        output.subreddits = await pg.query(subredditSQL, reportValues);
         callback(null, output);
       } else {
         //send back an error

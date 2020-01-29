@@ -99,7 +99,7 @@ const Login = (props) => {
         </ul>
       </div>
     </div>
-  )
+  );
 }
 
 export default Login;
