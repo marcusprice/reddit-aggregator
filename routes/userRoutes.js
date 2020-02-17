@@ -43,8 +43,16 @@ module.exports = (app) => {
    * @return {string/json} - success/fail reposnse
    */
   app.post('/editUser', (req, res) => {
+    
+    const userData = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      username: req.body.username
+    };
+
     if(req.session.loggedIn && req.session.userID) {    //if the user is logged in and the user ID is set
-      users.editUser(req.session.userID, req.body.userData)
+      users.editUser(req.session.userID, userData)
         .then((result) => {
           res.json({userEdited: true, userData: result})
         })
@@ -52,6 +60,7 @@ module.exports = (app) => {
           res.json({userEdited: false, reason: error.toString()});
         });
     } else {  //user is not logged in (possibly malacious activity!)
+      console.log('not logged in');
       res.json({userEdited: false, reason: 'user isn\'t logged in'});
     }
   });

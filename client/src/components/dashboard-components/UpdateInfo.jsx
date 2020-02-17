@@ -1,15 +1,46 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 const UpdateInfo = (props) => {
   let [firstName, setFirstName] = useState(props.userData.firstname);
   let [lastName, setLastName] = useState(props.userData.lastname);
   let [email, setEmail] = useState(props.userData.email);
   let [handle, setHandle] = useState(props.userData.username);
+  let [alertVariant, setAlertVariant] = useState('danger');
+  let [alertMessage, setAlertMessage] = useState('');
+
+  const updateInfo = () => {
+    const userData = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      username: handle
+    }
+
+    fetch('/editUser', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(userData)
+    })
+      .then(response => response.json())
+      .then((result) => {
+        if(result.userEdited) {
+          alert('user was edited');
+        } else {
+          alert('a problem ocurred')
+          alert(result.error)
+        }
+      })
+  }
 
   return(
-    <Form onSubmit={(e) => { e.preventDefault(); }}>
+    <Form onSubmit={(e) => { e.preventDefault(); updateInfo(); }}>
       <h2>Update Info</h2>
       <Form.Group controlId="formBasicFirstName">
         <Form.Label>First Name</Form.Label>
