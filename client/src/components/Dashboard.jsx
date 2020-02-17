@@ -5,7 +5,6 @@ import ReportList from './dashboard-components/ReportList';
 import AccountSettings from './dashboard-components/AccountSettings';
 
 const Dashboard = (props) => {
-
   let [view, setView] = useState('report list');
 
   const handleView = () => {
@@ -15,7 +14,7 @@ const Dashboard = (props) => {
         output = <ReportList reportData={props.reportData}/>;
         break;
       case 'account settings':
-        output = <AccountSettings reportData={props.userData}/>;
+        output = <AccountSettings userData={props.userData} />;
         break;
       default:
         output = <ReportList reportData={props.reportData}/>;
@@ -28,6 +27,7 @@ const Dashboard = (props) => {
   return(
     <div>
       <NavBar
+        setView={setView}
         setUserLoggedIn={props.setUserLoggedIn}
         setUserData={props.setUserData}
         setReportData={props.setReportData}

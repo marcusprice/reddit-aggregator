@@ -46,3 +46,7 @@ ul li {
   margin: 0 auto;
   text-align: center;
 }
+
+.reset-password-form {
+  margin-top: 32px;
+}

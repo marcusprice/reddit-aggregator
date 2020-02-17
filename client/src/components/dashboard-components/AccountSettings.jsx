@@ -1,11 +1,12 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
 import UpdateInfo from './UpdateInfo.jsx';
+import UpdatePassword from './UpdatePassword.jsx';
 
-const AccountSettings = () => {
+const AccountSettings = (props) => {
   return(
     <div className="content-container">
-      <UpdateInfo />
+      <UpdateInfo userData={props.userData} />
+      <UpdatePassword />
     </div>
   );
 }

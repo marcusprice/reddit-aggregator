@@ -34,9 +34,9 @@ const NavBar = (props) => {
         </Nav>
         <Nav>
         <DropdownButton variant="secondary" id="dropdown-basic-button" title="Menu" alignRight>
-          <Dropdown.Item>Reports</Dropdown.Item>
+          <Dropdown.Item onClick={() => { props.setView('report list') }}>Reports</Dropdown.Item>
           <Dropdown.Item>Create Report</Dropdown.Item>
-          <Dropdown.Item>Account Settings</Dropdown.Item>
+          <Dropdown.Item onClick={() => { props.setView('account settings') }}>Account Settings</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={() => {logout()}}>Logout</Dropdown.Item>
         </DropdownButton>

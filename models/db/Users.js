@@ -80,9 +80,9 @@ module.exports = {
     }
   },
 
-  readPassword: (handle, callback) => {
+  readPassword: (identifier, callback) => {
     const sql = 'SELECT Password FROM Users WHERE Username = $1 OR Email = $1;'
-    const values = [handle];
+    const values = [identifier];
 
     pg.query(sql, values, (err, result) => {
       if(err) {

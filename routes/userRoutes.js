@@ -61,20 +61,24 @@ module.exports = (app) => {
 
   /**
    * Change User's Password
-   * Endpoint for editing user info
+   * Endpoint for editing users password
    * @param {object} req - the express request object
    * @param {object} res - the express response object
    * @return {string/json} - success/fail reposnse
    */
-  app.post('/changePassword', (req, res) => {
+  app.post('/changePassword', async (req, res) => {
     if(req.session.loggedIn && req.session.userID) {    //if the user is logged in and the user ID is set
-      users.changePassword(req.session.userID, req.body.password)
+      const userID = req.session.userID;
+      const newPassword = req.body.newPassword;
+
+      users.changePassword(req.session.userID, newPassword)
         .then((result) => {
-          res.json({passwordChanged: true});
+          res.json({ passwordChanged: true });
         })
         .catch(() => {
-          res.json({passwordChanged: false});
+          res.json({ passwordChanged: false });
         });
+
     } else {  //user is not logged in (possibly malacious activity!)
       res.json({passwordChanged: false, reason: 'user isn\'t logged in'});
     }

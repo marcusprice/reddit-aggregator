@@ -10,25 +10,25 @@ const UpdateInfo = (props) => {
 
   return(
     <Form onSubmit={(e) => { e.preventDefault(); }}>
-      <h2>General Info</h2>
+      <h2>Update Info</h2>
       <Form.Group controlId="formBasicFirstName">
         <Form.Label>First Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter your username or email" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/>
+        <Form.Control type="text" placeholder="Enter your first name" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/>
       </Form.Group>
 
       <Form.Group controlId="formBasicLastName">
         <Form.Label>Last Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter your username or email" value={lastName} onChange={(e) => {setLastName(e.target.value)}}/>
+        <Form.Control type="text" placeholder="Enter your last name" value={lastName} onChange={(e) => {setLastName(e.target.value)}}/>
       </Form.Group>
 
-      <Form.Group controlId="formBasicLastName">
-        <Form.Label>Last Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter your username or email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
-      </Form.Group>
-
-      <Form.Group controlId="formBasicLastName">
+      <Form.Group controlId="formBasicEmail">
         <Form.Label>Email</Form.Label>
-        <Form.Control type="text" placeholder="Enter your username or email" value={handle} onChange={(e) => {setHandle(e.target.value)}}/>
+        <Form.Control type="email" placeholder="Enter your email" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+      </Form.Group>
+
+      <Form.Group controlId="formBasicUsername">
+        <Form.Label>Username</Form.Label>
+        <Form.Control type="text" placeholder="Enter your username" value={handle} onChange={(e) => {setHandle(e.target.value)}}/>
       </Form.Group>
 
       <Button variant="dark" type="submit" className="form-action-button">
