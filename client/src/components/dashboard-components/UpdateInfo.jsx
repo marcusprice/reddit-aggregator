@@ -4,20 +4,23 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
 const UpdateInfo = (props) => {
+  
   let [firstName, setFirstName] = useState(props.userData.firstname);
   let [lastName, setLastName] = useState(props.userData.lastname);
   let [email, setEmail] = useState(props.userData.email);
   let [handle, setHandle] = useState(props.userData.username);
+  let [showAlert, setShowAlert] = useState(false);
   let [alertVariant, setAlertVariant] = useState('danger');
   let [alertMessage, setAlertMessage] = useState('');
 
   const updateInfo = () => {
+
     const userData = {
       firstName: firstName,
       lastName: lastName,
       email: email,
       username: handle
-    }
+    };
 
     fetch('/editUser', {
       method: 'POST',
@@ -31,17 +34,30 @@ const UpdateInfo = (props) => {
       .then(response => response.json())
       .then((result) => {
         if(result.userEdited) {
-          alert('user was edited');
+          props.setUserData(result.userData);
+          setAlertVariant('success');
+          setAlertMessage('Your account information has been updated')
+          setShowAlert(true);
         } else {
-          alert('a problem ocurred')
-          alert(result.error)
+          setAlertVariant('danger');
+          setAlertMessage('There was a problem updating your account, please try again')
+          setShowAlert(true);
         }
       })
+  }
+
+  const handleAlert = () => {
+    if(showAlert) {
+      return <Alert variant={alertVariant} onClose={() => { setShowAlert(false) }} dismissible>{ alertMessage }</Alert>
+    }
   }
 
   return(
     <Form onSubmit={(e) => { e.preventDefault(); updateInfo(); }}>
       <h2>Update Info</h2>
+
+      { handleAlert() }
+
       <Form.Group controlId="formBasicFirstName">
         <Form.Label>First Name</Form.Label>
         <Form.Control type="text" placeholder="Enter your first name" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/>

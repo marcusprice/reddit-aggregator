@@ -14,7 +14,7 @@ const Dashboard = (props) => {
         output = <ReportList reportData={props.reportData}/>;
         break;
       case 'account settings':
-        output = <AccountSettings userData={props.userData} />;
+        output = <AccountSettings setUserData={props.setUserData} userData={props.userData} />;
         break;
       default:
         output = <ReportList reportData={props.reportData}/>;

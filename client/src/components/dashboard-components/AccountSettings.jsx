@@ -5,7 +5,7 @@ import UpdatePassword from './UpdatePassword.jsx';
 const AccountSettings = (props) => {
   return(
     <div className="content-container">
-      <UpdateInfo userData={props.userData} />
+      <UpdateInfo setUserData={props.setUserData} userData={props.userData} />
       <UpdatePassword />
     </div>
   );
