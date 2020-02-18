@@ -32,7 +32,7 @@ const Dashboard = (props) => {
         setUserData={props.setUserData}
         setReportData={props.setReportData}
       />
-      <DashboardHeader view={view} numOfReports={props.reportData.length} firstName={props.userData.firstname}/>
+      <DashboardHeader view={view} setView={setView} numOfReports={props.reportData.length} firstName={props.userData.firstname}/>
       { handleView() }
     </div>
   );

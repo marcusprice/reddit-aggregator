@@ -27,7 +27,7 @@ const NavBar = (props) => {
 
   return(
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand>Reddit Aggregator</Navbar.Brand>
+      <Navbar.Brand onClick={() => { props.setView('report list') }} className="site-title">Reddit Aggregator</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">

@@ -50,3 +50,7 @@ ul li {
 .reset-password-form {
   margin-top: 32px;
 }
+
+.site-title {
+  cursor: pointer;
+}

@@ -23,12 +23,18 @@ const DashboardHeader = (props) => {
       break;
   }
 
+  const handleClick= () => {
+    if(props.view === 'account settings') {
+      props.setView('report list');
+    }
+  }
+
   return(
     <Jumbotron fluid>
       <div className="dashboard-header">
         <h2>{ pageTitle }</h2>
         <h3 className="lead">{ tagLine }</h3>
-        <Button variant="primary" type="submit">
+        <Button onClick={() => { handleClick() }}variant="primary" type="submit">
           { buttonText }
         </Button>
       </div>
