@@ -16,6 +16,11 @@ const DashboardHeader = (props) => {
       tagLine = 'Edit your account settings below.';
       buttonText = 'Back to Reports';
       break;
+    case 'create report':
+      pageTitle = 'Create Report';
+      tagLine = 'Use the form below to create a new report.';
+      buttonText = 'Back to Reports';
+      break;
     default:
       pageTitle = 'reports';
       tagLine = `Welcome, ${props.firstName}. Below are your reports.`;
@@ -24,7 +29,15 @@ const DashboardHeader = (props) => {
   }
 
   const handleClick= () => {
+    if(props.view === 'report list') {
+      props.setView('create report');
+    }
+
     if(props.view === 'account settings') {
+      props.setView('report list');
+    }
+
+    if(props.view === 'create report') {
       props.setView('report list');
     }
   }

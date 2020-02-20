@@ -54,3 +54,12 @@ ul li {
 .site-title {
   cursor: pointer;
 }
+
+.tag-button {
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+
+.subreddit-tag-container {
+  margin-bottom: 32px;
+}

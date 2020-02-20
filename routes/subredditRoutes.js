@@ -22,8 +22,13 @@ module.exports = (app) => {
   app.get('/getSubreddits', async (req, res) => {
     if(req.session.loggedIn && req.session.userID) {  //user is logged in
       //get all subreddit names and send to the client
-      const subredditData = await subreddits.getAllSubreddits();
-      res.json(subredditData);
+      let subredditData = await subreddits.getAllSubreddits();
+
+      //return the subreddit name only
+      subredditData = subredditData.map(result => result.subredditname);
+
+      res.json({gotSubreddits: true, subreddits: subredditData});
+
     } else {  //user is not logged in
       //send failure notice
       res.json({result: 'failed', reason: 'not logged in'});
