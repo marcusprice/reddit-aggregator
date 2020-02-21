@@ -7,15 +7,13 @@ const CreateReport = () => {
   let [reportName, setReportName] = useState('');
   let [reportDescription, setReportDescsription] = useState('');
   let [subreddits, setSubreddits] = useState([]);
-
-  console.log(subreddits);
-
+  
   const addSubreddit = (s) => {
     setSubreddits([...subreddits, s]);
   }
 
   const removeSubreddit = (i) => {
-    const updatedSubreddits = subreddits.filter((item, index) => index != i);
+    const updatedSubreddits = subreddits.filter((item, index) => index !== i);
     setSubreddits(updatedSubreddits);
   }
 
