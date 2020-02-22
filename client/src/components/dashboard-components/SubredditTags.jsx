@@ -9,9 +9,8 @@ const SubredditTags = (props) => {
 
   let [suggestions, setSuggestions] = useState([]);
   let [matchedSuggestions, setMatchedSuggestions] = useState([]);
+  let [selectedSuggestion, setSelectedSuggestion] = useState(-1);
   let [subreddit, setSubreddit] = useState('');
-
-  console.log(matchedSuggestions);
 
   //grabs a list of all subreddits in use for suggestions
   useEffect(() => {
@@ -37,8 +36,14 @@ const SubredditTags = (props) => {
   const handleKeyPressed = (e) => {
     //if user presses enter submit new subreddit & clear input
     if(e.key === 'Enter') {
-      props.addSubreddit(subreddit);
-      setSubreddit('');
+      if(selectedSuggestion > -1) { //user is navigating through the suggestion list
+        props.addSubreddit(matchedSuggestions[selectedSuggestion]);
+      } else {  //user submits form form input
+        props.addSubreddit(subreddit);
+      }
+
+      //clear the input
+      clearInput();
     }
   }
 
@@ -50,19 +55,18 @@ const SubredditTags = (props) => {
     value = value.replace(/\s/g, '');
 
     const detectedSuggestions = detectSuggestions(value);
-
+    if(matchedSuggestions.length === 0) { setSelectedSuggestion(-1) } //if there are no matched suggestions set selectedSuggestion to -1
     setMatchedSuggestions(detectedSuggestions);
     setSubreddit(value);
   }
 
   //detects if user input matches any of the suggestions
   const detectSuggestions = (userInput) => {
-    //output and matchDetected variables
+
     let output = [];
     let matchDetected = false;
 
-    //only execute loops if user has entered more than one character
-    if(userInput.length > 1) {
+    if(userInput.length > 1) { //only execute code if user entered more than one character
 
       //loop through each suggestion
       suggestions.forEach(suggestion => {
@@ -86,7 +90,6 @@ const SubredditTags = (props) => {
       });
     }
 
-
     return output;
   }
 
@@ -103,19 +106,51 @@ const SubredditTags = (props) => {
     return buttons;
   }
 
+  //used to clear input & suggestions
   const clearInput = () => {
     setSubreddit('');
     setMatchedSuggestions([]);
+    setSelectedSuggestion(-1);
+  }
+
+  //handles key up/key down for suggestion box navigation
+  const handleKeyUpDown = (k) => {
+    if(matchedSuggestions.length > 0) { //only execute code if there are suggstions
+      if(k === 40) { //key was pressed down
+        if(selectedSuggestion < matchedSuggestions.length - 1) {
+          setSelectedSuggestion(selectedSuggestion += 1);
+        }
+      } else if(k === 38) { //key was pressed up
+        if(selectedSuggestion > -1) {
+          setSelectedSuggestion(selectedSuggestion -= 1);
+        }
+      }
+    }
   }
 
   return(
     <div className="subreddit-tag-container">
       <Form.Label>Report Subreddits</Form.Label>
+
       <div>
         { showButtons() }
       </div>
-      <Form.Control className="tag-input" type="text" placeholder="Enter subreddits for your report here" value={subreddit} onChange={(e) => { handleChange(e) }} onKeyPress={handleKeyPressed} />
-      <SuggestionBox suggestions={matchedSuggestions} addSubreddit={props.addSubreddit} clearInput={clearInput}/>
+
+      <Form.Control
+        className="tag-input"
+        type="text"
+        placeholder="Enter subreddits for your report here"
+        value={subreddit}
+        onChange={(e) => { handleChange(e) }}
+        onKeyPress={handleKeyPressed}
+        onKeyDown={(e) => { handleKeyUpDown(e.keyCode) }}
+      />
+
+      <SuggestionBox
+        suggestions={matchedSuggestions}
+        addSubreddit={props.addSubreddit}
+        clearInput={clearInput}
+      />
     </div>
   )
 }
