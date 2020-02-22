@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import SuggestionBox from './SuggestionBox';
 import deleteIcon from '../../img/delete-icon.svg';
 
 
@@ -48,34 +49,33 @@ const SubredditTags = (props) => {
     //if user presses space remove it
     value = value.replace(/\s/g, '');
 
-    setMatchedSuggestions(detectSuggestion(value));
+    const detectedSuggestions = detectSuggestions(value);
+
+    setMatchedSuggestions(detectedSuggestions);
     setSubreddit(value);
   }
 
   //detects if user input matches any of the suggestions
-  const detectSuggestion = (userInput) => {
+  const detectSuggestions = (userInput) => {
     //output and matchDetected variables
     let output = [];
     let matchDetected = false;
 
     //only execute loops if user has entered more than one character
     if(userInput.length > 1) {
+
       //loop through each suggestion
       suggestions.forEach(suggestion => {
-        //loop through each character in the suggestion
-        for(let i = 0; i < suggestion.length - 1; i++) {
-          if(matchDetected) { break; }
-          //loop through each character in the user input
-          for(let j = 0; j < userInput.length - 1; j++) {
-            if(matchDetected) { break; }
-            //make strings of current string index + 1
-            let suggestionPlusNext = suggestion[i] + suggestion[i + 1];
-            let userInputPlusNext = userInput[j] + userInput[j + 1];
 
-            if(suggestionPlusNext.toLowerCase() === userInputPlusNext.toLowerCase()) {
-              //there is a character match, set match detected var
-              matchDetected = true;
-            }
+        //loop through each character in the user input
+        for(let i = 0; i < userInput.length - 1; i++) {
+          if(matchDetected) { break; }  //if a match is detected break out of the loop
+
+          //create a string with the current character + 1
+          let userInputPlusNext = userInput[i] + userInput[i + 1];
+
+          if(suggestion.indexOf(userInputPlusNext) !== -1) {  //if the two characters are found in the suggestion
+            matchDetected = true;
           }
         }
 
@@ -83,8 +83,9 @@ const SubredditTags = (props) => {
           output.push(suggestion);
           matchDetected = false;
         }
-      })
+      });
     }
+
 
     return output;
   }
@@ -102,6 +103,11 @@ const SubredditTags = (props) => {
     return buttons;
   }
 
+  const clearInput = () => {
+    setSubreddit('');
+    setMatchedSuggestions([]);
+  }
+
   return(
     <div className="subreddit-tag-container">
       <Form.Label>Report Subreddits</Form.Label>
@@ -109,6 +115,7 @@ const SubredditTags = (props) => {
         { showButtons() }
       </div>
       <Form.Control className="tag-input" type="text" placeholder="Enter subreddits for your report here" value={subreddit} onChange={(e) => { handleChange(e) }} onKeyPress={handleKeyPressed} />
+      <SuggestionBox suggestions={matchedSuggestions} addSubreddit={props.addSubreddit} clearInput={clearInput}/>
     </div>
   )
 }
