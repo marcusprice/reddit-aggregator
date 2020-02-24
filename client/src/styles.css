@@ -78,3 +78,7 @@ ul li {
 .suggestion-item:hover {
   color: #007bff;
 }
+
+.selected {
+  color: #007bff;  
+}

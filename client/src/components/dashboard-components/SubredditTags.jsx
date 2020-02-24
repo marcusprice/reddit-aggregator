@@ -148,6 +148,7 @@ const SubredditTags = (props) => {
 
       <SuggestionBox
         suggestions={matchedSuggestions}
+        selectedSuggestion={selectedSuggestion}
         addSubreddit={props.addSubreddit}
         clearInput={clearInput}
       />

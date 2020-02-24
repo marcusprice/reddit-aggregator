@@ -6,7 +6,8 @@ const SuggestionBox = (props) => {
     if(props.suggestions.length > 0) {
 
       const suggestions = props.suggestions.map((suggestion, index) => {
-        return <li onClick={() => { props.addSubreddit(suggestion); props.clearInput(); }} className="suggestion-item" key={index}>{suggestion}</li>;
+        let selected = (props.selectedSuggestion === index ? 'selected' : '');
+        return <li onClick={() => { props.addSubreddit(suggestion); props.clearInput(); }} className={`suggestion-item ${selected}`} key={index}>{suggestion}</li>;
       });
 
       output = (
