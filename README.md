@@ -6,7 +6,7 @@
 
 Reddit Aggregator is a CRUD app that collects the top [Reddit](https://www.reddit.com) submissions of the hour so interesting posts don't get buried. It was a built for my capstone project class and I used it as an opportunity to become more accustomed to asynchronous JavaScript, automated processes with cron, test driven development, and integrating 3rd party REST api's into an application.
 
-It's built in the MVC (model-view-controller) design pattern, separating concerns between the backend/data layer and the client. The backend is managed with the Express framework & PostgreSQL and the client is built with the React framework (via [Create React App](https://create-react-app.dev/)) & React-Bootstrap.
+It's built in the MVC design pattern, separating concerns between the backend/data layer and the client. The backend is managed with the Express framework & PostgreSQL and the client is built with the React framework (via [Create React App](https://create-react-app.dev/)) & React-Bootstrap.
 
 ## Dependencies
 
