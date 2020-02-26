@@ -44,6 +44,8 @@ const SubredditTags = (props) => {
 
       //clear the input
       clearInput();
+      //prevent submit
+      e.preventDefault();
     }
   }
 

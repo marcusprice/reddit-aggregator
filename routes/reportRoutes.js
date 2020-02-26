@@ -42,12 +42,21 @@ module.exports = (app) => {
    */
   app.post('/createReport', async (req, res) => {
     if(req.session.loggedIn && req.session.userID) {  //if the user is logged in and user id is set
+
+      const newReport = {
+        userID: req.session.userID,
+        name: req.body.name,
+        description: req.body.description,
+        subreddits: req.body.subreddits,
+        notifications: false
+      };
+
       //create a new report
-      reports.createReport(req.body)
+      reports.createReport(newReport)
         .then(async (result) => { //report was succesfully created
           //get updated report array and send to the client
-          let reports = await helpers.getAllReportData(req.session.userID);
-          res.json({reportCreated: result, reportData: reports});
+          let reportData = await reports.getAllReportsByUser(req.session.userID);
+          res.json({reportCreated: result, reportData: reportData});
         })
         .catch((error) => { //there was an error
           //send the error back to the client

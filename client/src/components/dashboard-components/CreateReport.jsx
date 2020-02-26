@@ -7,7 +7,34 @@ const CreateReport = () => {
   let [reportName, setReportName] = useState('');
   let [reportDescription, setReportDescsription] = useState('');
   let [subreddits, setSubreddits] = useState([]);
-  
+
+  const createReport = () => {
+    if(reportName.length > 0 && reportDescription.length > 0 && subreddits.length > 0) {
+      const reportData = {
+        name: reportName,
+        description: reportDescription,
+        subreddits: subreddits,
+        notifications: false
+      }
+
+      fetch('/createReport', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(reportData)
+      })
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+        })
+    } else {
+      alert('please continue filling out the form');
+    }
+  }
+
   const addSubreddit = (s) => {
     setSubreddits([...subreddits, s]);
   }
@@ -19,7 +46,7 @@ const CreateReport = () => {
 
   return(
     <div className="content-container">
-      <Form onSubmit={(e) => { e.preventDefault(); }}>
+      <Form onSubmit={(e) => { e.preventDefault(); createReport(); }}>
         <h2>Create Report</h2>
 
         <Form.Group controlId="formBasicFirstName">
