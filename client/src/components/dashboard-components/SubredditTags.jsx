@@ -145,7 +145,7 @@ const SubredditTags = (props) => {
         value={subreddit}
         onChange={(e) => { handleChange(e) }}
         onKeyPress={handleKeyPressed}
-        onKeyDown={(e) => { handleKeyUpDown(e.keyCode) }}
+        onKeyDown={(e) => { handleKeyUpDown(e.keyCode); }}
       />
 
       <SuggestionBox

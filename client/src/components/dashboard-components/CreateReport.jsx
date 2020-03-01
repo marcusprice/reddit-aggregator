@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import SubredditTags from './SubredditTags';
+import Alert from 'react-bootstrap/Alert';
 
 const CreateReport = () => {
   let [reportName, setReportName] = useState('');
   let [reportDescription, setReportDescsription] = useState('');
   let [subreddits, setSubreddits] = useState([]);
+  let [showAlert, setShowAlert] = useState(false);
 
   const createReport = () => {
-    if(reportName.length > 0 && reportDescription.length > 0 && subreddits.length > 0) {
+    if(reportName.length > 0 && subreddits.length > 0) {
       const reportData = {
         name: reportName,
         description: reportDescription,
@@ -31,7 +33,7 @@ const CreateReport = () => {
           console.log(result);
         })
     } else {
-      alert('please continue filling out the form');
+      setShowAlert(true);
     }
   }
 
@@ -44,11 +46,17 @@ const CreateReport = () => {
     setSubreddits(updatedSubreddits);
   }
 
+  const handleAlert = () => {
+    if(showAlert) {
+      return <Alert variant="danger" onClose={() => { setShowAlert(false) }} dismissible>Report name and at least one subreddit is required</Alert>
+    }
+  }
+
   return(
     <div className="content-container">
       <Form onSubmit={(e) => { e.preventDefault(); createReport(); }}>
         <h2>Create Report</h2>
-
+        { handleAlert() }
         <Form.Group controlId="formBasicFirstName">
           <Form.Label>Report Name</Form.Label>
           <Form.Control type="text" placeholder="Enter the name for the report" value={reportName} onChange={(e) => {setReportName(e.target.value)}}/>
