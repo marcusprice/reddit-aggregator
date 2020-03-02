@@ -7,6 +7,7 @@ const ReportList = (props) => {
     let output;
     if(props.reportData.length > 0) { //if there are reports
       output = props.reportData.map((report, index) => {
+        console.log(report);
         return(
           <ReportCard key={index} name={report.name} description={report.description} />
         );

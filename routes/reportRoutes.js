@@ -78,7 +78,7 @@ module.exports = (app) => {
 
   /**
    * Edit Report
-   * Endpoint to udpate an existing report
+   * Endpoint to udpate an existing report 
    * @param {object} req - the express request object
    * @param {object} res - the express response object
    * @return {string/json} - result and an updated array of reports or reason of error
@@ -122,8 +122,8 @@ module.exports = (app) => {
     const userID = parseInt(req.query.userID);
     reports.deleteReport(reportID)
       .then(async (result) => {
-        let reports = await helpers.getAllReportData(userID);
-        res.json({reportDeleted: result, reportData: reports});
+        let reportData = await reports.getAllReportsByUser(req.session.userID);
+        res.json({ reportDeleted: result, reportData: reportData });
       })
       .catch((error) => {
         res.json({reportDeleted: false, reason: error.toString()});

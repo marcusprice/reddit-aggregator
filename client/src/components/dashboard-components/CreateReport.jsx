@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import SubredditTags from './SubredditTags';
 import Alert from 'react-bootstrap/Alert';
 
-const CreateReport = () => {
+const CreateReport = (props) => {
   let [reportName, setReportName] = useState('');
   let [reportDescription, setReportDescsription] = useState('');
   let [subreddits, setSubreddits] = useState([]);
@@ -30,7 +30,8 @@ const CreateReport = () => {
       })
         .then(response => response.json())
         .then(result => {
-          console.log(result);
+          props.setReportData(result.reportData);
+          props.setView('reports');
         })
     } else {
       setShowAlert(true);
