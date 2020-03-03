@@ -3,13 +3,20 @@ import ReportCard from './ReportCard';
 
 const ReportList = (props) => {
 
+  console.log(props);
+
   const distributeCards = () => {
     let output;
     if(props.reportData.length > 0) { //if there are reports
       output = props.reportData.map((report, index) => {
-        console.log(report);
         return(
-          <ReportCard key={index} name={report.name} description={report.description} />
+          <ReportCard
+            key={index}
+            reportid={report.reportid}
+            name={report.name}
+            description={report.description}
+            setReportData={props.setReportData}
+          />
         );
       });
     } else {  //no reports to display
