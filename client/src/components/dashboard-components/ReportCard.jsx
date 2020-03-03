@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Modal from 'react-bootstrap/Modal';
 
 const ReportCard = (props) => {
   let [show, setShow] = useState(false);
@@ -52,11 +51,11 @@ const ReportCard = (props) => {
         <Card.Text>
           {props.description}
         </Card.Text>
-        <ToggleButtonGroup variant="outline-secondary" type="checkbox">
-          <ToggleButton variant="outline-secondary" value={1}>View</ToggleButton>
-          <ToggleButton variant="outline-secondary" value={2}>Edit</ToggleButton>
-          <ToggleButton variant="outline-secondary" value={3} onClick={handleShow}>Delete</ToggleButton>
-        </ToggleButtonGroup>
+        <ButtonGroup variant="outline-secondary" type="checkbox">
+          <Button variant="outline-secondary" value={1}>View</Button>
+          <Button variant="outline-secondary" value={2}>Edit</Button>
+          <Button variant="outline-secondary" value={3} onClick={handleShow}>Delete</Button>
+        </ButtonGroup>
       </Card.Body>
       {handleModal()}
     </Card>

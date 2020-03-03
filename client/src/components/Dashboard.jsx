@@ -11,9 +11,6 @@ const Dashboard = (props) => {
   const handleView = () => {
     let output;
     switch(view) {
-      case 'report list':
-        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} />;
-        break;
       case 'account settings':
         output = <AccountSettings setUserData={props.setUserData} userData={props.userData} />;
         break;
@@ -21,7 +18,7 @@ const Dashboard = (props) => {
         output = <CreateReport setReportData={props.setReportData} setView={setView} />;
         break;
       default:
-        output = <ReportList reportData={props.reportData} />;
+        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} />;
         break;
     }
 

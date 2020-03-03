@@ -6,11 +6,6 @@ const DashboardHeader = (props) => {
   let pageTitle, tagLine, buttonText;
 
   switch(props.view) {
-    case 'report list':
-      pageTitle = 'Reports';
-      tagLine = `Welcome, ${props.firstName}. Below are your reports.`;
-      buttonText = 'Create New Report';
-      break;
     case 'account settings':
       pageTitle = 'Account Settings';
       tagLine = 'Edit your account settings below.';
@@ -22,7 +17,7 @@ const DashboardHeader = (props) => {
       buttonText = 'Back to Reports';
       break;
     default:
-      pageTitle = 'reports';
+      pageTitle = 'Reports';
       tagLine = `Welcome, ${props.firstName}. Below are your reports.`;
       buttonText = 'Create New Report';
       break;

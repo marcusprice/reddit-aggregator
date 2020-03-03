@@ -71,7 +71,7 @@ const CreateReport = (props) => {
         <SubredditTags subreddits={subreddits} addSubreddit={addSubreddit} removeSubreddit={removeSubreddit} />
 
         <Button variant="dark" type="submit" className="form-action-button">
-          Update Info
+          Create Report
         </Button>
       </Form>
     </div>
