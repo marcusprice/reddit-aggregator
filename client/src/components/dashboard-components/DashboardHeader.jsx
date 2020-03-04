@@ -40,6 +40,10 @@ const DashboardHeader = (props) => {
     if(props.view === 'create report') {
       props.setView('report list');
     }
+
+    if(props.view === 'edit report') {
+      props.setView('report list');
+    }
   }
 
   return(

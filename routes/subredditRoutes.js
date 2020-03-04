@@ -34,4 +34,17 @@ module.exports = (app) => {
       res.json({result: 'failed', reason: 'not logged in'});
     }
   });
+
+  app.get('/getSubredditsByReport', async (req, res) => {
+    if(req.session.loggedIn && req.session.userID) {  //user is logged in
+      let reportID = req.query.reportID;
+      let subredditData = await subreddits.getAllSubredditsByReport(reportID);
+
+      res.json({gotSubreddits: true, subreddits: subredditData});
+
+    } else {  //user is not logged in
+      //send failure notice
+      res.json({result: 'failed', reason: 'not logged in'});
+    }
+  });
 };

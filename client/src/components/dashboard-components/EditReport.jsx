@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import SubredditTags from './SubredditTags';
@@ -9,6 +9,21 @@ const EditReport = (props) => {
   let [reportDescription, setReportDescsription] = useState(props.report.description);
   let [subreddits, setSubreddits] = useState([]);
   let [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    fetch('/getSubredditsByReport?reportID=' + props.report.reportid, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then((result) => {
+        if(result.gotSubreddits) {
+          setSubreddits(result.subreddits);  
+        }
+      })
+  }, []);
 
   const editReport = () => {
     if(reportName.length > 0 && subreddits.length > 0) {

@@ -7,6 +7,8 @@ module.exports = {
         if(error) {
           reject(error);
         } else {
+          //create an array of subreddit names only
+          result = result.map(subreddit => subreddit.subredditname);
           resolve(result);
         }
       });

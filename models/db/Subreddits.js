@@ -22,7 +22,7 @@ module.exports = {
       if(error) {
         callback(error, null);
       } else {
-        callback(null, result.rows[0]);
+        callback(null, result.rows);
       }
     });
   }
