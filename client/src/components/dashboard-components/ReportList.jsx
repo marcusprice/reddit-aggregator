@@ -16,6 +16,7 @@ const ReportList = (props) => {
             name={report.name}
             description={report.description}
             setReportData={props.setReportData}
+            setView={props.setView}
           />
         );
       });

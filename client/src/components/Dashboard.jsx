@@ -4,6 +4,7 @@ import DashboardHeader from './dashboard-components/DashboardHeader'
 import ReportList from './dashboard-components/ReportList';
 import AccountSettings from './dashboard-components/AccountSettings';
 import CreateReport from './dashboard-components/CreateReport';
+import EditReport from './dashboard-components/EditReport';
 
 const Dashboard = (props) => {
   let [view, setView] = useState('report list');
@@ -17,8 +18,11 @@ const Dashboard = (props) => {
       case 'create report':
         output = <CreateReport setReportData={props.setReportData} setView={setView} />;
         break;
+      case 'edit report':
+        output = <EditReport setReportData={props.setReportData} setView={setView} />;
+        break;
       default:
-        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} />;
+        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} setView={setView} />;
         break;
     }
 

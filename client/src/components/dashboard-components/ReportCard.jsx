@@ -53,7 +53,7 @@ const ReportCard = (props) => {
         </Card.Text>
         <ButtonGroup variant="outline-secondary" type="checkbox">
           <Button variant="outline-secondary" value={1}>View</Button>
-          <Button variant="outline-secondary" value={2}>Edit</Button>
+          <Button variant="outline-secondary" value={2} onClick={() => {props.setView('edit report')}}>Edit</Button>
           <Button variant="outline-secondary" value={3} onClick={handleShow}>Delete</Button>
         </ButtonGroup>
       </Card.Body>

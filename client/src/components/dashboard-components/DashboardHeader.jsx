@@ -16,6 +16,11 @@ const DashboardHeader = (props) => {
       tagLine = 'Use the form below to create a new report.';
       buttonText = 'Back to Reports';
       break;
+    case 'edit report':
+      pageTitle = 'Edit Report';
+      tagLine = 'Use the form below to edit your report.';
+      buttonText = 'Back to Reports';
+      break;
     default:
       pageTitle = 'Reports';
       tagLine = `Welcome, ${props.firstName}. Below are your reports.`;
