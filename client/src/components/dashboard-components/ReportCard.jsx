@@ -9,6 +9,8 @@ const ReportCard = (props) => {
   let handleClose = () => setShow(false);
   let handleShow = () => setShow(true);
 
+  console.log(props);
+
   const deleteReport = () => {
     fetch('/deleteReport?reportID=' + props.reportid, {
       headers: {
@@ -53,7 +55,7 @@ const ReportCard = (props) => {
         </Card.Text>
         <ButtonGroup variant="outline-secondary" type="checkbox">
           <Button variant="outline-secondary" value={1}>View</Button>
-          <Button variant="outline-secondary" value={2} onClick={() => {props.setView('edit report')}}>Edit</Button>
+          <Button variant="outline-secondary" value={2} onClick={() => {props.setEditIndex(props.index); props.setView('edit report')}}>Edit</Button>
           <Button variant="outline-secondary" value={3} onClick={handleShow}>Delete</Button>
         </ButtonGroup>
       </Card.Body>

@@ -8,6 +8,7 @@ import EditReport from './dashboard-components/EditReport';
 
 const Dashboard = (props) => {
   let [view, setView] = useState('report list');
+  let [editIndex, setEditIndex] = useState(0);
 
   const handleView = () => {
     let output;
@@ -19,10 +20,10 @@ const Dashboard = (props) => {
         output = <CreateReport setReportData={props.setReportData} setView={setView} />;
         break;
       case 'edit report':
-        output = <EditReport setReportData={props.setReportData} setView={setView} />;
+        output = <EditReport setReportData={props.setReportData} setView={setView} report={props.reportData[editIndex]} />;
         break;
       default:
-        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} setView={setView} />;
+        output = <ReportList reportData={props.reportData} setReportData={props.setReportData} setEditIndex={setEditIndex} setView={setView} />;
         break;
     }
 

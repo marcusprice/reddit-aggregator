@@ -5,8 +5,8 @@ import SubredditTags from './SubredditTags';
 import Alert from 'react-bootstrap/Alert';
 
 const EditReport = (props) => {
-  let [reportName, setReportName] = useState('');
-  let [reportDescription, setReportDescsription] = useState('');
+  let [reportName, setReportName] = useState(props.report.name);
+  let [reportDescription, setReportDescsription] = useState(props.report.description);
   let [subreddits, setSubreddits] = useState([]);
   let [showAlert, setShowAlert] = useState(false);
 
