@@ -35,11 +35,19 @@ module.exports = (app) => {
     }
   });
 
+  /**
+   * Get Subreddits By Report
+   * Endpoint to collect all subreddits associated with a specific report
+   * @param {object} req - the express request object
+   * @param {object} res - the express response object
+   * @return {string/json} - subreddit data
+   */
+
   app.get('/getSubredditsByReport', async (req, res) => {
     if(req.session.loggedIn && req.session.userID) {  //user is logged in
       let reportID = req.query.reportID;
       let subredditData = await subreddits.getAllSubredditsByReport(reportID);
-
+      
       res.json({gotSubreddits: true, subreddits: subredditData});
 
     } else {  //user is not logged in

@@ -78,7 +78,7 @@ module.exports = (app) => {
 
   /**
    * Edit Report
-   * Endpoint to udpate an existing report 
+   * Endpoint to udpate an existing report
    * @param {object} req - the express request object
    * @param {object} res - the express response object
    * @return {string/json} - result and an updated array of reports or reason of error
@@ -87,6 +87,7 @@ module.exports = (app) => {
     if(req.session.loggedIn && req.session.userID) {  //if the user is logged in and user id is set
       const userID = req.body.userID;
       const reportID = req.body.reportID;
+
       const reportData = {
         name: req.body.name,
         description: req.body.description,
@@ -96,8 +97,8 @@ module.exports = (app) => {
 
       reports.editReport(reportID, reportData)
         .then(async (result) => {
-          let reports = await helpers.getAllReportData(userID);
-          res.json({reportEdited: result, reportData: reports});
+          let reportData = await reports.getAllReportsByUser(req.session.userID);
+          res.json({reportEdited: result, reportData: reportData});
         })
         .catch((error) => {
           res.json({reportEdited: false, reportData: error.toString()});

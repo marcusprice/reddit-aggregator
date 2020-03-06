@@ -9,8 +9,6 @@ const ReportCard = (props) => {
   let handleClose = () => setShow(false);
   let handleShow = () => setShow(true);
 
-  console.log(props);
-
   const deleteReport = () => {
     fetch('/deleteReport?reportID=' + props.reportid, {
       headers: {

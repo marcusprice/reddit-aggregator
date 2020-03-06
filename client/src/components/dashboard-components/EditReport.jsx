@@ -20,21 +20,23 @@ const EditReport = (props) => {
       .then(response => response.json())
       .then((result) => {
         if(result.gotSubreddits) {
-          setSubreddits(result.subreddits);  
+          setSubreddits(result.subreddits);
         }
       })
-  }, []);
+  }, [props.report.reportid]);
 
   const editReport = () => {
     if(reportName.length > 0 && subreddits.length > 0) {
+
       const reportData = {
+        reportID: props.report.reportid,
         name: reportName,
         description: reportDescription,
         subreddits: subreddits,
         notifications: false
-      }
+      };
 
-      fetch('/createReport', {
+      fetch('/editReport', {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
@@ -45,8 +47,8 @@ const EditReport = (props) => {
       })
         .then(response => response.json())
         .then(result => {
+          console.log(result.reportData);
           props.setReportData(result.reportData);
-          props.setView('reports');
         })
     } else {
       setShowAlert(true);
