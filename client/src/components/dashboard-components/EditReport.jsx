@@ -9,6 +9,9 @@ const EditReport = (props) => {
   let [reportDescription, setReportDescsription] = useState(props.report.description);
   let [subreddits, setSubreddits] = useState([]);
   let [showAlert, setShowAlert] = useState(false);
+  let [alertMessage, setAlertMessage] = useState('Report name and at least one subreddit is required');
+  let [alertVariant, setAlertVariant] = useState(false);
+
 
   useEffect(() => {
     fetch('/getSubredditsByReport?reportID=' + props.report.reportid, {
@@ -47,10 +50,14 @@ const EditReport = (props) => {
       })
         .then(response => response.json())
         .then(result => {
-          console.log(result.reportData);
           props.setReportData(result.reportData);
+          setAlertMessage('Report was succesfully edited');
+          setAlertVariant('success');
+          setShowAlert(true);
         })
     } else {
+      setAlertMessage('Report name and at least one subreddit is required');
+      setAlertVariant('danger');
       setShowAlert(true);
     }
   }
@@ -66,7 +73,7 @@ const EditReport = (props) => {
 
   const handleAlert = () => {
     if(showAlert) {
-      return <Alert variant="danger" onClose={() => { setShowAlert(false) }} dismissible>Report name and at least one subreddit is required</Alert>
+      return <Alert variant={alertVariant} onClose={() => { setShowAlert(false) }} dismissible>{alertMessage}</Alert>
     }
   }
 
